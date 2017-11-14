@@ -10,7 +10,6 @@
 #include <sstream>
 #include <iomanip>
 #include <Windows.h>
-#include <mlib/utf8.h>
 
 using namespace std;
 #pragma comment (lib, "mlib.lib")
@@ -18,6 +17,15 @@ using namespace std;
 
 namespace UnitTest {
 
+static wstring widen (const std::string& s)
+{
+  int nsz = (int)s.size();
+  int wsz = MultiByteToWideChar (CP_UTF8, 0, s.c_str(), nsz, 0, 0);
+  wstring out (wsz, 0);
+  if (wsz)
+    MultiByteToWideChar (CP_UTF8, 0, s.c_str(), nsz, &out[0], wsz);
+  return out;
+}
 /*!
   Output to debug output a failure message. If a test is in progress (the normal case)
   the message includes the name of the test and suite.
@@ -35,12 +43,13 @@ void TestReporterDbgout::ReportFailure (const Failure& failure)
     ss << " test " << CurrentTest->test_name ();
   }
   ss << endl;
-  OutputDebugString (utf8::widen(ss.str()).c_str());
+
+  OutputDebugString (widen(ss.str()).c_str());
   ss.clear ();
   ss.str ("");
   ss << failure.filename << "(" << failure.line_number << "):"
     << failure.message << endl;
-  OutputDebugString (utf8::widen (ss.str ()).c_str ());
+  OutputDebugString (widen (ss.str ()).c_str ());
   TestReporter::ReportFailure (failure);
 }
 
@@ -62,12 +71,12 @@ int TestReporterDbgout::Summary ()
     ss << "Success: " << total_test_count << " tests passed.";
   }
   ss << endl;
-  OutputDebugString (utf8::widen (ss.str ()).c_str ());
+  OutputDebugString (widen (ss.str ()).c_str ());
   ss.clear ();
   ss.str ("");
   ss.setf (ios::fixed);
   ss << "Run time: " << setprecision (2) << total_time_msec / 1000.;
-  OutputDebugString (utf8::widen (ss.str ()).c_str ());
+  OutputDebugString (widen (ss.str ()).c_str ());
 
   return TestReporter::Summary ();
 }
