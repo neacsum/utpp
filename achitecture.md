@@ -9,7 +9,9 @@ irritants:
 * baroque internal structure with tests, test suites, test lists, test results, test details,
 test reporters, etc.
 * stylistical issues with 'const madness' like this:
-    void RunTest(TestResults* const result, Test* const curTest, int const maxTestTimeInMs) const;
+  ```
+  void RunTest(TestResults* const result, Test* const curTest, int const maxTestTimeInMs) const;
+  ```
   (an int parameter is always const)
 
 ## Terminology ##
