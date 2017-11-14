@@ -1,18 +1,16 @@
 
-# Architecture #                                             {#architecture}
+# Architecture
 
 ## Motivation ##
 UnitTest++ is an excellent lightweight test framework but it has a number of
 irritants:
 
+* complete lack of comments
 * baroque internal structure with tests, test suites, test lists, test results, test details,
 test reporters, etc.
 * stylistical issues with 'const madness' like this:
-``````
-void RunTest(TestResults* const result, Test* const curTest, int const maxTestTimeInMs) const;
-``````
-(an int parameter is always const)
-* complete lack of comments
+    void RunTest(TestResults* const result, Test* const curTest, int const maxTestTimeInMs) const;
+  (an int parameter is always const)
 
 ## Terminology ##
 The library allows you to define test cases (called _tests_) and group those cases
@@ -34,12 +32,12 @@ expected results using _CHECK macros_ (see below).
 ## Overview ##
 In its simplest form, a test is defined using the `TEST` macro similarly with a
 standard function call:
-``````
+```
 TEST (MyFirstTest)
 {
   // test code goes here
 }
-``````
+```
 A number of things happen behind the scenes when TEST macro is invoked:
 
 1. It defines a class called _TestMyFirstTest_ derived from
@@ -47,24 +45,24 @@ A number of things happen behind the scenes when TEST macro is invoked:
 following the TEST macro becomes the body of the _RunImpl_ method.
 
 2. It creates a small function (called _MyFirstTestmaker_) with the following body:
-``````
+```
 Test* MyFirstTestmaker ()
 {
   return new MyFirstTest;
 }
-``````
+```
 We are going to call this function the _maker function_.
 
 3. A pointer to the maker together with the name of the current test suite and
 some additional information is used to create a `SuiteAdder` object 
 (with the name _adderMyFirstTest_). The current test suite has to be established
 using a macro like in the following example:
-``````
+```
 SUITE (LotsOfTests)
 {
   // tests definitions go here
 }
-``````
+```
 If no suite has been declared, test are by default appended to the default suite.
 
 4. `SuiteAdder` constructor appends the newly created object to current test
@@ -86,10 +84,10 @@ and, for each suite calls the TestSuite::RunTests() function.
 
 4. TestSuite::RunTests() iterates through the list of tests and for each test does
 the following:
-  1. Calls maker function to instantiate a new Test-derived object (like TestMyFirstTest).
-  2. Calls the Test::Run method which in turn calls the TestMyFirstTest::RunImpl.
+  + Calls maker function to instantiate a new Test-derived object (like TestMyFirstTest).
+  + Calls the Test::Run method which in turn calls the TestMyFirstTest::RunImpl.
      This is actually the test code that was placed after the TEST macro.
-  3. When the test has finished, the Test-derived object is deleted.
+  + When the test has finished, the Test-derived object is deleted.
 
 Throughout this process, different methods of the reporter are called at appropriate
 moments (beginning of test suite, beginning of test, end of test, end of suite,
@@ -184,6 +182,6 @@ There are two global object pointers: `CurrentTest` and `CurrentReporter`.
 They need to be global to be able to call check macros from anywhere.
 The TestSuite::RunTests function also initializes the CurrentReporter pointer.
 
-There is also a global string object CurrentSuite that contains the name of the
+In addition, the global string object CurrentSuite contains the name of the
 currently running suite.
 

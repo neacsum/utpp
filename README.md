@@ -6,7 +6,7 @@ This test library is based on UnitTest++. See below for README notes of UnitTest
 Author:
 Mircea Neacsu (mircea@neacsu.net)
 
-See architecture file for details
+See architecture.md file for details
 
 ## License ##
 
