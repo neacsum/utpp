@@ -5,10 +5,13 @@
 *.opensdf
 *.sdf
 *.suo
-Debug/
-Release/
 *.obj
 *.bak
-doc/
 *.ipch
 .vs/
+/o
+doc/html/
+sample/Win32/
+sample/x64/
+sample/o/
+/lib
