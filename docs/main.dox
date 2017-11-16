@@ -5,6 +5,9 @@ This is a new version of the excellent [UnitTest++](https://github.com/unittest-
 Some of the reasons for making this new version are detailed in the
 [architecture document](achitecture.md).
 
+Latest version can be downloaded from [GitHub](https://neacsum.github.com/utpp) or
+[BitBucket](https://bitbucket.org/neacsum/utpp).
+
 ## Installation ##
 This is a Visual Studio 2017 solution so you just have to download the repository and build
 the UTPP library.

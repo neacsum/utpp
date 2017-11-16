@@ -3,6 +3,12 @@ UTPP - A New Generation of UnitTest++
 
 This test library is based on UnitTest++. See below for README notes of UnitTest++.
 
+Latest version can be downloaded from [GitHub](https://neacsum.github.com/utpp) or
+[BitBucket](https://bitbucket.org/neacsum/utpp).
+
+There is also [documentation](https://neacsum.github.io/utpp) generated with Doxygen.
+
+
 Author:
 Mircea Neacsu (mircea@neacsu.net)
 
