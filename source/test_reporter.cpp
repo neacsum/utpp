@@ -1,5 +1,6 @@
 /*!
-  \file test_reporter.cpp - Implementation of TestReporter class
+  \file test_reporter.cpp
+  \brief Implementation of UnitTest::Reporter class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
@@ -9,9 +10,9 @@
 
 namespace UnitTest {
 
-TestReporter* CurrentReporter;
+Reporter* CurrentReporter;
 
-TestReporter::TestReporter ()
+Reporter::Reporter ()
   : suite_test_count (0)
   , suite_failed_count (0)
   , suite_failures_count (0)
@@ -24,23 +25,26 @@ TestReporter::TestReporter ()
 {
 }
 
-void TestReporter::SuiteStart (const TestSuite&)
+/*!
+  Records the beginning of a new test suite
+*/
+void Reporter::SuiteStart (const TestSuite&)
 {
   suites_count++;
   suite_test_count = suite_failed_count = suite_failures_count = 0;
 }
 
-void TestReporter::TestStart (const Test&)
+void Reporter::TestStart (const Test&)
 {
   suite_test_count++;
   total_test_count++;
 }
 
-void TestReporter::ReportFailure (const Failure &f)
+void Reporter::ReportFailure (const Failure &f)
 {
 }
 
-void TestReporter::TestFinish (const Test& t)
+void Reporter::TestFinish (const Test& t)
 {
   int f = t.failure_count ();
   if (f)
@@ -55,7 +59,10 @@ void TestReporter::TestFinish (const Test& t)
   total_time_msec += ms;
 }
 
-int TestReporter::SuiteFinish (const TestSuite&)
+/*!
+  \return number of failures in this suite
+*/
+int Reporter::SuiteFinish (const TestSuite&)
 {
   return suite_failures_count;
 }

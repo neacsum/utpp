@@ -1,18 +1,17 @@
 /*!
-  \file test_reporter_dbgout.cpp - Implementation of TestReporterDbgout class
+  \file test_reporter_dbgout.cpp
+  \brief Implementation of UnitTest::ReporterDbgout class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
 #include <utpp/test_reporter_dbgout.h>
-#include <utpp/failure.h>
 #include <utpp/test.h>
 #include <sstream>
 #include <iomanip>
 #include <Windows.h>
 
 using namespace std;
-#pragma comment (lib, "mlib.lib")
 
 
 namespace UnitTest {
@@ -32,7 +31,7 @@ static wstring widen (const std::string& s)
 
   \param failure - the failure information (filename, line number and message)
 */
-void TestReporterDbgout::ReportFailure (const Failure& failure)
+void ReporterDbgout::ReportFailure (const Failure& failure)
 {
   stringstream ss;
   ss << "Failure in ";
@@ -50,14 +49,14 @@ void TestReporterDbgout::ReportFailure (const Failure& failure)
   ss << failure.filename << "(" << failure.line_number << "):"
     << failure.message << endl;
   OutputDebugString (widen (ss.str ()).c_str ());
-  TestReporter::ReportFailure (failure);
+  Reporter::ReportFailure (failure);
 }
 
 /*!
   Prints a test run summary including number of tests, number of failures,
   running time, etc.
 */
-int TestReporterDbgout::Summary ()
+int ReporterDbgout::Summary ()
 {
   stringstream ss;
   if (total_failed_count > 0)
@@ -78,7 +77,7 @@ int TestReporterDbgout::Summary ()
   ss << "Run time: " << setprecision (2) << total_time_msec / 1000.;
   OutputDebugString (widen (ss.str ()).c_str ());
 
-  return TestReporter::Summary ();
+  return Reporter::Summary ();
 }
 
 }

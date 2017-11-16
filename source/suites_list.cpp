@@ -1,60 +1,75 @@
 /*!
-  \file suites_list.cpp - Implementation of SuitesList class
+  \file suites_list.cpp
+  \brief Implementation of UnitTest::SuitesList class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
 #include <utpp/suites_list.h>
+#include <algorithm>
 
 namespace UnitTest {
 
-SuitesList::SuitesList ()
-{
-}
+/*!
+  Add a test to a suite
 
-SuitesList::~SuitesList ()
+  \param suite_name name of suite that will contain the test
+  \param inf test information
+*/
+void SuitesList::Add (const std::string& suite_name, const TestSuite::Inserter* inf)
 {
-  for (auto p = suites.begin (); p != suites.end (); p++)
-    delete *p;
-}
-
-void SuitesList::Add (const char *suite_name, TestSuite::maker_info& inf)
-{
-  TestSuite *suite;
-  auto p = suites.cbegin ();
-  while (p != suites.cend ())
+  auto p = find_if (suites.begin (), suites.end (), 
+    [&suite_name](TestSuite& s) {return s.name == suite_name; });
+  if (p == suites.end ())
   {
-    if ((*p)->name == suite_name)
-      break;
-    p++;
-  }
-  if (p == suites.cend ())
-  {
-    suite = new TestSuite (suite_name);
-    suites.push_back (suite);
+    suites.push_back (TestSuite (suite_name));
+    suites.back().Add (inf);
   }
   else
-    suite = *p;
-  suite->Add (inf);
+    p->Add (inf);
 }
 
-int SuitesList::Run (const char *suite_name, TestReporter& reporter, int max_time_ms)
+/*!
+  Run tests in a suite
+
+  \param suite_name name of the suite to run
+  \param reporter test reporter to be used for results
+  \param max_time_ms global time constraint in milliseconds
+
+  \return number of tests that failed or -1 if there is no such suite
+*/
+int SuitesList::Run (const std::string& suite_name, Reporter& reporter, int max_time_ms)
 {
-  for (auto p = suites.cbegin (); p != suites.cend (); p++)
+  auto p = find_if (suites.begin (), suites.end (),
+    [&suite_name](TestSuite& s) {return s.name == suite_name; });
+  
+  if (p != suites.end())
   {
-    if ((*p)->name == suite_name)
-      return (*p)->RunTests (reporter, max_time_ms);
+    p->RunTests (reporter, max_time_ms);
+    return reporter.Summary ();
   }
   return -1;
 }
 
-int SuitesList::RunAll (TestReporter& reporter, int max_time_ms)
+/*!
+  Run tests in all suites
+  \param reporter test reporter to be used for results
+  \param max_time_ms global time constraint in milliseconds
+
+  \return total number of failed tests
+*/
+int SuitesList::RunAll (Reporter& reporter, int max_time_ms)
 {
-  for (auto p = suites.cbegin (); p != suites.cend (); p++)
-    (*p)->RunTests (reporter, max_time_ms);
+  for_each (suites.begin (), suites.end (), 
+    [&reporter, max_time_ms](TestSuite& s)  {s.RunTests (reporter, max_time_ms); });
+
   return reporter.Summary ();
 }
 
+/*!
+  Accesses the singleton object.
+  \return The one and only SuitesList object
+*/
 SuitesList& SuitesList::GetSuitesList ()
 {
   static SuitesList all_suites;
@@ -62,14 +77,28 @@ SuitesList& SuitesList::GetSuitesList ()
 }
 
 //////////////////////////// SuiteAdder ///////////////////////////////////////
-SuiteAdder::SuiteAdder (const char *suite_name,
-                        const std::string& test_name,
+
+/*!
+  Constructor.
+  \param suite        Suite name
+  \param test         Test name
+  \param file         Filename associated with this test
+  \param ln           Line number associated with this test
+  \param func         Factory for test object
+
+  Calls SuiteList::Add() to add the test to a suite.
+*/
+TestSuite::Inserter::Inserter (const std::string& suite,
+                        const std::string& test,
                         const std::string& file,
-                        int line,
+                        int ln,
                         Testmaker func)
+  : test_name (test)
+  , file_name (file)
+  , line (ln)
+  , maker (func)
 {
-  TestSuite::maker_info inf{ test_name, file, line, func };
-  SuitesList::GetSuitesList ().Add (suite_name, inf);
+  SuitesList::GetSuitesList ().Add (suite, this);
 }
 
 }

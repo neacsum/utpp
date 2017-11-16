@@ -1,33 +1,35 @@
 #pragma once
 /*!
-  \file xml_test_reporter.h - Definition of XmlTestReporter class
+  \file xml_test_reporter.h
+  \brief Definition of UnitTest::ReporterXml class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
 
-#include "deferred_test_reporter.h"
+#include <utpp/deferred_test_reporter.h>
 
 #include <iosfwd>
 
 namespace UnitTest
 {
 
-/// A DeferredTestReporter that sends results to an XML file.
-class XmlTestReporter : public DeferredTestReporter
+/// A Reporter that sends results to an XML file.
+class ReporterXml : public ReporterDeferred
 {
 public:
-  XmlTestReporter (std::ostream& ostream);
+  ReporterXml (std::ostream& ostream);
 
   int Summary ();
 
-private:
-  XmlTestReporter (XmlTestReporter const&);
-  XmlTestReporter& operator=(XmlTestReporter const&);
+protected:
+  void BeginTest (const ReporterDeferred::TestResult& result);
+  void AddFailure (const ReporterDeferred::TestResult& result);
+  void EndTest (const ReporterDeferred::TestResult& result);
 
-  void BeginTest (const DeferredTestReporter::TestResult& result);
-  void AddFailure (const DeferredTestReporter::TestResult& result);
-  void EndTest (const DeferredTestReporter::TestResult& result);
+private:
+  ReporterXml (ReporterXml const&) = delete;
+  ReporterXml& operator=(ReporterXml const&) = delete;
 
   std::ostream& os;
 };

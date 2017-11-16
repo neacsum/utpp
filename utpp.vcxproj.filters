@@ -24,9 +24,6 @@
     <ClCompile Include="source\deferred_test_reporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\assert_exception.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\test_reporter_stdout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -40,9 +37,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\test_suite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\checks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\suites_list.cpp">
@@ -71,9 +65,6 @@
     <ClInclude Include="include\utpp\deferred_test_reporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\utpp\assert_exception.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\utpp\test_reporter_stdout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -92,9 +83,6 @@
     <ClInclude Include="include\utpp\check_macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\utpp\failure.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\utpp\suites_list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -104,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="achitecture.md" />
+    <None Include="doc\achitecture.md" />
+    <None Include="doc\main.dox" />
   </ItemGroup>
 </Project>

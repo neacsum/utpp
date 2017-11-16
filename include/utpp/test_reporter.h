@@ -1,23 +1,33 @@
 #pragma once
 /*!
-  \file test_reporter.h - Definition of TestReporter class
+  \file test_reporter.h
+  \brief Definition of UnitTest::Reporter class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
 
+#include <string>
+
 namespace UnitTest {
 
+/// The failure records the file name, the line number and a message
+struct Failure 
+{
+  std::string filename;     ///< Name of file where a failure has occurred
+  std::string message;      ///< Description of failure
+  int line_number;          ///< Line number where the failure has occured
+};
+
 class Test;
-struct Failure;
 class TestSuite;
 
-/// @brief Abstract base for all reporters
-class TestReporter
+/// Abstract base for all reporters
+class Reporter
 {
 public:
-  TestReporter ();
-  virtual ~TestReporter () {};
+  Reporter ();
+  virtual ~Reporter () {};
 
   /// Invoked at the beginning of a test suite
   virtual void SuiteStart (const TestSuite& suite);
@@ -52,8 +62,8 @@ protected:
 };
 
 /// Return the default reporter object
-TestReporter& GetDefaultReporter ();
+Reporter& GetDefaultReporter ();
 
 /// Pointer to current reporter object
-extern TestReporter* CurrentReporter;
+extern Reporter* CurrentReporter;
 }

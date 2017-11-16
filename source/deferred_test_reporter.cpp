@@ -1,5 +1,6 @@
 /*!
-  \file deferred_test_reporter.cpp - Implementation of DeferredTestReporter class
+  \file deferred_test_reporter.cpp
+  \brief Implementation of UnitTest::ReporterDeferred class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
@@ -9,24 +10,37 @@
 
 using namespace UnitTest;
 
-/// Add a new test to the results container
-void DeferredTestReporter::TestStart (const Test& test)
+/*!
+  Called at the beginning of a new test.
+  \param  test    %Test that is about to start
+
+  Creates a new TestResult object and adds it to the results container
+*/
+void ReporterDeferred::TestStart (const Test& test)
 {
-  TestReporter::TestStart (test);
+  Reporter::TestStart (test);
   results.push_back (TestResult (CurrentSuite, test.test_name()));
 }
 
-/// Add a new failure to current test
-void DeferredTestReporter::ReportFailure (const Failure& failure)
+/*!
+  Add a new failure to current test
+  \param failure  The failure record
+*/
+void ReporterDeferred::ReportFailure (const Failure& failure)
 {
-  TestReporter::ReportFailure (failure);
+  assert (!results.empty ());
+
+  Reporter::ReportFailure (failure);
   results.back ().failures.push_back (failure);
 }
 
-/// Store test runtime when the test finishes
-void DeferredTestReporter::TestFinish (const Test& test)
+/*!
+  Store test runtime when the test finishes
+  \param  test    %Test that is about to end
+*/
+void ReporterDeferred::TestFinish (const Test& test)
 {
-  TestReporter::TestFinish (test);
+  Reporter::TestFinish (test);
   results.back ().test_time_ms = test.test_time_ms();
 }
 

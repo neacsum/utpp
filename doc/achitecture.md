@@ -3,7 +3,7 @@
 
 ## Motivation ##
 UnitTest++ is an excellent lightweight test framework but it has a number of
-irritants:
+irritants like:
 
 * complete lack of comments
 * baroque internal structure with tests, test suites, test lists, test results, test details,
@@ -14,18 +14,22 @@ test reporters, etc.
   ```
   (an int parameter is always const)
 
+This rewrite tried to maintain as much as possible the pubic "API" of the original
+UnitTest++ but on the inside almost everything has been rewritten.
+
 ## Terminology ##
 The library allows you to define test cases (called _tests_) and group those cases
 in _test suites_. Test suites are executed and the results are displayed using
-a _test repoter_.
+a _repoter_.
 
-Included are three test reporters: 
-* `TestReporterStdout` generates output to stdout.
-* `XMLTestReporter` generates results in an XML file with a structure similar
-to the files created by NUnit.
-* `TestReporterDbgout` writes messages to debug output (using OutputDebugString)
+Included are three reporters: 
+* [ReporterStdout](@ref UnitTest::ReporterStdout) generates output to stdout.
+* [ReporterXml](@ref UnitTest::ReporterXml) generates results in an XML file
+  with a structure similar to the files created by NUnit.
+* [ReporterDbgout](@ref UnitTest::ReporterDbgout) writes messages to debug output
+  (using OutputDebugString)
 
-The function GetDefaultTestReporter returns an instance of the `TestReporterStdout`
+The function GetDefaultTestReporter() returns an instance of the `ReporterStdout`
 object as the default test reporter.
 
 Throughout the execution of a test, one can verify the results and compare them with
@@ -46,29 +50,30 @@ A number of things happen behind the scenes when TEST macro is invoked:
 `Test` class. The new class has a method called `RunImpl` and the block of code
 following the TEST macro becomes the body of the _RunImpl_ method.
 
-2. It creates a small function (called _MyFirstTestmaker_) with the following body:
-```
-Test* MyFirstTestmaker ()
-{
-  return new MyFirstTest;
-}
-```
-We are going to call this function the _maker function_.
+2. It creates a small factory function (called `MyFirstTest_maker`) with the
+following body:
+  ```
+  Test* MyFirstTest_maker ()
+  {
+    return new MyFirstTest;
+  }
+  ```
+  We are going to call this function the _maker function_.
 
 3. A pointer to the maker together with the name of the current test suite and
-some additional information is used to create a `SuiteAdder` object 
-(with the name _adderMyFirstTest_). The current test suite has to be established
+some additional information is used to create a `TestSuite::Inserter` object 
+(with the name `MyFirstTest_inserter`). The current test suite has to be established
 using a macro like in the following example:
-```
-SUITE (LotsOfTests)
-{
-  // tests definitions go here
-}
-```
-If no suite has been declared, test are by default appended to the default suite.
+  ```
+  SUITE (LotsOfTests)
+  {
+    // tests definitions go here
+  }
+  ```
+  If no suite has been declared, tests are by default appended to the default suite.
 
-4. `SuiteAdder` constructor appends the newly created object to current test
-suite.
+4. The `TestSuite::Inserter` constructor appends the newly created object to 
+current test suite.
 
 5. There is a global `SuitesList` object that is returned by GetSuitesList()
 function. This object maintains a container with all currently defined suites.
@@ -98,27 +103,32 @@ end of run).
 
 ## Checking Test Results ##
 There are a a number of macro-definitions for testing abnormal conditions while
-running a test here is a list of them:
+running a test:
 
-`CHECK(value)`  Verify that value is true (or not 0) 
+`CHECK(value)`  Verifies that value is true (or not 0).
 
-`CHECK_EQUAL(expected, actual)` Compare two values for equality
+`CHECK_EQUAL(expected, actual)` Compares two values for equality.
 
-`CHECK_CLOSE(expected, actual, tolerance)` Check that two values are closer than
- specified tolerance
+`CHECK_CLOSE(expected, actual, tolerance)` Checks that two values are closer than
+ specified tolerance.
  
-`CHECK_ARRAY_EQUAL(expected, actual, count)` Compare two arrays for equality
+`CHECK_ARRAY_EQUAL(expected, actual, count)` Compares two arrays for equality.
 
-`CHECK_ARRAY_CLOSE(expected, actual, count, tolerance)` Check that two arrays
- are closer than specified tolerance
+`CHECK_ARRAY_CLOSE(expected, actual, count, tolerance)` Checks that two arrays
+ are closer than specified tolerance.
  
-`CHECK_ARRAY2D_CLOSE(expected, actual, rows, columns, tolerance)` Check that
- two matrices are within the specified tolerance
+`CHECK_ARRAY2D_CLOSE(expected, actual, rows, columns, tolerance)` Checks that
+ two matrices are within the specified tolerance.
  
-`CHECK_THROW(expression, ExceptionType)` Verifies that expression throws a given exception
-`CHECK_ASSERT(expression)` Verifies that expression throws an AssertException. 
+`CHECK_THROW(ExceptionType, expression)` Verifies that expression throws an 
+ of the given type.
 
-AssertException objects are thrown by _ReportAssert_ function.
+`CHECK_THROW_EQUAL(ExceptionType, expected, expression)` Verifies that expression
+ throws an of the given type and with the expected value.
+
+CHECK_EQUAL and CHECK_THOW_EQUAL macros use a template function UnitTest::CheckEqual()
+to compare their arguments. That means they can be used to compare any objects
+that define a suitable equality operator.
 
 ## Using Test Suites ##
 Tests can be grouped together in _suites_ like in the following example:
@@ -169,15 +179,14 @@ TEST_FIXTURE (Account_fixture, TestExchangeChf)
   CHECK (amount_chf > 0);
 }
 ``````
-At the beginning of each test the amounts are initialized by the Account_fixture
+At the beginning of each test, the amounts are initialized by the `Account_fixture`
 constructor. Because each test object inherits from the fixture, all members
 (or methods) of the fixture can be freely accessed during the test.
 
 TEST_FIXTURE macro simply defines an object that inherits from both the fixture
-and the Test object. Otherwise the treatment tests with fixtures is identical
-to the treatment of tests without fixture. When the test is run the maker function
-invokes the object constructor which in turn invokes the fixture constructor
-(and the Test constructor).
+and the Test object. Otherwise tests with fixtures are treated same as tests without
+fixture. When the test is run the maker function invokes the object constructor 
+which in turn invokes the fixture constructor (and the Test constructor).
 
 ## Global Objects ##
 There are two global object pointers: `CurrentTest` and `CurrentReporter`.

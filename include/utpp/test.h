@@ -1,21 +1,22 @@
 #pragma once
 /*!
-  \file test.h - Definition of Test class
+  \file test.h
+  \brief Definition of UnitTest::Test class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
 #include <string>
 #include <cassert>
-#include "test_suite.h"
+#include <utpp/test_suite.h>
 
 namespace UnitTest {
 
-/// @brief A test case representation
+///Representation of a test case
 class Test
 {
 public:
-  Test (const char* testName);
+  Test (const std::string& testName);
   virtual ~Test ();
   void no_time_constraint ();
 
@@ -25,16 +26,18 @@ public:
 
   void failure ();
   void run ();
+
+  /// Actual body of test.
   virtual void RunImpl () = 0;
 
 protected:
-  std::string name;
-  int failures;
-  int time;
+  std::string name;                   ///< Name of this test
+  int failures;                       ///< Number of failures in this test
+  int time;                           ///< Run time or -1 if exempt from time constraints 
 
 private:
-  Test (Test const&);
-  Test& operator =(Test const&);
+  Test (Test const&) = delete;
+  Test& operator =(Test const&) = delete;
   friend class TestSuite;
 };
 

@@ -1,27 +1,28 @@
 #pragma once
 /*!
-  \file suites_list.h - Definition of SuitesList class
+  \file suites_list.h
+  \brief Definition of UnitTest::SuitesList class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
 #include <deque>
-#include "test_suite.h"
+#include <utpp/test_suite.h>
 
 namespace UnitTest {
-class TestReporter;
+class Reporter;
 
+/// A singleton object containing all test suites
 class SuitesList {
 public:
-  SuitesList ();
-  ~SuitesList ();
-  void Add (const char *suite, TestSuite::maker_info& inf);
-  int Run (const char *suite, TestReporter& reporter, int max_time_ms);
-  int RunAll (TestReporter& reporter, int max_time_ms);
+  void Add (const std::string& suite, const TestSuite::Inserter* inf);
+  int Run (const std::string& suite, Reporter& reporter, int max_time_ms);
+  int RunAll (Reporter& reporter, int max_time_ms);
   static SuitesList& GetSuitesList ();
 
 private:
-  std::deque <TestSuite *> suites;
+
+  std::deque <TestSuite> suites;
 };
 
 }

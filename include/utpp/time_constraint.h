@@ -1,19 +1,18 @@
 #pragma once
 /*!
-  \file time_constraint.h - Definition of TimeConstraint class
+  \file time_constraint.h
+  \brief Definition of UnitTest::TimeConstraint class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
 
 #include <string>
-#include "time_helpers.h"
+#include <utpp/time_helpers.h>
 
 namespace UnitTest {
 
-class TestResults;
-
-/// @brief Defines maximum run time of a test
+///Defines maximum run time of a test
 class TimeConstraint
 {
 public:
@@ -21,8 +20,8 @@ public:
   ~TimeConstraint ();
 
 private:
-  void operator=(TimeConstraint const&);
-  TimeConstraint (TimeConstraint const&);
+  void operator=(TimeConstraint const&) = delete;
+  TimeConstraint (TimeConstraint const&) = delete;
 
   Timer timer;
   int const max_ms;

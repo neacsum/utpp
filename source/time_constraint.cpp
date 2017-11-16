@@ -1,5 +1,6 @@
 /*!
-  \file time_constraint.cpp - Implementation of TimeConstraint class
+  \file time_constraint.cpp
+  \brief Implementation of UnitTest::TimeConstraint class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
@@ -13,6 +14,15 @@
 
 namespace UnitTest {
 
+/*!
+  Initializes a TimeConstraint object.
+  \param ms       Maximum allowed duration in milliseconds
+  \param file     Filename associated with this constraint
+  \param line     Line number associated with this constraint
+
+  The object contains a timer that is started now. It also keeps track of the
+  filename and line number where it has been created.
+*/
 TimeConstraint::TimeConstraint (int ms, const char* file, int line)
   : filename (file)
   , line_number (line)
@@ -21,6 +31,10 @@ TimeConstraint::TimeConstraint (int ms, const char* file, int line)
   timer.Start ();
 }
 
+/*!
+  If the timer is greater than allowed value it records a time constraint failure
+  for the current test.
+*/
 TimeConstraint::~TimeConstraint ()
 {
   int t = timer.GetTimeInMs ();

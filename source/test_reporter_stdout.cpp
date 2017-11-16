@@ -1,11 +1,11 @@
 /*!
-  \file test_reporter_stdout.cpp - Implementation of TestReporterStdout class
+  \file test_reporter_stdout.cpp
+  \brief Implementation of UnitTest::ReporterStdout class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
 #include <utpp/test_reporter_stdout.h>
-#include <utpp/failure.h>
 #include <utpp/test.h>
 #include <iostream>
 #include <iomanip>
@@ -15,9 +15,9 @@ using namespace std;
 namespace UnitTest {
 
 /// Return the default reporter object. 
-TestReporter& GetDefaultReporter ()
+Reporter& GetDefaultReporter ()
 {
-  static TestReporterStdout the_default_reporter;
+  static ReporterStdout the_default_reporter;
   return the_default_reporter;
 }
 
@@ -27,7 +27,7 @@ TestReporter& GetDefaultReporter ()
 
   \param failure - the failure information (filename, line number and message)
 */
-void TestReporterStdout::ReportFailure (const Failure& failure)
+void ReporterStdout::ReportFailure (const Failure& failure)
 {
   cout << "Failure in ";
   if (CurrentTest)
@@ -38,14 +38,14 @@ void TestReporterStdout::ReportFailure (const Failure& failure)
   }
   cout << endl << failure.filename << "(" << failure.line_number << "):"
     << failure.message << endl;
-  TestReporter::ReportFailure (failure);
+  Reporter::ReportFailure (failure);
 }
 
 /*!
   Prints a test run summary including number of tests, number of failures,
   running time, etc.
 */
-int TestReporterStdout::Summary ()
+int ReporterStdout::Summary ()
 {
   if (total_failed_count > 0)
   {
@@ -59,7 +59,7 @@ int TestReporterStdout::Summary ()
   }
   cout.setf (ios::fixed);
   cout << "Run time: " << setprecision (2) << total_time_msec / 1000. << endl;
-  return TestReporter::Summary ();
+  return Reporter::Summary ();
 }
 
 }

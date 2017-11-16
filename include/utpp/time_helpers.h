@@ -1,16 +1,11 @@
 #pragma once
 /*!
-  \file time_helpers.h - Definition of Timer class
+  \file time_helpers.h
+  \brief Definition of UnitTest::Timer class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
-
-#ifdef UNITTEST_MINGW
-  #ifndef __int64
-    #define __int64 long long
-  #endif
-#endif
 
 namespace UnitTest {
 

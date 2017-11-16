@@ -1,5 +1,6 @@
 /*!
-  \file time_helpers.cpp - Implementation of Timer class
+  \file time_helpers.cpp
+  \brief Implementation of UnitTest::Timer class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
@@ -21,16 +22,18 @@ Timer::Timer ()
   }
 }
 
+/// Record starting time
 void Timer::Start ()
 {
   startTime = GetTime ();
 }
 
+/// Return elapsed time in milliseconds since the starting time
 int Timer::GetTimeInMs () const
 {
   __int64 elapsedTime = GetTime () - startTime;
   double seconds = double (elapsedTime) / double (frequency);
-  return int (seconds * 1000.0f);
+  return int (seconds * 1000.0);
 }
 
 __int64 Timer::GetTime () const

@@ -1,19 +1,20 @@
 #pragma once
 /*!
-  \file test_reporter_stdout.h - Definition of TestReporterStdout class
+  \file test_reporter_stdout.h
+  \brief Definition of UnitTest::ReporterStdout class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
 
-#include "test_reporter.h"
+#include <utpp/test_reporter.h>
 
 namespace UnitTest {
 
-/// A TestReporter that sends messages to stdout
-class TestReporterStdout : public TestReporter
+/// A Reporter that sends messages to stdout
+class ReporterStdout : public Reporter
 {
-private:
+protected:
   virtual void ReportFailure (const Failure& failure);
   virtual int Summary ();
 };

@@ -1,15 +1,17 @@
 #pragma once
 /*!
-  \file test_suite.h - Definition of TestSuite class
+  \file test_suite.h
+  \brief Definition of UnitTest::TestSuite class
 
   (c) Mircea Neacsu 2017
   See README.md file for full copyright information.
 */
 #include <string>
 #include <deque>
-#include "test_reporter.h"
-#include "time_helpers.h"
+#include <utpp/test_reporter.h>
+#include <utpp/time_helpers.h>
 
+/// Name of default suite
 #define DEFAULT_SUITE "DefaultSuite"
 
 namespace UnitTest {
@@ -19,44 +21,46 @@ class Test;
 /// Function pointer to a function that creates a test object
 typedef UnitTest::Test* (*Testmaker)();
 
-/// @brief A set of test cases that are run together
+///A set of test cases that are run together
 class TestSuite
 {
 public:
+  /// Constructor of this objects inserts the test in suite
+  class Inserter
+  {
+  public:
+    Inserter (const std::string& suite,
+      const std::string& test,
+      const std::string& file,
+      int line,
+      Testmaker func);
 
-  ///Information kept for each test
-  struct maker_info {
-    std::string name;   ///< test name
-    std::string file;   ///< filename where test was declared
-    int line;           ///< line number where test was declared
-    Testmaker func;     ///< test maker function
+  private:
+    const std::string test_name,      ///< Test name
+      file_name;                      ///< Filename where test was declared
+    const int line;                   ///< Line number where test was declared
+    const Testmaker maker;            ///< Test maker function
+
+    friend class TestSuite;
   };
 
-  TestSuite (const char *name);
-  void Add (maker_info& inf);
-  int RunTests (TestReporter& reporter, int max_runtime_ms);
-  std::string name;
+
+  TestSuite (const std::string& name);
+  void Add (const Inserter* inf);
+  int RunTests (Reporter& reporter, int max_runtime_ms);
+
+  std::string name;     ///< Suite name
 
 private:
-  std::deque <maker_info> test_list;  ///< tests included in this suite
+  std::deque <const Inserter*> test_list;  ///< tests included in this suite
   int max_runtime;
 
-  bool SetupCurrentTest (maker_info& inf);
-  void RunCurrentTest (maker_info& inf);
-  void TearDownCurrentTest (maker_info& inf);
+  bool SetupCurrentTest (const Inserter* inf);
+  void RunCurrentTest (const Inserter* inf);
+  void TearDownCurrentTest (const Inserter* inf);
 };
 
-/// Constructor of this objects inserts the test in suite
-class SuiteAdder
-{
-public:
-  SuiteAdder (const char *suite_name, 
-              const std::string& test_name, 
-              const std::string& file, 
-              int line,
-              Testmaker func);
-};
-
+/// Name of currently running suite
 extern std::string CurrentSuite;
 
 }

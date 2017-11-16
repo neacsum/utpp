@@ -1,5 +1,6 @@
 /*!
-  \file xml_test_reporter.cpp - Implementation of XmlTestReporter class
+  \file xml_test_reporter.cpp
+  \brief Implementation of UnitTest::ReporterXml class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
@@ -15,8 +16,6 @@
 
 using namespace std;
 
-//XML char encoding
-const string encoding;
 
 static void ReplaceChar (string& str, char c, string const& replacement)
 {
@@ -48,20 +47,17 @@ static string BuildFailureMessage (string const& file, int line, string const& m
 namespace UnitTest {
 
 /// Constructor
-XmlTestReporter::XmlTestReporter (std::ostream& ostream)
+ReporterXml::ReporterXml (std::ostream& ostream)
   : os (ostream)
 {
 }
 
 /// Generate XML report
-int XmlTestReporter::Summary ()
+int ReporterXml::Summary ()
 {
   string suite;
 
-  os << "<?xml version=\"1.0\"";
-  if (!encoding.empty())
-    os << " encoding=\"" << encoding << "\"";
-  os << "?>" << endl;
+  os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
 
   os << "<unittest-results"
     << " tests=\"" << total_test_count << "\""
@@ -90,26 +86,27 @@ int XmlTestReporter::Summary ()
 
   os << " </suite>" << endl;
   os << "</unittest-results>" << endl;
-  return DeferredTestReporter::Summary ();
+  return ReporterDeferred::Summary ();
 }
 
-void XmlTestReporter::BeginTest (const DeferredTestReporter::TestResult& result)
+void ReporterXml::BeginTest (const ReporterDeferred::TestResult& result)
 {
   os << "  <test"
      << " name=\"" << result.test_name << "\""
      << " time_ms=\"" << result.test_time_ms << "\"";
 }
 
-void XmlTestReporter::EndTest (const DeferredTestReporter::TestResult& result)
+void ReporterXml::EndTest (const ReporterDeferred::TestResult& result)
 {
-  if (!result.failures.empty())
-    os << "  </test>";
-  else
+  if (result.failures.empty())
     os << "/>";
+  else
+    os << "  </test>";
+
   os << endl;
 }
 
-void XmlTestReporter::AddFailure (const DeferredTestReporter::TestResult& result)
+void ReporterXml::AddFailure (const ReporterDeferred::TestResult& result)
 {
   os << ">" << endl; // close <test> element
 

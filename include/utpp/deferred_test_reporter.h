@@ -1,60 +1,54 @@
 #pragma once
 /*!
-  \file deferred_test_reporter.h - Definition of DeferredTestReporter class
+  \file deferred_test_reporter.h
+  \brief Definition of UnitTest::ReporterDeferred class
 
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
 
-#include "test_reporter.h"
-#include "failure.h"
-
+#include <utpp/test_reporter.h>
 #include <deque>
 
 namespace UnitTest
 {
 
-/// A TestReporter that keeps a list of test results.
-class DeferredTestReporter : public TestReporter
+/// A Reporter that keeps a list of test results.
+class ReporterDeferred : public Reporter
 {
 public:
-  DeferredTestReporter () {};
+  ReporterDeferred () {};
   virtual void TestStart (const Test& test);
   virtual void ReportFailure (const Failure& failure);
   virtual void TestFinish (const Test& test);
 
 protected:
-  ///@brief %Test results including all failure messages
+  /// %Test results including all failure messages
   struct TestResult
   {
     TestResult ();
     TestResult (const std::string& suite, const std::string& test);
 
-    std::string suite_name;
-    std::string test_name;
-    int test_time_ms;
+    std::string suite_name;         ///< suite name
+    std::string test_name;          ///< test name
+    int test_time_ms;               ///< test running time in milliseconds
+    std::deque<Failure> failures;   ///< All failures of a test
 
-    ///@brief All failures of a test
-    typedef std::deque< Failure > FailureVec;
-    FailureVec failures;
   };
 
-  ///@brief All test results
-  typedef std::deque< TestResult > DeferredTestResultList;
-
-  DeferredTestResultList results;   ///< These are the results of all tests
+  std::deque<TestResult> results;   ///< Results of all tests
 };
 
 /// Default constructor needed container inclusion
 inline 
-DeferredTestReporter::TestResult::TestResult ()
+ReporterDeferred::TestResult::TestResult ()
   : test_time_ms (0)
 {
 }
 
 /// Constructor
 inline 
-DeferredTestReporter::TestResult::TestResult (const std::string& suite, const std::string& test)
+ReporterDeferred::TestResult::TestResult (const std::string& suite, const std::string& test)
   : suite_name (suite)
   , test_name (test)
   , test_time_ms (0)
