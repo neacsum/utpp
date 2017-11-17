@@ -175,11 +175,16 @@
     <ClInclude Include="include\utpp\xml_test_reporter.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="doc\achitecture.md" />
-    <None Include="doc\main.dox">
+    <None Include="docs\using.md">
       <FileType>Text</FileType>
     </None>
-    <None Include="README.md" />
+    <None Include="docs\achitecture.md" />
+    <None Include="docs\main.dox">
+      <FileType>Text</FileType>
+    </None>
+    <None Include="README.md">
+      <FileType>Text</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
