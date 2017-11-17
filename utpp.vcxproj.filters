@@ -92,7 +92,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="doc\achitecture.md" />
-    <None Include="doc\main.dox" />
+    <None Include="docs\using.md" />
+    <None Include="docs\main.dox" />
+    <None Include="docs\achitecture.md" />
   </ItemGroup>
 </Project>
