@@ -27,12 +27,48 @@ bool CheckEqual (const Expected& expected, const Actual& actual, std::string& ms
   if (!(expected == actual))
   {
     std::stringstream stream;
-    stream << "Expected \'" << expected << "\' but was \'" << actual <<"\'";
+    stream << "Expected " << expected << " but was " << actual;
     msg = stream.str ();
     return false;
   }
   return true;
 }
+
+/*!
+  Specializations of CheckEqual function for C strings
+  @{
+*/
+inline
+bool CheckEqual (const char* expected, const char* actual, std::string& msg)
+{
+  if (strcmp (expected, actual))
+  {
+    std::stringstream stream;
+    stream << "Expected \'" << expected << "\' but was \'" << actual << "\'";
+    msg = stream.str ();
+    return false;
+  }
+  return true;
+}
+
+inline
+bool CheckEqual (char* expected, char* actual, std::string& msg)
+{
+  return CheckEqual (const_cast<const char *>(expected), const_cast<const char*>(actual), msg);
+}
+
+inline
+bool CheckEqual (const char* expected, char* actual, std::string& msg)
+{
+  return CheckEqual (const_cast<const char *>(expected), const_cast<const char*>(actual), msg);
+}
+
+inline
+bool CheckEqual (char* expected, const char* actual, std::string& msg)
+{
+  return CheckEqual (const_cast<const char *>(expected), const_cast<const char*>(actual), msg);
+}
+///@}
 
 /// Return true if two values are closer than specified tolerance.
 template <typename Expected, typename Actual, typename Tolerance>

@@ -30,13 +30,23 @@ string CurrentSuite = DEFAULT_SUITE;
   the suite.
 */
 
-///Constructor
+/*!
+  Constructor
+  \param name_  Suite name
+*/
 TestSuite::TestSuite (const std::string& name_)
   : name (name_)
 {
 }
 
-/// Add a new test information to test_list
+/*!
+  Add a new test information to test_list
+  \param inf Pointer to Inserter information that will be added to the container
+
+  Note that the container keeps the pointer itself and that could create
+  lifetime issues. However this is not a problem in normal usage as inserter
+  objects are statically created by the TEST... macros.
+*/
 void TestSuite::Add (const Inserter* inf)
 {
   test_list.push_back (inf);
@@ -165,6 +175,37 @@ void TestSuite::TearDownCurrentTest (const Inserter* inf)
     stream << "Unhandled exception tearing down test " << inf->test_name;
     ReportFailure (inf->file_name, inf->line, stream.str());
   }
+}
+
+/////////////////////// TestSuite::Inserter ///////////////////////////////////
+
+/*!
+  \class TestSuite::Inserter
+  %Inserter objects are instantiated by the TEST... macro-definitions. The
+  constructor places a pointer to the object into the test queue of the suite.
+*/
+
+/*!
+  Constructor.
+  \param suite        Suite name
+  \param test         %Test name
+  \param file         Filename associated with this test
+  \param ln           Line number associated with this test
+  \param func         Factory for test object
+
+  Calls SuiteList::Add() to add the test to a suite.
+*/
+TestSuite::Inserter::Inserter (const std::string& suite,
+                        const std::string& test,
+                        const std::string& file,
+                        int ln,
+                        Testmaker func)
+  : test_name (test)
+  , file_name (file)
+  , line (ln)
+  , maker (func)
+{
+  SuitesList::GetSuitesList ().Add (suite, this);
 }
 
 

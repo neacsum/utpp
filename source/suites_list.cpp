@@ -76,29 +76,4 @@ SuitesList& SuitesList::GetSuitesList ()
   return all_suites;
 }
 
-//////////////////////////// SuiteAdder ///////////////////////////////////////
-
-/*!
-  Constructor.
-  \param suite        Suite name
-  \param test         Test name
-  \param file         Filename associated with this test
-  \param ln           Line number associated with this test
-  \param func         Factory for test object
-
-  Calls SuiteList::Add() to add the test to a suite.
-*/
-TestSuite::Inserter::Inserter (const std::string& suite,
-                        const std::string& test,
-                        const std::string& file,
-                        int ln,
-                        Testmaker func)
-  : test_name (test)
-  , file_name (file)
-  , line (ln)
-  , maker (func)
-{
-  SuitesList::GetSuitesList ().Add (suite, this);
-}
-
 }

@@ -125,6 +125,15 @@ template&lt;typename Expected , typename Actual , typename Tolerance &gt; </td><
 <tr class="memitem:ab3c5063cb64bd47ba20e347a764f681a"><td class="memTemplParams" colspan="2">template&lt;typename Expected , typename Actual , typename Tolerance &gt; </td></tr>
 <tr class="memitem:ab3c5063cb64bd47ba20e347a764f681a"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="checks_8h.html#ab3c5063cb64bd47ba20e347a764f681a">UnitTest::CheckArray2DClose</a> (const Expected &amp;expected, const Actual &amp;actual, int rows, int columns, const Tolerance &amp;tolerance, std::string &amp;msg)</td></tr>
 <tr class="separator:ab3c5063cb64bd47ba20e347a764f681a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader"></div></td></tr>
+<tr class="memitem:a3f21bc78c4fa3fed78c8d76953df9769"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="checks_8h.html#a3f21bc78c4fa3fed78c8d76953df9769">UnitTest::CheckEqual</a> (const char *expected, const char *actual, std::string &amp;msg)</td></tr>
+<tr class="separator:a3f21bc78c4fa3fed78c8d76953df9769"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4483f3508a0342b53d3ecdd26ae2953e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="checks_8h.html#a4483f3508a0342b53d3ecdd26ae2953e">UnitTest::CheckEqual</a> (char *expected, char *actual, std::string &amp;msg)</td></tr>
+<tr class="separator:a4483f3508a0342b53d3ecdd26ae2953e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65bbc06f69576dce0a54c800f778d943"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="checks_8h.html#a65bbc06f69576dce0a54c800f778d943">UnitTest::CheckEqual</a> (const char *expected, char *actual, std::string &amp;msg)</td></tr>
+<tr class="separator:a65bbc06f69576dce0a54c800f778d943"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c53896d6f2363c34f8851e3ddd692b5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="checks_8h.html#a9c53896d6f2363c34f8851e3ddd692b5">UnitTest::CheckEqual</a> (char *expected, const char *actual, std::string &amp;msg)</td></tr>
+<tr class="separator:a9c53896d6f2363c34f8851e3ddd692b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Definition of Check... template functions. </p>
@@ -376,7 +385,7 @@ template&lt;typename Expected , typename Actual , typename Tolerance &gt; </div>
 </div>
 </div>
 <a id="file_a4d7a079e294bdb3a502bba5de4db97e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_a4d7a079e294bdb3a502bba5de4db97e5">&#9670;&nbsp;</a></span>CheckEqual()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a4d7a079e294bdb3a502bba5de4db97e5">&#9670;&nbsp;</a></span>CheckEqual() <span class="overload">[1/5]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -409,6 +418,178 @@ template&lt;typename Expected , typename Actual &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>Check if two values are equal. If not, generate a failure message. </p>
+
+</div>
+</div>
+<a id="file_a3f21bc78c4fa3fed78c8d76953df9769"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a3f21bc78c4fa3fed78c8d76953df9769">&#9670;&nbsp;</a></span>CheckEqual() <span class="overload">[2/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UnitTest::CheckEqual </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>expected</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>actual</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string &amp;&#160;</td>
+          <td class="paramname"><em>msg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Specializations of CheckEqual function for C strings </p>
+
+</div>
+</div>
+<a id="file_a4483f3508a0342b53d3ecdd26ae2953e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a4483f3508a0342b53d3ecdd26ae2953e">&#9670;&nbsp;</a></span>CheckEqual() <span class="overload">[3/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UnitTest::CheckEqual </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>expected</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>actual</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string &amp;&#160;</td>
+          <td class="paramname"><em>msg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Specializations of CheckEqual function for C strings </p>
+
+</div>
+</div>
+<a id="file_a65bbc06f69576dce0a54c800f778d943"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a65bbc06f69576dce0a54c800f778d943">&#9670;&nbsp;</a></span>CheckEqual() <span class="overload">[4/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UnitTest::CheckEqual </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>expected</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>actual</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string &amp;&#160;</td>
+          <td class="paramname"><em>msg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Specializations of CheckEqual function for C strings </p>
+
+</div>
+</div>
+<a id="file_a9c53896d6f2363c34f8851e3ddd692b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a9c53896d6f2363c34f8851e3ddd692b5">&#9670;&nbsp;</a></span>CheckEqual() <span class="overload">[5/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool UnitTest::CheckEqual </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>expected</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>actual</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string &amp;&#160;</td>
+          <td class="paramname"><em>msg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Specializations of CheckEqual function for C strings </p>
 
 </div>
 </div>
