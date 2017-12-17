@@ -100,9 +100,9 @@ bool CheckClose (const Expected& expected, const Actual& actual, const Tolerance
 
 /// Return true if two arrays are equal
 template <typename Expected, typename Actual>
-bool Equal1D (const Expected& expected, const Actual& actual, int count)
+bool Equal1D (const Expected& expected, const Actual& actual, size_t count)
 {
-  for (int i = 0; i < count; ++i)
+  for (size_t i = 0; i < count; ++i)
     if (expected[i] != actual[i])
       return false;
   return true;
@@ -113,13 +113,13 @@ bool Equal1D (const Expected& expected, const Actual& actual, int count)
 */
 template <typename Expected, typename Actual>
 bool CheckArrayEqual (const Expected& expected, const Actual& actual,
-                      int count, std::string& msg)
+                      size_t count, std::string& msg)
 {
   if (!Equal1D (expected, actual, count))
   {
     std::stringstream stream;
     stream << "Expected [ ";
-    for (int expectedIndex = 0; expectedIndex < count; ++expectedIndex)
+    for (size_t expectedIndex = 0; expectedIndex < count; ++expectedIndex)
       stream << expected[expectedIndex] << " ";
 
     stream << "] but was [ ";
@@ -135,10 +135,10 @@ bool CheckArrayEqual (const Expected& expected, const Actual& actual,
 
 /// Return true if values in two arrays are closer than specified tolerance.
 template <typename Expected, typename Actual, typename Tolerance>
-bool Close1D (const Expected& expected, const Actual& actual, int count, const Tolerance& tolerance)
+bool Close1D (const Expected& expected, const Actual& actual, size_t count, const Tolerance& tolerance)
 {
   bool equal = true;
-  for (int i = 0; equal && i < count; ++i)
+  for (size_t i = 0; equal && i < count; ++i)
     equal = AreClose (expected[i], actual[i], tolerance);
   return equal;
 }
@@ -150,17 +150,17 @@ bool Close1D (const Expected& expected, const Actual& actual, int count, const T
 */
 template <typename Expected, typename Actual, typename Tolerance>
 bool CheckArrayClose (const Expected& expected, const Actual& actual,
-                      int count, const Tolerance& tolerance, std::string& msg)
+                      size_t count, const Tolerance& tolerance, std::string& msg)
 {
   if (!Close1D (expected, actual, count, tolerance))
   {
     std::stringstream stream;
     stream << "Expected [ ";
-    for (int expectedIndex = 0; expectedIndex < count; ++expectedIndex)
+    for (size_t expectedIndex = 0; expectedIndex < count; ++expectedIndex)
       stream << expected[expectedIndex] << " ";
 
     stream << "] +/- " << tolerance << " but was [ ";
-    for (int actualIndex = 0; actualIndex < count; ++actualIndex)
+    for (size_t actualIndex = 0; actualIndex < count; ++actualIndex)
       stream << actual[actualIndex] << " ";
     stream << "]";
     msg = stream.str ();
@@ -171,9 +171,9 @@ bool CheckArrayClose (const Expected& expected, const Actual& actual,
 
 /// Return true if two 2D arrays are equal
 template <typename Expected, typename Actual, typename Tolerance>
-bool Equal2D (const Expected& expected, const Actual& actual, int rows, int columns)
+bool Equal2D (const Expected& expected, const Actual& actual, size_t rows, size_t columns)
 {
-  for (int i = 0; i < rows; i++)
+  for (size_t i = 0; i < rows; i++)
     if (!Equal1D (expected[i], actual[i], columns))
       return false;
   return true;
@@ -184,13 +184,13 @@ bool Equal2D (const Expected& expected, const Actual& actual, int rows, int colu
 */
 template <typename Expected, typename Actual, typename Tolerance>
 bool CheckArray2DEqual (const Expected& expected, const Actual& actual,
-                        int rows, int columns, const Tolerance& tolerance, std::string& msg)
+                        size_t rows, size_t columns, const Tolerance& tolerance, std::string& msg)
 {
   if (!Equal2D (expected, actual, rows, columns))
   {
     std::stringstream stream;
     stream << "Expected [ ";
-    for (int expectedRow = 0; expectedRow < rows; ++expectedRow)
+    for (size_t expectedRow = 0; expectedRow < rows; ++expectedRow)
     {
       stream << "[ ";
       for (int expectedColumn = 0; expectedColumn < columns; ++expectedColumn)
@@ -199,7 +199,7 @@ bool CheckArray2DEqual (const Expected& expected, const Actual& actual,
     }
 
     stream << "] +/- " << tolerance << " but was [ ";
-    for (int actualRow = 0; actualRow < rows; ++actualRow)
+    for (size_t actualRow = 0; actualRow < rows; ++actualRow)
     {
       stream << "[ ";
       for (int actualColumn = 0; actualColumn < columns; ++actualColumn)
@@ -215,9 +215,9 @@ bool CheckArray2DEqual (const Expected& expected, const Actual& actual,
 
 /// Return true if values in two 2D arrays are closer than specified tolerance.
 template <typename Expected, typename Actual, typename Tolerance>
-bool Close2D (const Expected& expected, const Actual& actual, int rows, int columns)
+bool Close2D (const Expected& expected, const Actual& actual, size_t rows, size_t columns)
 {
-  for (int i = 0; i < rows; i++)
+  for (size_t i = 0; i < rows; i++)
     if (!Close1D (expected[i], actual[i], columns))
       return false;
   return true;
@@ -229,7 +229,7 @@ bool Close2D (const Expected& expected, const Actual& actual, int rows, int colu
 */
 template <typename Expected, typename Actual, typename Tolerance>
 bool CheckArray2DClose (const Expected& expected, const Actual& actual,
-                        int rows, int columns, const Tolerance& tolerance, std::string& msg)
+                        size_t rows, size_t columns, const Tolerance& tolerance, std::string& msg)
 {
   bool equal = true;
 
@@ -237,7 +237,7 @@ bool CheckArray2DClose (const Expected& expected, const Actual& actual,
   {
     std::stringstream stream;
     stream << "Expected [ ";
-    for (int expectedRow = 0; expectedRow < rows; ++expectedRow)
+    for (size_t expectedRow = 0; expectedRow < rows; ++expectedRow)
     {
       stream << "[ ";
       for (int expectedColumn = 0; expectedColumn < columns; ++expectedColumn)
@@ -246,7 +246,7 @@ bool CheckArray2DClose (const Expected& expected, const Actual& actual,
     }
 
     stream << "] +/- " << tolerance << " but was [ ";
-    for (int actualRow = 0; actualRow < rows; ++actualRow)
+    for (size_t actualRow = 0; actualRow < rows; ++actualRow)
     {
       stream << "[ ";
       for (int actualColumn = 0; actualColumn < columns; ++actualColumn)
