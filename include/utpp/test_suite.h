@@ -47,6 +47,8 @@ public:
 
   TestSuite (const std::string& name);
   void Add (const Inserter* inf);
+  bool IsEnabled () const;
+  void Enable (bool on_off);
   int RunTests (Reporter& reporter, int max_runtime_ms);
 
   std::string name;     ///< Suite name
@@ -54,11 +56,26 @@ public:
 private:
   std::deque <const Inserter*> test_list;  ///< tests included in this suite
   int max_runtime;
+  bool enabled;
 
   bool SetupCurrentTest (const Inserter* inf);
   void RunCurrentTest (const Inserter* inf);
   void TearDownCurrentTest (const Inserter* inf);
 };
+
+/// Returns true if suite is enabled
+inline
+bool TestSuite::IsEnabled () const
+{
+  return enabled;
+}
+
+///Enables or disables this suite
+inline
+void TestSuite::Enable (bool on_off)
+{
+  enabled = on_off;
+}
 
 /// Name of currently running suite
 extern std::string CurrentSuite;

@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['sleepms',['SleepMs',['../time__helpers_8h.html#aa17942c0fdbbba07cc530607bf5d81b4',1,'UnitTest']]],
-  ['start',['Start',['../class_unit_test_1_1_timer.html#acb9c2831775e37497e40f3df652eb9d9',1,'UnitTest::Timer']]],
-  ['suitefinish',['SuiteFinish',['../class_unit_test_1_1_reporter.html#adbafcc5c5b358605839790396b63b581',1,'UnitTest::Reporter']]],
-  ['suitestart',['SuiteStart',['../class_unit_test_1_1_reporter.html#a36e4c22c554e5b02ef43074fc4a69b45',1,'UnitTest::Reporter']]],
-  ['summary',['Summary',['../class_unit_test_1_1_reporter.html#aa43acf7d495130cda611109bf60af5ac',1,'UnitTest::Reporter::Summary()'],['../class_unit_test_1_1_reporter_dbgout.html#a86f6044b99f76c94311033c2193acd1a',1,'UnitTest::ReporterDbgout::Summary()'],['../class_unit_test_1_1_reporter_stdout.html#a879c481ae0fb1483a40ebfffb02b12bc',1,'UnitTest::ReporterStdout::Summary()'],['../class_unit_test_1_1_reporter_xml.html#ada9b3a2c3aadc659bc770e4c806ab68d',1,'UnitTest::ReporterXml::Summary()']]]
+  ['reporterxml',['ReporterXml',['../class_unit_test_1_1_reporter_xml.html#a8b5ff1c6075ee420f61c3e6ea3ea31a3',1,'UnitTest::ReporterXml']]],
+  ['reportfailure',['ReportFailure',['../class_unit_test_1_1_reporter_deferred.html#ae8c2789ccc132f2d88095b4ce2394421',1,'UnitTest::ReporterDeferred::ReportFailure()'],['../class_unit_test_1_1_reporter.html#a9762f97d702ab15d62d4bd7592312351',1,'UnitTest::Reporter::ReportFailure()'],['../class_unit_test_1_1_reporter_dbgout.html#abc9c11e1993ee7e25a96457fee6b7fd2',1,'UnitTest::ReporterDbgout::ReportFailure()'],['../class_unit_test_1_1_reporter_stdout.html#a77dc40496d9a63b72afba5bd789a2acf',1,'UnitTest::ReporterStdout::ReportFailure()'],['../test_8h.html#a4446fa39a8485e9c434934acf2f30038',1,'UnitTest::ReportFailure()']]],
+  ['run',['Run',['../class_unit_test_1_1_suites_list.html#acb541f5444c1869a52e75234de856daf',1,'UnitTest::SuitesList::Run()'],['../class_unit_test_1_1_test.html#a4b702d7baafab91dc061256a3228257a',1,'UnitTest::Test::run()']]],
+  ['runall',['RunAll',['../class_unit_test_1_1_suites_list.html#a644b68728e730eb86fe0567b7229ffe4',1,'UnitTest::SuitesList']]],
+  ['runalltests',['RunAllTests',['../utpp_8h.html#a011d106d4150ae0c8d3fdd63ef8762e5',1,'UnitTest']]],
+  ['runimpl',['RunImpl',['../class_unit_test_1_1_test.html#a63e8dc2a9a8e2314bd025d1d28df61f7',1,'UnitTest::Test']]],
+  ['runsuite',['RunSuite',['../utpp_8h.html#a392224b71e7359957c8f64ed596cba95',1,'UnitTest']]],
+  ['runtests',['RunTests',['../class_unit_test_1_1_test_suite.html#aad7a1a05054f5ad1b2d944f4df7326ee',1,'UnitTest::TestSuite']]]
 ];

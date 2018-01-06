@@ -25,6 +25,9 @@ namespace UnitTest {
 /// Run all tests from all test suites
 int RunAllTests (Reporter& rpt = GetDefaultReporter (), int max_time_ms = 0);
 
+/// Disable a test suite
+void DisableSuite (const std::string& suite_name);
+
 /// Run all tests from one suite
 int RunSuite (const char *suite_name, Reporter& rpt = GetDefaultReporter (), int max_time_ms = 0);
 

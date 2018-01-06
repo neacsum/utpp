@@ -19,6 +19,7 @@ public:
   int Run (const std::string& suite, Reporter& reporter, int max_time_ms);
   int RunAll (Reporter& reporter, int max_time_ms);
   static SuitesList& GetSuitesList ();
+  void Disable (const std::string& suite);
 
 private:
 

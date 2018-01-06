@@ -11,6 +11,18 @@
 using namespace UnitTest;
 
 /*!
+  Called at the beginning of a new suite.
+  \param  suite    New suite name
+
+  Creates a new TestResult object with an empty test name as a suite start flag.
+  Adds the TestResult object it to the results container.
+*/
+void ReporterDeferred::SuiteStart (const TestSuite& suite)
+{
+  results.push_back (TestResult (CurrentSuite, std::string()));
+}
+
+/*!
   Called at the beginning of a new test.
   \param  test    %Test that is about to start
 

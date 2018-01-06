@@ -68,23 +68,32 @@ int ReporterXml::Summary ()
 
   for (auto i = results.begin (); i != results.end (); ++i)
   {
-    if (i->suite_name != suite)
+    if (i->test_name.empty()) // New suite flag
     {
       if (!suite.empty ())
         os << " </suite>" << endl;
       suite = i->suite_name;
-      os << " <suite name=\"" << suite << "\">" << endl;
+      os << " <suite name=\"" << suite << '\"';
+      if ((i + 1) == results.end () || (i + 1)->test_name.empty ())
+      {
+        // Next record is another suite. This suite is either empty or disabled
+        os << " /";
+        suite.clear ();
+      }
+      os << '>' << endl;
     }
+    else
+    {
+      BeginTest (*i);
 
-    BeginTest (*i);
+      if (!i->failures.empty ())
+        AddFailure (*i);
 
-    if (!i->failures.empty())
-      AddFailure (*i);
-
-    EndTest (*i);
+      EndTest (*i);
+    }
   }
-
-  os << " </suite>" << endl;
+  if (!suite.empty())
+    os << " </suite>" << endl;
   os << "</unittest-results>" << endl;
   return ReporterDeferred::Summary ();
 }

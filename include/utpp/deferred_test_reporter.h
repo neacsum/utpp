@@ -18,9 +18,10 @@ class ReporterDeferred : public Reporter
 {
 public:
   ReporterDeferred () {};
-  virtual void TestStart (const Test& test);
-  virtual void ReportFailure (const Failure& failure);
-  virtual void TestFinish (const Test& test);
+  void SuiteStart (const TestSuite& suite);
+  void TestStart (const Test& test);
+  void ReportFailure (const Failure& failure);
+  void TestFinish (const Test& test);
 
 protected:
   /// %Test results including all failure messages
@@ -33,7 +34,6 @@ protected:
     std::string test_name;          ///< test name
     int test_time_ms;               ///< test running time in milliseconds
     std::deque<Failure> failures;   ///< All failures of a test
-
   };
 
   std::deque<TestResult> results;   ///< Results of all tests

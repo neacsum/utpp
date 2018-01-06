@@ -1,11 +1,8 @@
 var searchData=
 [
-  ['test',['Test',['../class_unit_test_1_1_test.html#ab0af6acd8f1020bd2807677d5bcf3aa2',1,'UnitTest::Test']]],
-  ['test_5fname',['test_name',['../class_unit_test_1_1_test.html#a84a2f62425421139a46c174f8e6c95a8',1,'UnitTest::Test']]],
-  ['test_5ftime_5fms',['test_time_ms',['../class_unit_test_1_1_test.html#a91ca0b9de930a6451eb86787e71086e9',1,'UnitTest::Test']]],
-  ['testfinish',['TestFinish',['../class_unit_test_1_1_reporter_deferred.html#a3683f2502f9ae055b4007a725d510280',1,'UnitTest::ReporterDeferred::TestFinish()'],['../class_unit_test_1_1_reporter.html#a6173ba96ba36917fb05deb75332d04a9',1,'UnitTest::Reporter::TestFinish()']]],
-  ['testresult',['TestResult',['../struct_unit_test_1_1_reporter_deferred_1_1_test_result.html#ae94cf3707be948ddaedf387aaa24a1d9',1,'UnitTest::ReporterDeferred::TestResult::TestResult()'],['../struct_unit_test_1_1_reporter_deferred_1_1_test_result.html#a6feeefab17e539b729b0942a3c788520',1,'UnitTest::ReporterDeferred::TestResult::TestResult(const std::string &amp;suite, const std::string &amp;test)']]],
-  ['teststart',['TestStart',['../class_unit_test_1_1_reporter_deferred.html#a92b9f62a095203b9ab86a0b4a051a26d',1,'UnitTest::ReporterDeferred::TestStart()'],['../class_unit_test_1_1_reporter.html#a3e810621193e6deead888e4f24b9af5e',1,'UnitTest::Reporter::TestStart()']]],
-  ['testsuite',['TestSuite',['../class_unit_test_1_1_test_suite.html#ae7b80467635dd1fd2dd6c0aaea24d53b',1,'UnitTest::TestSuite']]],
-  ['timeconstraint',['TimeConstraint',['../class_unit_test_1_1_time_constraint.html#af3f0732e6cfd3245d93cd515315ecaa1',1,'UnitTest::TimeConstraint']]]
+  ['sleepms',['SleepMs',['../time__helpers_8h.html#aa17942c0fdbbba07cc530607bf5d81b4',1,'UnitTest']]],
+  ['start',['Start',['../class_unit_test_1_1_timer.html#acb9c2831775e37497e40f3df652eb9d9',1,'UnitTest::Timer']]],
+  ['suitefinish',['SuiteFinish',['../class_unit_test_1_1_reporter.html#adbafcc5c5b358605839790396b63b581',1,'UnitTest::Reporter']]],
+  ['suitestart',['SuiteStart',['../class_unit_test_1_1_reporter_deferred.html#a5efe1cbe617ae1e9c1faf23c3f8f1b08',1,'UnitTest::ReporterDeferred::SuiteStart()'],['../class_unit_test_1_1_reporter.html#a36e4c22c554e5b02ef43074fc4a69b45',1,'UnitTest::Reporter::SuiteStart()']]],
+  ['summary',['Summary',['../class_unit_test_1_1_reporter.html#aa43acf7d495130cda611109bf60af5ac',1,'UnitTest::Reporter::Summary()'],['../class_unit_test_1_1_reporter_dbgout.html#a86f6044b99f76c94311033c2193acd1a',1,'UnitTest::ReporterDbgout::Summary()'],['../class_unit_test_1_1_reporter_stdout.html#a879c481ae0fb1483a40ebfffb02b12bc',1,'UnitTest::ReporterStdout::Summary()'],['../class_unit_test_1_1_reporter_xml.html#ada9b3a2c3aadc659bc770e4c806ab68d',1,'UnitTest::ReporterXml::Summary()']]]
 ];

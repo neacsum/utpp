@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['failure',['failure',['../class_unit_test_1_1_test.html#a53a9862e37f53ede429e14d993eef3fc',1,'UnitTest::Test']]],
-  ['failure_5fcount',['failure_count',['../class_unit_test_1_1_test.html#a8c214b7f4b5bb76706ef08d69510ea8a',1,'UnitTest::Test']]]
+  ['enable',['Enable',['../class_unit_test_1_1_test_suite.html#afbe5f86082b82d1e55f828c280fde4ab',1,'UnitTest::TestSuite']]],
+  ['equal1d',['Equal1D',['../checks_8h.html#a1a01a416bbc13b521e4aeeefe792f3c4',1,'UnitTest']]],
+  ['equal2d',['Equal2D',['../checks_8h.html#a48d650d82eb2e809fbee15bd5251d95b',1,'UnitTest']]]
 ];

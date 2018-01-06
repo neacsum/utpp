@@ -69,20 +69,24 @@ int TestSuite::RunTests (Reporter& rep, int maxtime)
 
   ///Inform reporter that suite has started
   CurrentReporter->SuiteStart (*this);
-
-  auto listp = test_list.begin ();
-  max_runtime = maxtime;
-  while (listp != test_list.end ())
+  if (IsEnabled ())
   {
-    /// Setup the test context
-    if (SetupCurrentTest (*listp))
+    auto listp = test_list.begin ();
+    max_runtime = maxtime;
+    while (listp != test_list.end ())
     {
-      RunCurrentTest (*listp); /// Run test
-      TearDownCurrentTest (*listp);  /// Tear down test context
+      /// Setup the test context
+      if (SetupCurrentTest (*listp))
+      {
+        RunCurrentTest (*listp); /// Run test
+        TearDownCurrentTest (*listp);  /// Tear down test context
+      }
+      /// Repeat for all tests
+      listp++;
     }
-    /// Repeat for all tests
-    listp++;
   }
+  else
+    ;
 
   ///At the end invoke reporter SuiteFinish function
   return CurrentReporter->SuiteFinish (*this);
@@ -240,4 +244,8 @@ int RunSuite (const char *suite_name, Reporter& rpt, int max_time_ms)
   return SuitesList::GetSuitesList ().Run (suite_name, rpt, max_time_ms);
 }
 
+void DisableSuite (const std::string& suite_name)
+{
+  SuitesList::GetSuitesList ().Disable (suite_name);
+}
 }

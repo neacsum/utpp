@@ -61,7 +61,11 @@ int SuitesList::Run (const std::string& suite_name, Reporter& reporter, int max_
 int SuitesList::RunAll (Reporter& reporter, int max_time_ms)
 {
   for_each (suites.begin (), suites.end (), 
-    [&reporter, max_time_ms](TestSuite& s)  {s.RunTests (reporter, max_time_ms); });
+    [&reporter, max_time_ms](TestSuite& s) 
+    {
+      s.RunTests (reporter, max_time_ms); 
+    }
+  );
 
   return reporter.Summary ();
 }
@@ -74,6 +78,14 @@ SuitesList& SuitesList::GetSuitesList ()
 {
   static SuitesList all_suites;
   return all_suites;
+}
+
+void SuitesList::Disable (const std::string& suite)
+{
+  auto s = std::find_if (suites.begin (), suites.end (), 
+    [&suite](TestSuite s) {return s.name == suite; });
+  if (s != suites.end ())
+    s->Enable (false);
 }
 
 }
