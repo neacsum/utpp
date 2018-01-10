@@ -8,6 +8,7 @@
 */
 
 #include <sstream>
+#include <vector>
 
 namespace UnitTest {
 
@@ -28,6 +29,29 @@ bool CheckEqual (const Expected& expected, const Actual& actual, std::string& ms
   {
     std::stringstream stream;
     stream << "Expected " << expected << " but was " << actual;
+    msg = stream.str ();
+    return false;
+  }
+  return true;
+}
+
+/// Specialization of CheckEqual for vectors
+template <typename T>
+inline
+bool CheckEqual (const std::vector<T>& expected, const std::vector<T>& actual, std::string& msg)
+{
+  if (expected != actual)
+  {
+    std::stringstream stream;
+    stream << "Expected [ ";
+    for (auto p = expected.begin (); p != expected.end(); p++)
+      stream << *p << " ";
+
+    stream << "] but was [ ";
+    for (auto p = actual.begin (); p != actual.end(); p++)
+      stream << *p << " ";
+
+    stream << "]";
     msg = stream.str ();
     return false;
   }
@@ -70,13 +94,6 @@ bool CheckEqual (char* expected, const char* actual, std::string& msg)
 }
 ///@}
 
-/// Return true if two values are closer than specified tolerance.
-template <typename Expected, typename Actual, typename Tolerance>
-bool AreClose (const Expected& expected, const Actual& actual, const Tolerance& tolerance)
-{
-  return (actual >= (expected - tolerance)) && (actual <= (expected + tolerance));
-}
-
 /*!
   Check if two values are closer than specified tolerance. If not, generate a
   failure message.
@@ -85,7 +102,7 @@ template <typename Expected, typename Actual, typename Tolerance>
 bool CheckClose (const Expected& expected, const Actual& actual, const Tolerance& tolerance,
                  std::string& msg)
 {
-  if (!AreClose (expected, actual, tolerance))
+  if (abs(actual - expected) <= tolerance)
   {
     int prec = (int)(1 - log10 ((double)tolerance));
     std::stringstream stream;
@@ -139,7 +156,7 @@ bool Close1D (const Expected& expected, const Actual& actual, size_t count, cons
 {
   bool equal = true;
   for (size_t i = 0; equal && i < count; ++i)
-    equal = AreClose (expected[i], actual[i], tolerance);
+    equal = abs (expected[i] - actual[i]) <= tolerance;
   return equal;
 }
 
@@ -154,7 +171,10 @@ bool CheckArrayClose (const Expected& expected, const Actual& actual,
 {
   if (!Close1D (expected, actual, count, tolerance))
   {
+    int prec = (int)(1 - log10 ((double)tolerance));
     std::stringstream stream;
+    stream.precision (prec);
+    stream.setf (std::ios::fixed);
     stream << "Expected [ ";
     for (size_t expectedIndex = 0; expectedIndex < count; ++expectedIndex)
       stream << expected[expectedIndex] << " ";
@@ -162,6 +182,31 @@ bool CheckArrayClose (const Expected& expected, const Actual& actual,
     stream << "] +/- " << tolerance << " but was [ ";
     for (size_t actualIndex = 0; actualIndex < count; ++actualIndex)
       stream << actual[actualIndex] << " ";
+    stream << "]";
+    msg = stream.str ();
+    return false;
+  }
+  return true;
+}
+
+/// Specialization of CheckClose function for vectors
+template <typename T>
+bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, const T& tolerance,
+  std::string& msg)
+{
+  if (expected.size () != actual.size () || !Close1D (&expected[0], &actual[0], expected.size(), tolerance))
+  {
+    int prec = (int)(1 - log10 ((double)tolerance));
+    std::stringstream stream;
+    stream.precision (prec);
+    stream.setf (std::ios::fixed);
+    stream << "Expected [ ";
+    for (auto p = expected.begin(); p != expected.end(); ++p)
+      stream << *p << " ";
+
+    stream << "] +/- " << tolerance << " but was [ ";
+    for (auto p = actual.begin (); p != actual.end (); ++p)
+      stream << *p << " ";
     stream << "]";
     msg = stream.str ();
     return false;
@@ -235,7 +280,10 @@ bool CheckArray2DClose (const Expected& expected, const Actual& actual,
 
   if (!Close2D (expected, actual, rows, columns))
   {
+    int prec = (int)(1 - log10 ((double)tolerance));
     std::stringstream stream;
+    stream.precision (prec);
+    stream.setf (std::ios::fixed);
     stream << "Expected [ ";
     for (size_t expectedRow = 0; expectedRow < rows; ++expectedRow)
     {
