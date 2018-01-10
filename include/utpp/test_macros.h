@@ -11,15 +11,15 @@
 
 
 #ifdef TEST
-  #error UnitTest++ redefines TEST
+  #error Macro TEST is already defined
 #endif
 
-#ifdef TEST_EX
-  #error UnitTest++ redefines TEST_EX
+#ifdef TEST_FIXTURE
+  #error Macro TEST_FIXTURE is already defined
 #endif
 
-#ifdef TEST_FIXTURE_EX
-  #error UnitTest++ redefines TEST_FIXTURE_EX
+#ifdef SUITE
+#error Macro SUITE is already defined
 #endif
 
 /// Declares the beginning of a new test suite
@@ -46,15 +46,15 @@
 
 /// Defines a test case with an associated fixture
 #define TEST_FIXTURE(Fixture, Name)                                           \
-  class Test##Fixture##Name : public Fixture, public UnitTest::Test           \
+  class Test##Name : public Fixture, public UnitTest::Test                    \
   {                                                                           \
   public:                                                                     \
-    Test##Fixture##Name() : Fixture (), Test(#Fixture #Name) {}               \
+    Test##Name() : Fixture (), Test(#Name) {}                                 \
   private:                                                                    \
     void RunImpl();                                                           \
   };                                                                          \
-  UnitTest::Test* Fixture##Name##_maker() {return new Test##Fixture##Name;};  \
-  UnitTest::TestSuite::Inserter Fixture##Name##_inserter (GetSuiteName(), #Fixture #Name,  \
-    __FILE__, __LINE__, Fixture##Name##_maker);                               \
-  void Test##Fixture##Name::RunImpl()
+  UnitTest::Test* Name##_maker() {return new Test##Name;};                    \
+  UnitTest::TestSuite::Inserter Name##_inserter (GetSuiteName(), #Name,       \
+    __FILE__, __LINE__, Name##_maker);                                        \
+  void Test##Name::RunImpl()
 
