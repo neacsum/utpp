@@ -102,7 +102,7 @@ template <typename Expected, typename Actual, typename Tolerance>
 bool CheckClose (const Expected& expected, const Actual& actual, const Tolerance& tolerance,
                  std::string& msg)
 {
-  if (abs(actual - expected) <= tolerance)
+  if (abs(actual - expected) > tolerance)
   {
     int prec = (int)(1 - log10 ((double)tolerance));
     std::stringstream stream;
