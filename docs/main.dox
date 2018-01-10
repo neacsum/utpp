@@ -95,10 +95,6 @@ SUITE (MyNiceTests)
 // ... many tests here
 }
 ```
-Suites can also be disabled. This is useful if you have a large collection of
-tests but you are doing some development in one particular area and you don't
-want to run all tests until you finish this development. To disable a suite call
-the DisableSuite() function.
 
 ### Fixtures ###
 When performing test you need certain objects and values to be in a known state
@@ -152,5 +148,10 @@ int main (int argc, char **argv)
   UnitTest::RunAllTests (xml);
 }
 ```
+### Execution Control ###
+While in most cases RunAllTests function is all that's needed to execute all
+tests, there may be cases where you need a finer control. The UnitTest::RunSuite()
+function allows you to run one particular suite while the UnitTest::DisbleSuite()
+allows you to disable a suite.
 
 */
