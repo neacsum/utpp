@@ -11,29 +11,8 @@
 #include <utpp/test_reporter.h>
 
 #ifdef CHECK
-  #error UnitTest++ redefines CHECK
+  #error Macro CHECK is already defined
 #endif
-
-#ifdef CHECK_EQUAL
-  #error UnitTest++ redefines CHECK_EQUAL
-#endif
-
-#ifdef CHECK_CLOSE
-  #error UnitTest++ redefines CHECK_CLOSE
-#endif
-
-#ifdef CHECK_ARRAY_EQUAL
-  #error UnitTest++ redefines CHECK_ARRAY_EQUAL
-#endif
-
-#ifdef CHECK_ARRAY_CLOSE
-  #error UnitTest++ redefines CHECK_ARRAY_CLOSE
-#endif
-
-#ifdef CHECK_ARRAY2D_CLOSE
-  #error UnitTest++ redefines CHECK_ARRAY2D_CLOSE
-#endif
-
 ///Generate a failure if value is 0. Failure message is the value itself.
 #define CHECK(value)                                                          \
   do                                                                          \
@@ -50,6 +29,9 @@
     }                                                                         \
   } while (0)
 
+#ifdef CHECK_EX
+  #error Macro CHECK_EX is already defined
+#endif
 ///Generate a failure with the given message if value is 0
 #define CHECK_EX(value, message)                                              \
   do                                                                          \
@@ -64,6 +46,9 @@
     }                                                                         \
   } while (0)
 
+#ifdef CHECK_EQUAL
+  #error Macro CHECK_EQUAL is already defined
+#endif
 ///Generate a failure if actual value is different from expected
 #define CHECK_EQUAL(expected, actual)                                         \
   do                                                                          \
@@ -79,6 +64,9 @@
     }                                                                         \
   } while (0)
 
+#ifdef CHECK_CLOSE
+  #error Macro CHECK_CLOSE is already defined
+#endif
 /*!
   Generate a failure if actual value differs from expected value with more than
   given tolerance
@@ -97,6 +85,9 @@
     }                                                                         \
   } while (0)
 
+#ifdef CHECK_ARRAY_EQUAL
+  #error Macro CHECK_ARRAY_EQUAL is already defined
+#endif
 ///Generate a failure if an array is different from expected results
 #define CHECK_ARRAY_EQUAL(expected, actual, count) \
   do                                                                          \
@@ -112,6 +103,9 @@
     }                                                                         \
   } while (0)
 
+#ifdef CHECK_ARRAY_CLOSE
+  #error Macro CHECK_ARRAY_CLOSE is already defined
+#endif
 /*!
   Generate a failure if an array differs from expected values with more than
   given tolerance
@@ -130,6 +124,9 @@
     }                                                                         \
   } while (0)
 
+#ifdef CHECK_ARRAY2D_CLOSE
+  #error Macro CHECK_ARRAY2D_CLOSE is already defined
+#endif
 /*!
   Generate a failure if a two-dimensional array differs from expected values
   with more than given tolerance
@@ -148,6 +145,9 @@
     }                                                                         \
   } while (0)
 
+#ifdef CHECK_THROW
+  #error Macro CHECK_THROW is already defined
+#endif
 /// Checks if evaluating the expression triggers an exception of the given type
 #define CHECK_THROW(ExpectedExceptionType, expression) \
   do                                                                          \
@@ -161,7 +161,9 @@
         "Expected exception: \"" #ExpectedExceptionType "\" not thrown");     \
   } while(0)
 
-
+#ifdef CHECK_THROW_EQUAL
+  #error Macro CHECK_THROW_EQUAL is already defined
+#endif
 /*!
   Checks if evaluating the expression triggers an exception of the given type
   and with the expected value.
@@ -182,8 +184,4 @@
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
         "Expected exception: \"" #ExpectedExceptionType "\" not thrown");     \
   } while(0)
-
-/// Checks if evaluating the expression triggers an AssertException
-#define CHECK_ASSERT(expression) \
-    CHECK_THROW(expression, UnitTest::AssertException);
 
