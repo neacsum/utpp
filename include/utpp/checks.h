@@ -140,7 +140,7 @@ bool CheckArrayEqual (const Expected& expected, const Actual& actual,
       stream << expected[expectedIndex] << " ";
 
     stream << "] but was [ ";
-    for (int actualIndex = 0; actualIndex < count; ++actualIndex)
+    for (size_t actualIndex = 0; actualIndex < count; ++actualIndex)
       stream << actual[actualIndex] << " ";
 
     stream << "]";

@@ -10,7 +10,7 @@
 *.ipch
 .vs/
 /o
-sample/Win32/
+sample/x86/
 sample/x64/
 sample/o/
 /lib

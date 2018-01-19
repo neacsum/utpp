@@ -22,6 +22,7 @@
     <ProjectGuid>{C6BEA1F0-D8D4-493B-902C-EF57FDA8F477}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>utpp</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -67,20 +68,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IntDir>o\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>o\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>lib\$(PlatformTarget)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>o\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>o\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>lib\$(PlatformTarget)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IntDir>o\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>o\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>lib\$(PlatformTarget)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>o\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <OutDir>lib\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>o\$(PlatformTarget)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir>lib\$(PlatformTarget)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
