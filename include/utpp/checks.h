@@ -215,7 +215,7 @@ bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, c
 }
 
 /// Return true if two 2D arrays are equal
-template <typename Expected, typename Actual, typename Tolerance>
+template <typename Expected, typename Actual>
 bool Equal2D (const Expected& expected, const Actual& actual, size_t rows, size_t columns)
 {
   for (size_t i = 0; i < rows; i++)
@@ -227,9 +227,9 @@ bool Equal2D (const Expected& expected, const Actual& actual, size_t rows, size_
 /*!
   Check if two 2D arrays are equal. If not, generate a failure message.
 */
-template <typename Expected, typename Actual, typename Tolerance>
+template <typename Expected, typename Actual>
 bool CheckArray2DEqual (const Expected& expected, const Actual& actual,
-                        size_t rows, size_t columns, const Tolerance& tolerance, std::string& msg)
+                        size_t rows, size_t columns, std::string& msg)
 {
   if (!Equal2D (expected, actual, rows, columns))
   {
@@ -260,10 +260,10 @@ bool CheckArray2DEqual (const Expected& expected, const Actual& actual,
 
 /// Return true if values in two 2D arrays are closer than specified tolerance.
 template <typename Expected, typename Actual, typename Tolerance>
-bool Close2D (const Expected& expected, const Actual& actual, size_t rows, size_t columns)
+bool Close2D (const Expected& expected, const Actual& actual, size_t rows, size_t columns, const Tolerance& tolerance)
 {
   for (size_t i = 0; i < rows; i++)
-    if (!Close1D (expected[i], actual[i], columns))
+    if (!Close1D (expected[i], actual[i], columns, tolerance))
       return false;
   return true;
 }
@@ -278,7 +278,7 @@ bool CheckArray2DClose (const Expected& expected, const Actual& actual,
 {
   bool equal = true;
 
-  if (!Close2D (expected, actual, rows, columns))
+  if (!Close2D (expected, actual, rows, columns, tolerance))
   {
     int prec = (int)(1 - log10 ((double)tolerance));
     std::stringstream stream;
@@ -288,7 +288,7 @@ bool CheckArray2DClose (const Expected& expected, const Actual& actual,
     for (size_t expectedRow = 0; expectedRow < rows; ++expectedRow)
     {
       stream << "[ ";
-      for (int expectedColumn = 0; expectedColumn < columns; ++expectedColumn)
+      for (size_t expectedColumn = 0; expectedColumn < (int)columns; ++expectedColumn)
         stream << expected[expectedRow][expectedColumn] << " ";
       stream << "] ";
     }
@@ -297,7 +297,7 @@ bool CheckArray2DClose (const Expected& expected, const Actual& actual,
     for (size_t actualRow = 0; actualRow < rows; ++actualRow)
     {
       stream << "[ ";
-      for (int actualColumn = 0; actualColumn < columns; ++actualColumn)
+      for (size_t actualColumn = 0; actualColumn < columns; ++actualColumn)
         stream << actual[actualRow][actualColumn] << " ";
       stream << "] ";
     }
