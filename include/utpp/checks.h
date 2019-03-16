@@ -243,7 +243,7 @@ bool CheckArray2DEqual (const Expected& expected, const Actual& actual,
       stream << "] ";
     }
 
-    stream << "] +/- " << tolerance << " but was [ ";
+    stream << "] but was [ ";
     for (size_t actualRow = 0; actualRow < rows; ++actualRow)
     {
       stream << "[ ";
