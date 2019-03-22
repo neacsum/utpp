@@ -5,7 +5,10 @@ rem  Environment variable DEV_ROOT points to the root of development tree.
 rem
 rem  This script should be run as administrator
 rem
+if defined DEV_ROOT goto MAKELINKS
+echo Environment variable DEV_ROOT is not set!
+ECHO Cannot create symlinks.
+goto :EOF
 
-pushd "%~dp0"
-mklink /d lib %DEV_ROOT%\lib
-popd
+:MAKELINKS
+if not exist lib\NUL mklink /d lib %DEV_ROOT%\lib
