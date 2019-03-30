@@ -67,5 +67,67 @@ void ReportFailure (const std::string& filename, int line, const std::string& me
   CurrentReporter->ReportFailure ({ filename, message, line });
 }
 
+/*!
+  The function called by CHECK_FILE_EQUAL macro to compare two files.
+  \param ref      Name of reference file
+  \param actual   Name of output file
+  \param message  Error message
+*/
+bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
+{
+  struct stat st1, st2;
+  char buf[1024];
+
+  stat (ref, &st1);
+  stat (actual, &st2);
+  if (st1.st_size != st2.st_size)
+  {
+    sprintf_s (buf, "Size is different (%ld vs %ld) while comparing %s and %s",
+      st1.st_size, st2.st_size, ref, actual);
+    message = buf;
+    return false;
+  }
+
+  FILE *f1, *f2;
+  f1 = fopen (ref, "r");
+  f2 = fopen (actual, "r");
+  if (!f1 || !f2)
+  {
+    if (f1) fclose (f1);
+    if (f2) fclose (f2);
+    sprintf_s (buf, "Failed to open files while comparing %s and %s",
+      ref, actual);
+    message = buf;
+    return false; //something wrong with files
+  }
+
+  size_t ln = 0;
+  while (!feof (f1) && !feof (f2))
+  {
+    ln++;
+    char ln1[1024], ln2[1024];
+    fgets (ln1, sizeof (ln1), f1);
+    fgets (ln2, sizeof (ln2), f2);
+    if (strcmp (ln1, ln2))
+    {
+      fclose (f1);
+      fclose (f2);
+      char *p1, *p2;
+      int off;
+      for (off = 0, p1 = ln1, p2 = ln2;
+        *p1 && *p2 && *p1 == *p2;
+        *p1++, *p2++, off++)
+        ;
+      sprintf_s (buf, "Difference at line %zd position %d while comparing %s and %s",
+        ln, off, ref, actual);
+      message = buf;
+      return false;
+    }
+  }
+  fclose (f1);
+  fclose (f2);
+  message = std::string();
+  return true;
+}
 
 }
