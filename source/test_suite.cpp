@@ -36,6 +36,8 @@ string CurrentSuite = DEFAULT_SUITE;
 */
 TestSuite::TestSuite (const std::string& name_)
   : name (name_)
+  , max_runtime (0)
+  , enabled (true)
 {
 }
 
@@ -66,7 +68,7 @@ int TestSuite::RunTests (Reporter& rep, int maxtime)
   /// Establish reporter as CurrentReporter and suite as CurrentSuite
   CurrentSuite = name;
   CurrentReporter = &rep;
-
+  
   ///Inform reporter that suite has started
   CurrentReporter->SuiteStart (*this);
   if (IsEnabled ())

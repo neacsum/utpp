@@ -1,38 +1,63 @@
-# compiler options
-CPPFLAGS = -I include/ -c -g -Wall -pedantic
+# default architecture
+ifndef ARCH
+ARCH = x64
+endif
 
-OBJDIR = o
-OUTDIR = lib/x64/Release
-CXX = g++
+
+# compiler
+CXX := g++
+CPPFLAGS := -I include/ -Wall -pedantic
+
+OBJDIR := o
+LIBDIR := lib
+
+ifeq ($(ARCH), x64)
+OBJDIR := $(OBJDIR)/x64
+LIBDIR := $(LIBDIR)/x64
+else
+OBJDIR := $(OBJDIR)/x86
+LIBDIR := $(LIBDIR)/x86
+CPPFLAGS += -m32
+endif
+
+ifdef _DEBUG
+OBJDIR := $(OBJDIR)/Debug
+LIBDIR := $(LIBDIR)/Debug
+CPPFLAGS += -g
+else
+CPPFLAGS += -O3
+OBJDIR := $(OBJDIR)/Release
+LIBDIR := $(LIBDIR)/Release
+endif
+
+
+LIB = $(LIBDIR)/libutpp.a
 
 OFILES =  deferred_test_reporter.o suites_list.o test.o test_reporter.o test_reporter_stdout.o \
  test_suite.o time_constraint.o time_helpers.o xml_test_reporter.o
  
 OBJS = $(addprefix $(OBJDIR)/,$(OFILES))
 
-.PHONY: directories
+all: $(LIB) samples
 
-all: directories program
-
-directories: $(OUTDIR) $(OBJDIR)
-
-$(OUTDIR):
-	md -p $(OUTDIR)
-		
-$(OBJDIR):
-	md -p $(OBJDIR)
 	
 $(OBJDIR)/%.o: source/%.cpp
-	$(CXX) $(CPPFLAGS) -o $@ $<
+	$(CXX) $(CPPFLAGS) -c -o $@ $<
 
-$(OUTDIR)/libutpp.a: $(OBJS)
+$(LIB): | $(LIBDIR)
+
+$(LIB): $(OBJS)
 	ar rcs  $@ $^
 
+$(OBJS) : | $(OBJDIR)
+
+$(LIBDIR) $(OBJDIR):
+	mkdir -p $@
+	
 clean:
 	rm $(OBJS)
 	
-samples: samp1 $(OUTDIR)/libutpp.a
+samples: samp1
 
-samp1: sample/sample.cpp
-	$(CXX) -g -Wall -I include/  -o samp1 -L $(OUTDIR)/ $< -lutpp 
-	
+samp1: sample/sample.cpp $(LIB)
+	$(CXX) $(CPPFLAGS) -o samp1 -L $(LIBDIR)/ $< -lutpp 

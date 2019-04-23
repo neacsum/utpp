@@ -39,7 +39,7 @@
   private:                                                                    \
     void RunImpl();                                                           \
   };                                                                          \
-  UnitTest::Test* Name##_maker() {return new Test##Name; };                   \
+  UnitTest::Test* Name##_maker() {return new Test##Name; }                   \
   UnitTest::TestSuite::Inserter Name##_inserter (GetSuiteName(), #Name, __FILE__, __LINE__,\
     Name##_maker);                                                            \
   void Test##Name::RunImpl()
@@ -53,7 +53,7 @@
   private:                                                                    \
     void RunImpl();                                                           \
   };                                                                          \
-  UnitTest::Test* Name##_maker() {return new Test##Name;};                    \
+  UnitTest::Test* Name##_maker() {return new Test##Name;}                     \
   UnitTest::TestSuite::Inserter Name##_inserter (GetSuiteName(), #Name,       \
     __FILE__, __LINE__, Name##_maker);                                        \
   void Test##Name::RunImpl()

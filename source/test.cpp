@@ -108,32 +108,35 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
   }
 
   size_t ln = 0;
-  while (!feof (f1) && !feof (f2))
+  bool ok = true;
+  char ln1[1024], ln2[1024];
+  while (ok)
   {
     ln++;
-    char ln1[1024], ln2[1024];
-    fgets (ln1, sizeof (ln1), f1);
-    fgets (ln2, sizeof (ln2), f2);
-    if (strcmp (ln1, ln2))
-    {
-      fclose (f1);
-      fclose (f2);
-      char *p1, *p2;
-      int off;
-      for (off = 0, p1 = ln1, p2 = ln2;
-        *p1 && *p2 && *p1 == *p2;
-        p1++, p2++, off++)
-        ;
-      sprintf_s (buf, "Difference at line %zd position %d while comparing %s and %s",
-        ln, off, ref, actual);
-      message = buf;
-      return false;
-    }
+    bool c1 = (fgets (ln1, sizeof (ln1), f1) != 0);
+    bool c2 = (fgets (ln2, sizeof (ln2), f2) != 0);
+    if (c1 && c2)
+      ok = !strcmp (ln1, ln2);
+    else
+      ok = !(c1^c2);
   }
   fclose (f1);
   fclose (f2);
-  message = std::string();
-  return true;
+  if (!ok)
+  {
+    char *p1, *p2;
+    int off;
+    for (off = 0, p1 = ln1, p2 = ln2;
+      *p1 && *p2 && *p1 == *p2;
+      p1++, p2++, off++)
+      ;
+    sprintf_s (buf, "Difference at line %zd position %d while comparing %s and %s",
+      ln, off, ref, actual);
+    message = buf;
+  }
+  else
+    message = std::string();
+  return ok;
 }
 
 }

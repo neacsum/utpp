@@ -16,7 +16,7 @@
 #include <utpp/test_reporter_dbgout.h>
 #include <utpp/xml_test_reporter.h>
 #include <utpp/test_macros.h>
-
+#include <utpp/suites_list.h>
 #include <utpp/check_macros.h>
 #include <utpp/time_constraint.h>
 

@@ -8,11 +8,11 @@
 
 bool earth_is_round () {
   return true;
-};
+}
 
 double earth_radius_km () {
   return 6370;
-};
+}
 
 const char *planet_name () {
   return "Earth";
@@ -69,7 +69,7 @@ struct Account_fixture {
   Account_fixture () : amount_usd (100), amount_eur (0), amount_chf (0) 
   {
     std::cout << "Account_fixture constructed" << std::endl;
-  };
+  }
 
   ~Account_fixture () 
   { 
