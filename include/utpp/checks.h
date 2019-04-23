@@ -9,6 +9,8 @@
 
 #include <sstream>
 #include <vector>
+#include <string.h>
+#include <math.h>
 
 namespace UnitTest {
 

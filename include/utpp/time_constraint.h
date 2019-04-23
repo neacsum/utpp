@@ -24,9 +24,9 @@ private:
   TimeConstraint (TimeConstraint const&) = delete;
 
   Timer timer;
-  int const max_ms;
   std::string filename;
   int line_number;
+  int const max_ms;
 };
 
 /// Defines a local (per scope) time constraint

@@ -9,6 +9,7 @@
 
 namespace UnitTest {
 
+
 /// An object that can be interrogated to get elapsed time
 class Timer
 {
@@ -18,9 +19,9 @@ public:
   int GetTimeInMs () const;
 
 private:
-  __int64 GetTime () const;
-  __int64 startTime;
-  static __int64 frequency;
+  long long GetTime () const;
+  long long startTime;
+  static long long frequency;
 };
 
 

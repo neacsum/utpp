@@ -7,19 +7,27 @@
 */
 
 #include <utpp/time_helpers.h>
+
+#ifdef _WIN32
 #include <windows.h>
+#else
+#include <unistd.h>
+#include <sys/time.h>
+#endif
 
 namespace UnitTest {
 
-__int64 Timer::frequency = 0;
+long long Timer::frequency = 0;
 
 Timer::Timer ()
   : startTime (0)
 {
+#ifdef _WIN32
   if (!frequency)
-  {
     ::QueryPerformanceFrequency (reinterpret_cast<LARGE_INTEGER*>(&frequency));
-  }
+#else
+  frequency = 1000000;
+#endif
 }
 
 /// Record starting time
@@ -31,22 +39,32 @@ void Timer::Start ()
 /// Return elapsed time in milliseconds since the starting time
 int Timer::GetTimeInMs () const
 {
-  __int64 elapsedTime = GetTime () - startTime;
+  long long elapsedTime = GetTime () - startTime;
   double seconds = double (elapsedTime) / double (frequency);
   return int (seconds * 1000.0);
 }
 
-__int64 Timer::GetTime () const
+long long Timer::GetTime () const
 {
+#ifdef _WIN32
   LARGE_INTEGER curTime;
   ::QueryPerformanceCounter (&curTime);
   return curTime.QuadPart;
+#else
+  struct timeval currentTime;
+  gettimeofday (&currentTime, 0);
+  return currentTime.tv_sec * frequency + currentTime.tv_usec;
+#endif
 }
 
 /// Pause current thread for the specified time
 void SleepMs (int const ms)
 {
+#ifdef _WIN32
   ::Sleep (ms);
+#else
+  usleep (static_cast<useconds_t>(ms * 1000));
+#endif
 }
 
 }

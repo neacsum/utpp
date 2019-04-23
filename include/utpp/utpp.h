@@ -32,5 +32,6 @@ void DisableSuite (const std::string& suite_name);
 int RunSuite (const char *suite_name, Reporter& rpt = GetDefaultReporter (), int max_time_ms = 0);
 
 }
-
+#ifdef _MSC_VER
 #pragma comment (lib, "utpp.lib")
+#endif
