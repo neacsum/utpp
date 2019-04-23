@@ -185,3 +185,20 @@
         "Expected exception: \"" #ExpectedExceptionType "\" not thrown");     \
   } while(0)
 
+#ifdef CHECK_FILE_EQUAL
+#error Macro CHECK_FILE_EQUAL is already defined
+#endif
+///Generate a failure the two files are different
+#define CHECK_FILE_EQUAL(expected, actual)                                    \
+  do                                                                          \
+  {                                                                           \
+    try {                                                                     \
+      std::string msg;                                                        \
+      if (!UnitTest::CheckFileEqual((expected), (actual), msg))               \
+        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
+    }                                                                         \
+    catch (...) {                                                             \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+        "Unhandled exception in CHECK_EQUAL(" #expected ", " #actual ")");    \
+    }                                                                         \
+  } while (0)

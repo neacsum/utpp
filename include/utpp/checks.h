@@ -310,4 +310,5 @@ bool CheckArray2DClose (const Expected& expected, const Actual& actual,
   return true;
 }
 
+bool CheckFileEqual (const char* ref_file, const char *actual_file, std::string& msg);
 }
