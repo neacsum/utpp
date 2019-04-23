@@ -7,6 +7,8 @@
 */
 #include <utpp/suites_list.h>
 #include <algorithm>
+#include <iostream>
+#include <iomanip>
 
 namespace UnitTest {
 
@@ -63,6 +65,7 @@ int SuitesList::RunAll (Reporter& reporter, int max_time_ms)
   for_each (suites.begin (), suites.end (), 
     [&reporter, max_time_ms](TestSuite& s) 
     {
+      std::cout << "SuitesList::RunAll" << std::endl;
       s.RunTests (reporter, max_time_ms); 
     }
   );

@@ -31,7 +31,7 @@ $(OUTDIR)/libutpp.a: $(OBJS)
 clean:
 	rm $(OBJS)
 	
-samples: samp1
+samples: samp1 $(OUTDIR)/libutpp.a
 
 samp1: sample/sample.cpp
 	$(CXX) -g -Wall -I include/  -o samp1 -L $(OUTDIR)/ $< -lutpp 

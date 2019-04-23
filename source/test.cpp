@@ -10,6 +10,12 @@
 #include <utpp/test_reporter.h>
 
 #include <sstream>
+#include <string.h>
+#include <sys/stat.h>
+
+//#ifndef _MSC_VER
+#define sprintf_s sprintf
+//#endif
 
 namespace UnitTest {
 
@@ -116,7 +122,7 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
       int off;
       for (off = 0, p1 = ln1, p2 = ln2;
         *p1 && *p2 && *p1 == *p2;
-        *p1++, *p2++, off++)
+        p1++, p2++, off++)
         ;
       sprintf_s (buf, "Difference at line %zd position %d while comparing %s and %s",
         ln, off, ref, actual);
