@@ -11,13 +11,13 @@ There is also [documentation](https://neacsum.github.io/utpp) generated with Dox
 
 Author:
 Mircea Neacsu (mircea@neacsu.net)
-See architecture.md file for details
+See [architecture](docs/achitecture.md) file for details
 
 ## License ##
 
 The MIT License (MIT)
  
-Copyright (c) 1999-2017 Mircea Neacsu
+Copyright (c) 2017-2019 Mircea Neacsu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -69,8 +69,6 @@ For Windows users, there is a Visual Studio 2017 solution file. Just open it and
 build any configuration you need (debug, release, 32-bit, 64-bit).
 
 For Unix users there is a makefile that creates a static library `libutpp.a`.
-For 32-bit version add `ARCH=x86` to make command line. For debug version add
-`_DEBUG=1`.
 
 ## Usage ##
 
