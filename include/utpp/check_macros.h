@@ -42,7 +42,7 @@
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "Unhandled exception in CHECK(" #value ")");                          \
+        "Unhandled exception in CHECK_EX(" #value #message ")");                          \
     }                                                                         \
   } while (0)
 
@@ -188,7 +188,7 @@
 #ifdef CHECK_FILE_EQUAL
 #error Macro CHECK_FILE_EQUAL is already defined
 #endif
-///Generate a failure the two files are different
+///Generate a failure if the two files are different
 #define CHECK_FILE_EQUAL(expected, actual)                                    \
   do                                                                          \
   {                                                                           \
@@ -200,5 +200,49 @@
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
         "Unhandled exception in CHECK_EQUAL(" #expected ", " #actual ")");    \
+    }                                                                         \
+  } while (0)
+
+#ifdef ABORT
+#error Macro ABORT is already defined
+#endif
+
+/// Abort current test is value is 0. Abort message is the value itself
+#define ABORT(value) \
+  do                                                                          \
+  {                                                                           \
+    try {                                                                     \
+      if (!UnitTest::Check(value))                                            \
+        throw UnitTest::test_abort (#value);                                  \
+    }                                                                         \
+    catch (UnitTest::test_abort&) {                                         \
+      UnitTest::ReportFailure (__FILE__, __LINE__, "Test aborted: " #value);  \
+      throw;                                                                  \
+    }                                                                         \
+    catch (...) {                                                             \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+        "Unhandled exception in ABORT(" #value ")");                          \
+    }                                                                         \
+  } while (0)
+
+#ifdef ABORT_EX
+#error Macro ABORT_EX is already defined
+#endif
+
+/// Abort current test is value is 0.
+#define ABORT_EX(value, message) \
+  do                                                                          \
+  {                                                                           \
+    try {                                                                     \
+      if (!UnitTest::Check(value))                                            \
+        throw UnitTest::test_abort (message);                                  \
+    }                                                                         \
+    catch (UnitTest::test_abort&) {                                         \
+      UnitTest::ReportFailure (__FILE__, __LINE__, "Test aborted: " message);  \
+      throw;                                                                  \
+    }                                                                         \
+    catch (...) {                                                             \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+        "Unhandled exception in ABORT_EX(" #value #message ")");                          \
     }                                                                         \
   } while (0)

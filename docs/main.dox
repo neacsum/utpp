@@ -134,6 +134,21 @@ public or protected members of the fixture are directly available in the test bo
 When the test finishes, the fixture destructor gets called and can release any
 resources allocated by the constructor.
 
+### Aborting a Test ###
+If something goes terribly wrong in a test, the execution can be aborted
+using the ABORT or ABORT_EX macros. They work exactly like CHECK and CHECK_EX
+macros but, once triggered, the remaining test is abandoned. 
+
+Example:
+````
+TEST_FIXTURE (Account_fixture, Test_Abort)
+{
+  exchange_to_chf (amount_usd, amount_chf);
+  ABORT (amount_usd);
+  printf ("Never gets here");
+}
+````
+
 ### Results ###
 UTPP results are produced by an object called a _Reporter_. There can be
 different type of reporters depending on where the output must be directed.

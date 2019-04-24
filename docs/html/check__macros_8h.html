@@ -105,13 +105,71 @@ Macros</h2></td></tr>
 <tr class="memitem:a77833c1bc153262f230112e4986d7b62"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="check__macros_8h.html#a77833c1bc153262f230112e4986d7b62">CHECK_THROW_EQUAL</a>(ExpectedExceptionType,  expected,  expression)</td></tr>
 <tr class="separator:a77833c1bc153262f230112e4986d7b62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb6e7bd0c7d81d74cba362736a35b7a3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="check__macros_8h.html#aeb6e7bd0c7d81d74cba362736a35b7a3">CHECK_FILE_EQUAL</a>(expected,  actual)</td></tr>
-<tr class="memdesc:aeb6e7bd0c7d81d74cba362736a35b7a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a failure the two files are different.  <a href="#aeb6e7bd0c7d81d74cba362736a35b7a3">More...</a><br /></td></tr>
+<tr class="memdesc:aeb6e7bd0c7d81d74cba362736a35b7a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a failure if the two files are different.  <a href="#aeb6e7bd0c7d81d74cba362736a35b7a3">More...</a><br /></td></tr>
 <tr class="separator:aeb6e7bd0c7d81d74cba362736a35b7a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47efb5b76a5915cb121e1cd1b3061867"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="check__macros_8h.html#a47efb5b76a5915cb121e1cd1b3061867">ABORT</a>(value)</td></tr>
+<tr class="memdesc:a47efb5b76a5915cb121e1cd1b3061867"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abort current test is value is 0. Abort message is the value itself.  <a href="#a47efb5b76a5915cb121e1cd1b3061867">More...</a><br /></td></tr>
+<tr class="separator:a47efb5b76a5915cb121e1cd1b3061867"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4aa68164971ec31b50bf282be8af361"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="check__macros_8h.html#ad4aa68164971ec31b50bf282be8af361">ABORT_EX</a>(value,  message)</td></tr>
+<tr class="memdesc:ad4aa68164971ec31b50bf282be8af361"><td class="mdescLeft">&#160;</td><td class="mdescRight">Abort current test is value is 0.  <a href="#ad4aa68164971ec31b50bf282be8af361">More...</a><br /></td></tr>
+<tr class="separator:ad4aa68164971ec31b50bf282be8af361"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>CHECK... macro-definitions. </p>
 <p>(c) Mircea Neacsu 2017 See README file for full copyright information. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a47efb5b76a5915cb121e1cd1b3061867"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47efb5b76a5915cb121e1cd1b3061867">&#9670;&nbsp;</a></span>ABORT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ABORT</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">value</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span>                                                                          \</div><div class="line">  {                                                                           \</div><div class="line">    try {                                                                     \</div><div class="line">      if (!UnitTest::Check(value))                                            \</div><div class="line">        throw <a class="code" href="struct_unit_test_1_1test__abort.html">UnitTest::test_abort</a> (#value);                                  \</div><div class="line">    }                                                                         \</div><div class="line">    catch (<a class="code" href="struct_unit_test_1_1test__abort.html">UnitTest::test_abort</a>&amp;) {                                         \</div><div class="line">      UnitTest::ReportFailure (__FILE__, __LINE__, <span class="stringliteral">&quot;Test aborted: &quot;</span> #value);  \</div><div class="line">      throw;                                                                  \</div><div class="line">    }                                                                         \</div><div class="line">    catch (...) {                                                             \</div><div class="line">      UnitTest::ReportFailure (__FILE__, __LINE__,                            \</div><div class="line">        <span class="stringliteral">&quot;Unhandled exception in ABORT(&quot;</span> #value <span class="stringliteral">&quot;)&quot;</span>);                          \</div><div class="line">    }                                                                         \</div><div class="line">  } <span class="keywordflow">while</span> (0)</div><div class="ttc" id="struct_unit_test_1_1test__abort_html"><div class="ttname"><a href="struct_unit_test_1_1test__abort.html">UnitTest::test_abort</a></div><div class="ttdoc">Exception thrown by ABORT macro.</div><div class="ttdef"><b>Definition:</b> checks.h:18</div></div>
+</div><!-- fragment -->
+<p>Abort current test is value is 0. Abort message is the value itself. </p>
+
+</div>
+</div>
+<a id="ad4aa68164971ec31b50bf282be8af361"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4aa68164971ec31b50bf282be8af361">&#9670;&nbsp;</a></span>ABORT_EX</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ABORT_EX</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">value, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">message&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span>                                                                          \</div><div class="line">  {                                                                           \</div><div class="line">    try {                                                                     \</div><div class="line">      if (!UnitTest::Check(value))                                            \</div><div class="line">        throw <a class="code" href="struct_unit_test_1_1test__abort.html">UnitTest::test_abort</a> (message);                                  \</div><div class="line">    }                                                                         \</div><div class="line">    catch (<a class="code" href="struct_unit_test_1_1test__abort.html">UnitTest::test_abort</a>&amp;) {                                         \</div><div class="line">      UnitTest::ReportFailure (__FILE__, __LINE__, <span class="stringliteral">&quot;Test aborted: &quot;</span> message);  \</div><div class="line">      throw;                                                                  \</div><div class="line">    }                                                                         \</div><div class="line">    catch (...) {                                                             \</div><div class="line">      UnitTest::ReportFailure (__FILE__, __LINE__,                            \</div><div class="line">        <span class="stringliteral">&quot;Unhandled exception in ABORT_EX(&quot;</span> #value #message <span class="stringliteral">&quot;)&quot;</span>);                          \</div><div class="line">    }                                                                         \</div><div class="line">  } <span class="keywordflow">while</span> (0)</div><div class="ttc" id="struct_unit_test_1_1test__abort_html"><div class="ttname"><a href="struct_unit_test_1_1test__abort.html">UnitTest::test_abort</a></div><div class="ttdoc">Exception thrown by ABORT macro.</div><div class="ttdef"><b>Definition:</b> checks.h:18</div></div>
+</div><!-- fragment -->
+<p>Abort current test is value is 0. </p>
+
+</div>
+</div>
 <a id="a76bb1ed1c7c2e0e58db57d181d5afbf8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a76bb1ed1c7c2e0e58db57d181d5afbf8">&#9670;&nbsp;</a></span>CHECK</h2>
 
@@ -346,7 +404,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span>                                                                          \</div><div class="line">  {                                                                           \</div><div class="line">    try {                                                                     \</div><div class="line">      if (!UnitTest::Check(value))                                            \</div><div class="line">        UnitTest::ReportFailure (__FILE__, __LINE__, message);                \</div><div class="line">    }                                                                         \</div><div class="line">    catch (...) {                                                             \</div><div class="line">      UnitTest::ReportFailure (__FILE__, __LINE__,                            \</div><div class="line">        <span class="stringliteral">&quot;Unhandled exception in CHECK(&quot;</span> #value <span class="stringliteral">&quot;)&quot;</span>);                          \</div><div class="line">    }                                                                         \</div><div class="line">  } <span class="keywordflow">while</span> (0)</div></div><!-- fragment -->
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span>                                                                          \</div><div class="line">  {                                                                           \</div><div class="line">    try {                                                                     \</div><div class="line">      if (!UnitTest::Check(value))                                            \</div><div class="line">        UnitTest::ReportFailure (__FILE__, __LINE__, message);                \</div><div class="line">    }                                                                         \</div><div class="line">    catch (...) {                                                             \</div><div class="line">      UnitTest::ReportFailure (__FILE__, __LINE__,                            \</div><div class="line">        <span class="stringliteral">&quot;Unhandled exception in CHECK_EX(&quot;</span> #value #message <span class="stringliteral">&quot;)&quot;</span>);                          \</div><div class="line">    }                                                                         \</div><div class="line">  } <span class="keywordflow">while</span> (0)</div></div><!-- fragment -->
 <p>Generate a failure with the given message if value is 0. </p>
 
 </div>
@@ -377,7 +435,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span>                                                                          \</div><div class="line">  {                                                                           \</div><div class="line">    try {                                                                     \</div><div class="line">      std::string msg;                                                        \</div><div class="line">      if (!UnitTest::CheckFileEqual((expected), (actual), msg))               \</div><div class="line">        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \</div><div class="line">    }                                                                         \</div><div class="line">    catch (...) {                                                             \</div><div class="line">      UnitTest::ReportFailure (__FILE__, __LINE__,                            \</div><div class="line">        <span class="stringliteral">&quot;Unhandled exception in CHECK_EQUAL(&quot;</span> #expected <span class="stringliteral">&quot;, &quot;</span> #actual <span class="stringliteral">&quot;)&quot;</span>);    \</div><div class="line">    }                                                                         \</div><div class="line">  } <span class="keywordflow">while</span> (0)</div></div><!-- fragment -->
-<p>Generate a failure the two files are different. </p>
+<p>Generate a failure if the two files are different. </p>
 
 </div>
 </div>

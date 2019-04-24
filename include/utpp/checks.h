@@ -14,6 +14,13 @@
 
 namespace UnitTest {
 
+/// Exception thrown by ABORT macro
+struct test_abort : public std::runtime_error
+{
+  test_abort (const char* msg) : std::runtime_error (msg) {};
+};
+
+
 /// Check if value is true (or not 0)
 template <typename Value>
 bool Check (Value const value)

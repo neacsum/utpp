@@ -194,6 +194,22 @@ TEST_FIXTURE (Account_fixture, Uncaught_exception)
   throw_2 ();
 }
 
+/* How to use the ABORT macro */
+TEST_FIXTURE (Account_fixture, Test_Abort)
+{
+  exchange_to_chf (amount_usd, amount_chf);
+  ABORT (amount_usd);
+  printf ("Never gets here");
+}
+/* Same thing but with ABORT_EX */
+TEST_FIXTURE (Account_fixture, Test_AbortEx)
+{
+  exchange_to_chf (amount_usd, amount_chf);
+  ABORT_EX (amount_usd, "USD amount is 0!!");
+  printf ("Never gets here");
+}
+
+
 /* An example of a disabled suite*/
 SUITE (not_run)
 {

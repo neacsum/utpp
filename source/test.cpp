@@ -8,6 +8,7 @@
 #include <utpp/test.h>
 #include <utpp/test_suite.h>
 #include <utpp/test_reporter.h>
+#include <utpp/checks.h>
 
 #include <sstream>
 #include <string.h>
@@ -42,8 +43,12 @@ void Test::run ()
   Timer test_timer;
   test_timer.Start ();
 
-  RunImpl ();
-
+  try {
+    RunImpl ();
+  }
+  catch (test_abort&)
+  {
+  }
   time = test_timer.GetTimeInMs ();
 }
 

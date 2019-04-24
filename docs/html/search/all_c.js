@@ -3,6 +3,7 @@ var searchData=
   ['test',['Test',['../class_unit_test_1_1_test.html',1,'UnitTest::Test'],['../class_unit_test_1_1_test.html#ab0af6acd8f1020bd2807677d5bcf3aa2',1,'UnitTest::Test::Test()'],['../test__macros_8h.html#aa336661b38c04ab56c34842870688872',1,'TEST():&#160;test_macros.h']]],
   ['test_2ecpp',['test.cpp',['../test_8cpp.html',1,'']]],
   ['test_2eh',['test.h',['../test_8h.html',1,'']]],
+  ['test_5fabort',['test_abort',['../struct_unit_test_1_1test__abort.html',1,'UnitTest']]],
   ['test_5ffixture',['TEST_FIXTURE',['../test__macros_8h.html#a123c32bf07d1ccebda460f6a78b15f17',1,'test_macros.h']]],
   ['test_5fmacros_2eh',['test_macros.h',['../test__macros_8h.html',1,'']]],
   ['test_5fname',['test_name',['../struct_unit_test_1_1_reporter_deferred_1_1_test_result.html#a304e823344b64216e780d3f4c896047e',1,'UnitTest::ReporterDeferred::TestResult::test_name()'],['../class_unit_test_1_1_test.html#a84a2f62425421139a46c174f8e6c95a8',1,'UnitTest::Test::test_name()']]],
