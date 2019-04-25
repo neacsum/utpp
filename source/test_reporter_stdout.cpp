@@ -21,6 +21,41 @@ Reporter& GetDefaultReporter ()
   return the_default_reporter;
 }
 
+/// If tracing is enabled, show a suite start message 
+void ReporterStdout::SuiteStart (const TestSuite& suite)
+{
+  Reporter::SuiteStart (suite);
+  if (!trace)
+    return;
+  cout << "Suite starting: " << suite.name << endl;
+}
+
+/// If tracing is enabled, show a test start message 
+void ReporterStdout::TestStart (const Test & test)
+{
+  Reporter::TestStart (test);
+  if (!trace)
+    return;
+  cout << "Test starting: " << test.test_name () << endl;
+}
+
+/// If tracing is enabled, show a test finish message 
+void ReporterStdout::TestFinish (const Test & test)
+{
+  if (trace)
+    cout << "Test finished: " << test.test_name () << endl;
+  Reporter::TestFinish (test);
+}
+
+/// If tracing is enabled, show a suite finish message 
+int ReporterStdout::SuiteFinish (const TestSuite & suite)
+{
+  if (trace)
+    cout << "Suite finishing: " << suite.name << endl;
+  return Reporter::SuiteFinish (suite);
+}
+
+
 /*!
   Output to stdout a failure message. If a test is in progress (the normal case)
   the message includes the name of the test and suite.

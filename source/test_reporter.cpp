@@ -22,6 +22,7 @@ Reporter::Reporter ()
   , total_failures_count (0)
   , total_time_msec (0)
   , suites_count (0)
+  , trace (false)
 {
 }
 

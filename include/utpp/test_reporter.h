@@ -29,6 +29,9 @@ public:
   Reporter ();
   virtual ~Reporter () {};
 
+  /// Controls test tracing feature
+  void SetTrace (bool on_off) { trace = on_off; }
+
   /// Invoked at the beginning of a test suite
   virtual void SuiteStart (const TestSuite& suite);
 
@@ -59,6 +62,8 @@ protected:
     total_time_msec;        ///< total running time in milliseconds
   
   int suites_count;         ///< number of suites ran
+  bool trace;               ///< true if tracing is enabled
+
 };
 
 /// Return the default reporter object

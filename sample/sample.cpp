@@ -224,6 +224,8 @@ int main (int argc, char** argv)
   //Suites can be disabled using the "DisableSuite" function
   DisableSuite ("not_run");
 
+  GetDefaultReporter ().SetTrace (true);
+
   int ret = RunAllTests ();
   std::ofstream os ("test.xml");
   UnitTest::ReporterXml xml (os);

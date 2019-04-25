@@ -15,6 +15,11 @@ namespace UnitTest {
 class ReporterStdout : public Reporter
 {
 protected:
+  virtual void SuiteStart (const TestSuite& suite);
+  virtual void TestStart (const Test& test);
+  virtual void TestFinish (const Test& test);
+  virtual int SuiteFinish (const TestSuite& suite);
+
   virtual void ReportFailure (const Failure& failure);
   virtual int Summary ();
 };
