@@ -6,5 +6,6 @@ var searchData=
   ['total_5ffailed_5fcount',['total_failed_count',['../class_unit_test_1_1_reporter.html#ace55a8fe0b34093e3a23a11acf44bb15',1,'UnitTest::Reporter']]],
   ['total_5ffailures_5fcount',['total_failures_count',['../class_unit_test_1_1_reporter.html#a1ead08f4ef33646f6df46f161b652d9a',1,'UnitTest::Reporter']]],
   ['total_5ftest_5fcount',['total_test_count',['../class_unit_test_1_1_reporter.html#a91427f0cddd570292d7031dd7bc292f2',1,'UnitTest::Reporter']]],
-  ['total_5ftime_5fmsec',['total_time_msec',['../class_unit_test_1_1_reporter.html#aef56c5c9bdbf7d28237ae24a69d29d30',1,'UnitTest::Reporter']]]
+  ['total_5ftime_5fmsec',['total_time_msec',['../class_unit_test_1_1_reporter.html#aef56c5c9bdbf7d28237ae24a69d29d30',1,'UnitTest::Reporter']]],
+  ['trace',['trace',['../class_unit_test_1_1_reporter.html#a4bc6da8bf2b3bba561450b8baada3833',1,'UnitTest::Reporter']]]
 ];
