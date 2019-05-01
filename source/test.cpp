@@ -14,9 +14,9 @@
 #include <string.h>
 #include <sys/stat.h>
 
-//#ifndef _MSC_VER
+#ifndef _MSC_VER
 #define sprintf_s sprintf
-//#endif
+#endif
 
 namespace UnitTest {
 
@@ -118,12 +118,11 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
   while (ok)
   {
     ln++;
-    bool c1 = (fgets (ln1, sizeof (ln1), f1) != 0);
-    bool c2 = (fgets (ln2, sizeof (ln2), f2) != 0);
-    if (c1 && c2)
+    if (fgets (ln1, sizeof (ln1), f1)
+     && fgets (ln2, sizeof (ln2), f2))
       ok = !strcmp (ln1, ln2);
     else
-      ok = !(c1^c2);
+      break;
   }
   fclose (f1);
   fclose (f2);
