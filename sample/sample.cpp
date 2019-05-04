@@ -209,6 +209,18 @@ TEST_FIXTURE (Account_fixture, Test_AbortEx)
   printf ("Never gets here");
 }
 
+/* Abort while setting up a fixture */
+struct ImpossibleFixture {
+  ImpossibleFixture () {
+    ABORT_EX (0, "This fixture cannot be setup");
+  }
+};
+
+TEST_FIXTURE (ImpossibleFixture, ImpossibleTest)
+{
+  printf ("Never gets here");
+}
+
 
 /* An example of a disabled suite*/
 SUITE (not_run)

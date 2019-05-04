@@ -211,18 +211,8 @@
 #define ABORT(value) \
   do                                                                          \
   {                                                                           \
-    try {                                                                     \
-      if (!UnitTest::Check(value))                                            \
-        throw UnitTest::test_abort (#value);                                  \
-    }                                                                         \
-    catch (UnitTest::test_abort&) {                                         \
-      UnitTest::ReportFailure (__FILE__, __LINE__, "Test aborted: " #value);  \
-      throw;                                                                  \
-    }                                                                         \
-    catch (...) {                                                             \
-      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "Unhandled exception in ABORT(" #value ")");                          \
-    }                                                                         \
+    if (!UnitTest::Check(value))                                              \
+      throw UnitTest::test_abort (__FILE__, __LINE__, #value);                \
   } while (0)
 
 #ifdef ABORT_EX
@@ -233,16 +223,6 @@
 #define ABORT_EX(value, message) \
   do                                                                          \
   {                                                                           \
-    try {                                                                     \
-      if (!UnitTest::Check(value))                                            \
-        throw UnitTest::test_abort (message);                                  \
-    }                                                                         \
-    catch (UnitTest::test_abort&) {                                         \
-      UnitTest::ReportFailure (__FILE__, __LINE__, "Test aborted: " message);  \
-      throw;                                                                  \
-    }                                                                         \
-    catch (...) {                                                             \
-      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "Unhandled exception in ABORT_EX(" #value #message ")");                          \
-    }                                                                         \
+    if (!UnitTest::Check(value))                                              \
+      throw UnitTest::test_abort (__FILE__, __LINE__, message);               \
   } while (0)

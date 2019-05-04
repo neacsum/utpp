@@ -33,8 +33,7 @@ Test::~Test ()
 }
 
 /*!
-  If test is not exempted of global time constraint it starts a timer and calls
-  RunImpl() to execute test code.
+  Starts a timer and calls RunImpl() to execute test code.
 
   When RunImpl() returns, it records the elapsed time.
 */
@@ -43,12 +42,7 @@ void Test::run ()
   Timer test_timer;
   test_timer.Start ();
 
-  try {
-    RunImpl ();
-  }
-  catch (test_abort&)
-  {
-  }
+  RunImpl ();
   time = test_timer.GetTimeInMs ();
 }
 
