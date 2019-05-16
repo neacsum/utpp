@@ -16,7 +16,6 @@
 
 using namespace std;
 
-
 static void ReplaceChar (string& str, char c, string const& replacement)
 {
   for (size_t pos = str.find (c); pos != string::npos; pos = str.find (c, pos + 1))

@@ -135,8 +135,10 @@ TEST (CheckThowEqual)
 /* Example of CHECK_ARRAY_EQUAL*/
 TEST (Fibonacci_10)
 {
-  std::vector<int> expected { 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
+	std::vector<int> expected;
   std::vector<int> fibs;
+  for(int i=0;i<sizeof(ex)/sizeof(ex[0]);i++)
+	 expected.push_back(ex[i]);
   fibonacci (10, fibs);
   CHECK_ARRAY_EQUAL (&expected[0], &fibs[0], 10);
 
@@ -150,11 +152,13 @@ TEST (Fibonacci_10)
 /* Example of CHECK_ARRAY_CLOSE */
 TEST (Array_Close)
 {
-  std::vector<double> expected{ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
+  std::vector<double> expected;//{ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
   std::vector<double> actual (10);
+  for(int i=0;i<sizeof(ex)/sizeof(ex[0]);i++)
+	 expected.push_back(ex[i]);
   for (size_t i=0; i<expected.size(); i++)
   {
-    actual[i] = expected[i] + (double)rand () / RAND_MAX / 10. - 0.05;
+    actual[i] = expected[i] + (double)std::rand () / RAND_MAX / 10. - 0.05;
   }
   CHECK_ARRAY_CLOSE (&expected[0], &actual[0], expected.size (), 0.05);
 

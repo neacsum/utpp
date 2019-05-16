@@ -28,7 +28,7 @@ protected:
   void EndTest (const ReporterDeferred::TestResult& result);
 
 private:
-#if __cplusplus > 201103L
+#if __cplusplus >= 201103L
   ReporterXml (ReporterXml const&) = delete;
   ReporterXml& operator=(ReporterXml const&) = delete;
 #endif

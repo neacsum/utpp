@@ -1,0 +1,60 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{94392C53-DAE1-4AD9-BE9C-F05DBF04C00B}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="utpp_xe.cbproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="sample\sample.cbproj">
+            <Dependencies>utpp_xe.cbproj</Dependencies>
+        </Projects>
+        <Projects Include="tests\tests.cbproj">
+            <Dependencies>utpp_xe.cbproj</Dependencies>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="utpp_xe">
+        <MSBuild Projects="utpp_xe.cbproj"/>
+    </Target>
+    <Target Name="utpp_xe:Clean">
+        <MSBuild Projects="utpp_xe.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="utpp_xe:Make">
+        <MSBuild Projects="utpp_xe.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="sample" DependsOnTargets="utpp_xe">
+        <MSBuild Projects="sample\sample.cbproj"/>
+    </Target>
+    <Target Name="sample:Clean" DependsOnTargets="utpp_xe:Clean">
+        <MSBuild Projects="sample\sample.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="sample:Make" DependsOnTargets="utpp_xe:Make">
+        <MSBuild Projects="sample\sample.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="tests" DependsOnTargets="utpp_xe">
+        <MSBuild Projects="tests\tests.cbproj"/>
+    </Target>
+    <Target Name="tests:Clean" DependsOnTargets="utpp_xe:Clean">
+        <MSBuild Projects="tests\tests.cbproj" Targets="Clean"/>
+    </Target>
+    <Target Name="tests:Make" DependsOnTargets="utpp_xe:Make">
+        <MSBuild Projects="tests\tests.cbproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="utpp_xe;sample;tests"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="utpp_xe:Clean;sample:Clean;tests:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="utpp_xe:Make;sample:Make;tests:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
