@@ -75,7 +75,12 @@ void ReportFailure (const std::string& filename, int line, const std::string& me
 
   if (CurrentTest)
     CurrentTest->failure ();
+#if __cplusplus < 201103L
+  Failure f = { filename, message, line };
+  CurrentReporter->ReportFailure ( f );
+#else
   CurrentReporter->ReportFailure ({ filename, message, line });
+#endif
 }
 
 /*!

@@ -1,3 +1,5 @@
+#ifndef TEST_SUITE_H
+#define TEST_SUITE_H
 #pragma once
 /*!
   \file test_suite.h
@@ -90,4 +92,6 @@ inline const char* GetSuiteName ()
 {
   return DEFAULT_SUITE;
 }
+
+#endif
 

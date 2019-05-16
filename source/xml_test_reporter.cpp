@@ -66,7 +66,12 @@ int ReporterXml::Summary ()
     << " time_sec=\"" << fixed << setprecision (3) << total_time_msec / 1000. << "\""
     << ">" << endl;
 
+#if __cplusplus < 201103L
+  typedef std::deque<TestResult>::iterator iter;
+  for (iter i = results.begin (); i != results.end (); ++i)
+#else
   for (auto i = results.begin (); i != results.end (); ++i)
+#endif
   {
     if (i->test_name.empty()) // New suite flag
     {
@@ -119,9 +124,14 @@ void ReporterXml::AddFailure (const ReporterDeferred::TestResult& result)
 {
   os << ">" << endl; // close <test> element
 
+#if __cplusplus < 201103L
+  typedef _Deque_const_iterator<Failure, allocator<Failure> > iter;
+  for (iter it = result.failures.begin() ; it != result.failures.end (); ++it)
+#else
   for (auto it = result.failures.begin ();
        it != result.failures.end ();
        ++it)
+#endif
   {
     string const escapedMessage = XmlEscape (it->message);
     string const message = BuildFailureMessage (it->filename, it->line_number, escapedMessage);

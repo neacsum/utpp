@@ -20,8 +20,10 @@ public:
   ~TimeConstraint ();
 
 private:
+#if __cplusplus > 201103L
   void operator=(TimeConstraint const&) = delete;
   TimeConstraint (TimeConstraint const&) = delete;
+#endif
 
   Timer timer;
   std::string filename;

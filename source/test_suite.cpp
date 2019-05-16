@@ -73,7 +73,11 @@ int TestSuite::RunTests (Reporter& rep, int maxtime)
   CurrentReporter->SuiteStart (*this);
   if (IsEnabled ())
   {
+#if __cplusplus < 201103L
+    std::deque <const Inserter*>::iterator listp = test_list.begin ();
+#else
     auto listp = test_list.begin ();
+#endif
     max_runtime = maxtime;
     while (listp != test_list.end ())
     {

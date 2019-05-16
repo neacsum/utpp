@@ -53,11 +53,20 @@ bool CheckEqual (const std::vector<T>& expected, const std::vector<T>& actual, s
   {
     std::stringstream stream;
     stream << "Expected [ ";
+#if __cplusplus < 201103L
+	 typedef std::vector<T>::const_iterator iter;
+	for (iter p = expected.begin(); p != expected.end(); ++p)
+#else
     for (auto p = expected.begin (); p != expected.end(); p++)
+#endif
       stream << *p << " ";
 
     stream << "] but was [ ";
+#if __cplusplus < 201103L
+    for (iter p = expected.begin(); p != expected.end(); ++p)
+#else
     for (auto p = actual.begin (); p != actual.end(); p++)
+#endif
       stream << *p << " ";
 
     stream << "]";
@@ -210,11 +219,20 @@ bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, c
     stream.precision (prec);
     stream.setf (std::ios::fixed);
     stream << "Expected [ ";
+#if __cplusplus < 201103L
+	 typedef std::vector<T>::const_iterator iter;
+    for (iter p = expected.begin(); p != expected.end(); ++p)
+#else
     for (auto p = expected.begin(); p != expected.end(); ++p)
+#endif
       stream << *p << " ";
 
     stream << "] +/- " << tolerance << " but was [ ";
-    for (auto p = actual.begin (); p != actual.end (); ++p)
+#if __cplusplus < 201103L
+    for (iter p = actual.begin(); p != actual.end(); ++p)
+#else
+    for (auto p = actual.begin(); p != actual.end(); ++p)
+#endif
       stream << *p << " ";
     stream << "]";
     msg = stream.str ();
