@@ -5,10 +5,7 @@
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
-#include <utpp/test.h>
-#include <utpp/test_suite.h>
-#include <utpp/test_reporter.h>
-#include <utpp/checks.h>
+#include <utpp/utpp.h>
 
 #include <sstream>
 #include <string.h>
@@ -75,7 +72,7 @@ void ReportFailure (const std::string& filename, int line, const std::string& me
 
   if (CurrentTest)
     CurrentTest->failure ();
-#if __cplusplus < 201103L
+#ifndef UTPP_CPP11
   Failure f = { filename, message, line };
   CurrentReporter->ReportFailure ( f );
 #else

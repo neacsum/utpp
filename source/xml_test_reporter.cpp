@@ -6,8 +6,7 @@
   See README file for full copyright information.
 */
 
-#include <utpp/xml_test_reporter.h>
-#include <utpp/test_suite.h>
+#include <utpp/utpp.h>
 
 #include <iostream>
 #include <sstream>
@@ -65,7 +64,7 @@ int ReporterXml::Summary ()
     << " time_sec=\"" << fixed << setprecision (3) << total_time_msec / 1000. << "\""
     << ">" << endl;
 
-#if __cplusplus < 201103L
+#ifndef UTPP_CPP11
   typedef std::deque<TestResult>::iterator iter;
   for (iter i = results.begin (); i != results.end (); ++i)
 #else
@@ -123,7 +122,7 @@ void ReporterXml::AddFailure (const ReporterDeferred::TestResult& result)
 {
   os << ">" << endl; // close <test> element
 
-#if __cplusplus < 201103L
+#ifndef UTPP_CPP11
   typedef _Deque_const_iterator<Failure, allocator<Failure> > iter;
   for (iter it = result.failures.begin() ; it != result.failures.end (); ++it)
 #else

@@ -6,9 +6,7 @@
   See README file for full copyright information.
 */
 
-#include <utpp/test_suite.h>
-#include <utpp/test.h>
-#include <utpp/suites_list.h>
+#include <utpp/utpp.h>
 
 #include <cassert>
 #include <sstream>
@@ -73,7 +71,7 @@ int TestSuite::RunTests (Reporter& rep, int maxtime)
   CurrentReporter->SuiteStart (*this);
   if (IsEnabled ())
   {
-#if __cplusplus < 201103L
+#ifndef UTPP_CPP11
     std::deque <const Inserter*>::iterator listp = test_list.begin ();
 #else
     auto listp = test_list.begin ();

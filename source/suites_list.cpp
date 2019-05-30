@@ -5,7 +5,7 @@
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
-#include <utpp/suites_list.h>
+#include <utpp/utpp.h>
 #include <algorithm>
 
 namespace UnitTest {
@@ -18,7 +18,7 @@ namespace UnitTest {
 */
 void SuitesList::Add (const std::string& suite_name, const TestSuite::Inserter* inf)
 {
-#if __cplusplus > 201103L
+#ifdef UTPP_CPP11
   auto p = find_if (suites.begin (), suites.end (),
     [&suite_name](TestSuite& s) {return s.name == suite_name; });
 #else
@@ -49,7 +49,7 @@ void SuitesList::Add (const std::string& suite_name, const TestSuite::Inserter* 
 int SuitesList::Run (const std::string& suite_name, Reporter& reporter, int max_time_ms)
 {
 
-#if __cplusplus > 201103L
+#ifdef UTPP_CPP11
   auto p = find_if (suites.begin (), suites.end (),
     [&suite_name](TestSuite& s) {return s.name == suite_name; });
 #else
@@ -75,7 +75,7 @@ int SuitesList::Run (const std::string& suite_name, Reporter& reporter, int max_
 */
 int SuitesList::RunAll (Reporter& reporter, int max_time_ms)
 {
-#if __cplusplus > 201103L
+#ifdef UTPP_CPP11
   for_each (suites.begin (), suites.end (),
     [&reporter, max_time_ms](TestSuite& s)
     {
@@ -104,9 +104,9 @@ SuitesList& SuitesList::GetSuitesList ()
 
 void SuitesList::Disable (const std::string& suite)
 {
-#if __cplusplus > 201103L
+#ifdef UTPP_CPP11
   auto s = find_if (suites.begin (), suites.end (),
-    [&suite_name](TestSuite& s) {return s.name == suite_name; });
+    [&suite](TestSuite& s) {return s.name == suite; });
 #else
   std::deque <TestSuite>::iterator s;
   for( s= suites.begin(); s != suites.end(); s++)

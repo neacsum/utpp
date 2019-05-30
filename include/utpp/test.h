@@ -36,7 +36,7 @@ protected:
   int time;                           ///< Run time or -1 if exempt from time constraints 
 
 private:
-#if __cplusplus > 201103L
+#ifdef UTPP_CPP11
   Test (Test const&) = delete;
   Test& operator =(Test const&) = delete;
 #endif

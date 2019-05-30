@@ -20,7 +20,7 @@ public:
   ~TimeConstraint ();
 
 private:
-#if __cplusplus > 201103L
+#ifdef UTPP_CPP11
   void operator=(TimeConstraint const&) = delete;
   TimeConstraint (TimeConstraint const&) = delete;
 #endif

@@ -1,5 +1,3 @@
-#ifndef TEST_REPORTER_H
-#define TEST_REPORTER_H
 #pragma once
 /*!
   \file test_reporter.h
@@ -74,6 +72,4 @@ Reporter& GetDefaultReporter ();
 /// Pointer to current reporter object
 extern Reporter* CurrentReporter;
 }
-
-#endif
 
