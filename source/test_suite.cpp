@@ -112,6 +112,12 @@ bool TestSuite::SetupCurrentTest (const Inserter* inf)
     CurrentTest = (inf->maker)();
     ok = true;
   }
+  catch (UnitTest::test_abort& x)
+  {
+    std::stringstream stream;
+    stream << " Aborted setup of " << inf->test_name << " - " << x.what ();
+    ReportFailure (x.file, x.line, stream.str ());
+  }
   catch (const std::exception& e)
   {
     std::stringstream stream;
@@ -135,6 +141,10 @@ void TestSuite::RunCurrentTest (const Inserter* inf)
 
   try {
     CurrentTest->run ();
+  }
+  catch (UnitTest::test_abort& x)
+  {
+    ReportFailure (x.file, x.line, string ("Test aborted: ") + x.what ());
   }
   catch (const std::exception& e)
   {

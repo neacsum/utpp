@@ -12,6 +12,19 @@
 
 namespace UnitTest {
 
+/// Exception thrown by ABORT macro
+struct test_abort : public std::runtime_error
+{
+  test_abort (const char *file_, int line_, const char* msg) 
+    : std::runtime_error (msg)
+  , file (file_)
+  , line (line_)
+  {};
+  const char *file;
+  int line;
+};
+
+
 ///Representation of a test case
 class Test
 {
