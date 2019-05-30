@@ -5,7 +5,7 @@
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
-#include <utpp/suites_list.h>
+#include <utpp/utpp.h>
 #include <algorithm>
 
 namespace UnitTest {
@@ -18,8 +18,16 @@ namespace UnitTest {
 */
 void SuitesList::Add (const std::string& suite_name, const TestSuite::Inserter* inf)
 {
-  auto p = find_if (suites.begin (), suites.end (), 
+#ifdef UTPP_CPP11
+  auto p = find_if (suites.begin (), suites.end (),
     [&suite_name](TestSuite& s) {return s.name == suite_name; });
+#else
+  std::deque <TestSuite>::iterator p;
+  for( p= suites.begin(); p != suites.end(); p++)
+    if( p->name == suite_name )
+      break;
+#endif
+
   if (p == suites.end ())
   {
     suites.push_back (TestSuite (suite_name));
@@ -40,9 +48,16 @@ void SuitesList::Add (const std::string& suite_name, const TestSuite::Inserter* 
 */
 int SuitesList::Run (const std::string& suite_name, Reporter& reporter, int max_time_ms)
 {
+
+#ifdef UTPP_CPP11
   auto p = find_if (suites.begin (), suites.end (),
     [&suite_name](TestSuite& s) {return s.name == suite_name; });
-  
+#else
+  std::deque <TestSuite>::iterator p;
+  for( p= suites.begin(); p != suites.end(); p++)
+    if( p->name == suite_name )
+      break;
+#endif
   if (p != suites.end())
   {
     p->RunTests (reporter, max_time_ms);
@@ -60,12 +75,19 @@ int SuitesList::Run (const std::string& suite_name, Reporter& reporter, int max_
 */
 int SuitesList::RunAll (Reporter& reporter, int max_time_ms)
 {
-  for_each (suites.begin (), suites.end (), 
-    [&reporter, max_time_ms](TestSuite& s) 
+#ifdef UTPP_CPP11
+  for_each (suites.begin (), suites.end (),
+    [&reporter, max_time_ms](TestSuite& s)
     {
-      s.RunTests (reporter, max_time_ms); 
+      s.RunTests (reporter, max_time_ms);
     }
   );
+#else
+  std::deque <TestSuite>::iterator p;
+  for( p= suites.begin(); p != suites.end(); p++)
+    p->RunTests(reporter, max_time_ms);
+#endif
+
 
   return reporter.Summary ();
 }
@@ -82,8 +104,15 @@ SuitesList& SuitesList::GetSuitesList ()
 
 void SuitesList::Disable (const std::string& suite)
 {
-  auto s = std::find_if (suites.begin (), suites.end (), 
-    [&suite](TestSuite s) {return s.name == suite; });
+#ifdef UTPP_CPP11
+  auto s = find_if (suites.begin (), suites.end (),
+    [&suite](TestSuite& s) {return s.name == suite; });
+#else
+  std::deque <TestSuite>::iterator s;
+  for( s= suites.begin(); s != suites.end(); s++)
+    if( s->name == suite )
+      break;
+#endif
   if (s != suites.end ())
     s->Enable (false);
 }

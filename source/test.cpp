@@ -5,18 +5,15 @@
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
-#include <utpp/test.h>
-#include <utpp/test_suite.h>
-#include <utpp/test_reporter.h>
-#include <utpp/checks.h>
+#include <utpp/utpp.h>
 
 #include <sstream>
 #include <string.h>
 #include <sys/stat.h>
 
-//#ifndef _MSC_VER
+#ifndef _MSC_VER
 #define sprintf_s sprintf
-//#endif
+#endif
 
 namespace UnitTest {
 
@@ -75,7 +72,12 @@ void ReportFailure (const std::string& filename, int line, const std::string& me
 
   if (CurrentTest)
     CurrentTest->failure ();
+#ifndef UTPP_CPP11
+  Failure f = { filename, message, line };
+  CurrentReporter->ReportFailure ( f );
+#else
   CurrentReporter->ReportFailure ({ filename, message, line });
+#endif
 }
 
 /*!
@@ -118,12 +120,11 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
   while (ok)
   {
     ln++;
-    bool c1 = (fgets (ln1, sizeof (ln1), f1) != 0);
-    bool c2 = (fgets (ln2, sizeof (ln2), f2) != 0);
-    if (c1 && c2)
+    if (fgets (ln1, sizeof (ln1), f1)
+     && fgets (ln2, sizeof (ln2), f2))
       ok = !strcmp (ln1, ln2);
     else
-      ok = !(c1^c2);
+      break;
   }
   fclose (f1);
   fclose (f2);

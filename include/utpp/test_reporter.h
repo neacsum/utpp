@@ -72,3 +72,4 @@ Reporter& GetDefaultReporter ();
 /// Pointer to current reporter object
 extern Reporter* CurrentReporter;
 }
+

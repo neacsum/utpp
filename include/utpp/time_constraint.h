@@ -20,8 +20,10 @@ public:
   ~TimeConstraint ();
 
 private:
+#ifdef UTPP_CPP11
   void operator=(TimeConstraint const&) = delete;
   TimeConstraint (TimeConstraint const&) = delete;
+#endif
 
   Timer timer;
   std::string filename;

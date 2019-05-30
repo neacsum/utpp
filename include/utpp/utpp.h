@@ -10,6 +10,10 @@
   See README file for full copyright information.
 */
 
+#if defined (_MSVC_LANG) && (_MSVC_LANG > 199711l)
+#define UTPP_CPP11    //use newer features of C++
+#endif
+
 #include <utpp/test.h>
 #include <utpp/test_suite.h>
 #include <utpp/test_reporter.h>

@@ -36,8 +36,10 @@ protected:
   int time;                           ///< Run time or -1 if exempt from time constraints 
 
 private:
+#ifdef UTPP_CPP11
   Test (Test const&) = delete;
   Test& operator =(Test const&) = delete;
+#endif
   friend class TestSuite;
 };
 

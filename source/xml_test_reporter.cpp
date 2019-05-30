@@ -6,8 +6,7 @@
   See README file for full copyright information.
 */
 
-#include <utpp/xml_test_reporter.h>
-#include <utpp/test_suite.h>
+#include <utpp/utpp.h>
 
 #include <iostream>
 #include <sstream>
@@ -15,7 +14,6 @@
 #include <iomanip>
 
 using namespace std;
-
 
 static void ReplaceChar (string& str, char c, string const& replacement)
 {
@@ -66,7 +64,12 @@ int ReporterXml::Summary ()
     << " time_sec=\"" << fixed << setprecision (3) << total_time_msec / 1000. << "\""
     << ">" << endl;
 
+#ifndef UTPP_CPP11
+  typedef std::deque<TestResult>::iterator iter;
+  for (iter i = results.begin (); i != results.end (); ++i)
+#else
   for (auto i = results.begin (); i != results.end (); ++i)
+#endif
   {
     if (i->test_name.empty()) // New suite flag
     {
@@ -119,9 +122,14 @@ void ReporterXml::AddFailure (const ReporterDeferred::TestResult& result)
 {
   os << ">" << endl; // close <test> element
 
+#ifndef UTPP_CPP11
+  typedef _Deque_const_iterator<Failure, allocator<Failure> > iter;
+  for (iter it = result.failures.begin() ; it != result.failures.end (); ++it)
+#else
   for (auto it = result.failures.begin ();
        it != result.failures.end ();
        ++it)
+#endif
   {
     string const escapedMessage = XmlEscape (it->message);
     string const message = BuildFailureMessage (it->filename, it->line_number, escapedMessage);

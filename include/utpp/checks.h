@@ -11,7 +11,6 @@
 #include <vector>
 #include <string.h>
 #include <math.h>
-
 namespace UnitTest {
 
 /// Exception thrown by ABORT macro
@@ -53,11 +52,20 @@ bool CheckEqual (const std::vector<T>& expected, const std::vector<T>& actual, s
   {
     std::stringstream stream;
     stream << "Expected [ ";
+#ifndef UTPP_CPP11
+    typedef std::vector<T>::const_iterator iter;
+    for (iter p = expected.begin(); p != expected.end(); ++p)
+#else
     for (auto p = expected.begin (); p != expected.end(); p++)
+#endif
       stream << *p << " ";
 
     stream << "] but was [ ";
+#ifndef UTPP_CPP11
+    for (iter p = expected.begin(); p != expected.end(); ++p)
+#else
     for (auto p = actual.begin (); p != actual.end(); p++)
+#endif
       stream << *p << " ";
 
     stream << "]";
@@ -210,11 +218,20 @@ bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, c
     stream.precision (prec);
     stream.setf (std::ios::fixed);
     stream << "Expected [ ";
+#ifndef UTPP_CPP11
+    typedef std::vector<T>::const_iterator iter;
+    for (iter p = expected.begin(); p != expected.end(); ++p)
+#else
     for (auto p = expected.begin(); p != expected.end(); ++p)
+#endif
       stream << *p << " ";
 
     stream << "] +/- " << tolerance << " but was [ ";
-    for (auto p = actual.begin (); p != actual.end (); ++p)
+#ifndef UTPP_CPP11
+    for (iter p = actual.begin(); p != actual.end(); ++p)
+#else
+    for (auto p = actual.begin(); p != actual.end(); ++p)
+#endif
       stream << *p << " ";
     stream << "]";
     msg = stream.str ();

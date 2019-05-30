@@ -94,49 +94,52 @@ using namespace UnitTest;
 
 SUITE (EarthSuite)
 {
-  /* Example of CHECK macro */
+  // Example of CHECK macro
   TEST (EarthShape)
   {
     CHECK (earth_is_round ());
   }
 
-  /* Example of CHECK_CLOSE macro */
+  // Example of CHECK_CLOSE macro
   TEST (HowBigIsEarth)
   {
     CHECK_CLOSE (6371., earth_radius_km (), 1.);
   }
 
-  /* Example of CHECK_EQUAL macro */
+  // Example of CHECK_EQUAL macro
   TEST (PlanetName)
   {
     CHECK_EQUAL ("Earth", planet_name ());
   }
 
-  /* Example of a test that fails */
+  // Example of a test that fails
   TEST (Martians)
   {
     CHECK_EQUAL ("Mars", planet_name ());
   }
 
-  /* Example of CHECK_THROW macro */
+  // Example of CHECK_THROW macro
   TEST (EndOfTheEarth)
   {
     CHECK_THROW (flat_earth_exception, go_to_end_of_earth ());
   }
 }
 
-/* Example of CHECK_THROW_EQUAL*/
+// Example of CHECK_THROW_EQUAL
 TEST (CheckThowEqual)
 {
   CHECK_THROW_EQUAL (int, 2, throw_2());
 }
 
 
-/* Example of CHECK_ARRAY_EQUAL*/
+// Example of CHECK_ARRAY_EQUAL
+int ex[] = { 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
 TEST (Fibonacci_10)
 {
-  std::vector<int> expected { 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
+	std::vector<int> expected;
   std::vector<int> fibs;
+  for(int i=0;i<sizeof(ex)/sizeof(ex[0]);i++)
+	 expected.push_back(ex[i]);
   fibonacci (10, fibs);
   CHECK_ARRAY_EQUAL (&expected[0], &fibs[0], 10);
 
@@ -147,14 +150,16 @@ TEST (Fibonacci_10)
   CHECK_EQUAL (expected, fibs);
 }
 
-/* Example of CHECK_ARRAY_CLOSE */
+// Example of CHECK_ARRAY_CLOSE
 TEST (Array_Close)
 {
-  std::vector<double> expected{ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
+  std::vector<double> expected;//{ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
   std::vector<double> actual (10);
+  for(int i=0;i<sizeof(ex)/sizeof(ex[0]);i++)
+	 expected.push_back(ex[i]);
   for (size_t i=0; i<expected.size(); i++)
   {
-    actual[i] = expected[i] + (double)rand () / RAND_MAX / 10. - 0.05;
+    actual[i] = expected[i] + (double)std::rand () / RAND_MAX / 10. - 0.05;
   }
   CHECK_ARRAY_CLOSE (&expected[0], &actual[0], expected.size (), 0.05);
 
@@ -165,7 +170,7 @@ TEST (Array_Close)
   CHECK_CLOSE (expected, actual, 0.05);
 }
 
-/* CHECK_THROW can catch a base class of the exception*/
+// CHECK_THROW can catch a base class of the exception
 TEST (AnotherException)
 {
   std::vector<int> fibs;
@@ -173,7 +178,7 @@ TEST (AnotherException)
   CHECK_THROW (std::exception, fibonacci (200, fibs));
 }
 
-/* Example of a test with a fixture */
+// Example of a test with a fixture
 TEST_FIXTURE (Account_fixture, TestExchangeEur)
 {
   exchange_to_eur (amount_usd, amount_eur);
@@ -181,7 +186,7 @@ TEST_FIXTURE (Account_fixture, TestExchangeEur)
   CHECK (amount_eur > 0);
 }
 
-/* Another test with the same fixture */
+// Another test with the same fixture
 TEST_FIXTURE (Account_fixture, TestExchangeChf)
 {
   exchange_to_chf (amount_usd, amount_chf);
@@ -194,14 +199,14 @@ TEST_FIXTURE (Account_fixture, Uncaught_exception)
   throw_2 ();
 }
 
-/* How to use the ABORT macro */
+// How to use the ABORT macro
 TEST_FIXTURE (Account_fixture, Test_Abort)
 {
   exchange_to_chf (amount_usd, amount_chf);
   ABORT (amount_usd);
   printf ("Never gets here");
 }
-/* Same thing but with ABORT_EX */
+/// Same thing but with ABORT_EX
 TEST_FIXTURE (Account_fixture, Test_AbortEx)
 {
   exchange_to_chf (amount_usd, amount_chf);
@@ -209,8 +214,7 @@ TEST_FIXTURE (Account_fixture, Test_AbortEx)
   printf ("Never gets here");
 }
 
-
-/* An example of a disabled suite*/
+// An example of a disabled suite
 SUITE (not_run)
 {
   TEST (Fails_always)

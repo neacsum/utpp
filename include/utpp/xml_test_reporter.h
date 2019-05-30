@@ -28,8 +28,10 @@ protected:
   void EndTest (const ReporterDeferred::TestResult& result);
 
 private:
+#ifdef UTPP_CPP11
   ReporterXml (ReporterXml const&) = delete;
   ReporterXml& operator=(ReporterXml const&) = delete;
+#endif
 
   std::ostream& os;
 };
