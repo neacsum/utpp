@@ -66,12 +66,8 @@ void ReportFailure (const std::string& filename, int line, const std::string& me
 
   if (CurrentTest)
     CurrentTest->failure ();
-#ifndef UTPP_CPP11
   Failure f = { filename, message, line };
   CurrentReporter->ReportFailure ( f );
-#else
-  CurrentReporter->ReportFailure ({ filename, message, line });
-#endif
 }
 
 /*!

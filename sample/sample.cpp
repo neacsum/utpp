@@ -20,7 +20,7 @@ const char *planet_name () {
 
 class flat_earth_exception : public std::exception {
 public:
-  const char *what () { return "Earth is not flat!"; }
+  const char *what () const { return "Earth is not flat!"; }
 };
 
 void go_to_end_of_earth ()
@@ -138,7 +138,7 @@ TEST (Fibonacci_10)
 {
 	std::vector<int> expected;
   std::vector<int> fibs;
-  for(int i=0;i<sizeof(ex)/sizeof(ex[0]);i++)
+  for(size_t i=0;i<sizeof(ex)/sizeof(ex[0]);i++)
 	 expected.push_back(ex[i]);
   fibonacci (10, fibs);
   CHECK_ARRAY_EQUAL (&expected[0], &fibs[0], 10);
@@ -155,7 +155,7 @@ TEST (Array_Close)
 {
   std::vector<double> expected;//{ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
   std::vector<double> actual (10);
-  for(int i=0;i<sizeof(ex)/sizeof(ex[0]);i++)
+  for(size_t i=0;i<sizeof(ex)/sizeof(ex[0]);i++)
 	 expected.push_back(ex[i]);
   for (size_t i=0; i<expected.size(); i++)
   {
