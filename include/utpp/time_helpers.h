@@ -17,6 +17,7 @@ public:
   Timer ();
   void Start ();
   int GetTimeInMs () const;
+  long long GetTimeInUs () const;
 
 private:
   long long GetTime () const;
