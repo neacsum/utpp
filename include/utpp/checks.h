@@ -45,7 +45,7 @@ bool CheckEqual (const std::vector<T>& expected, const std::vector<T>& actual, s
   {
     std::stringstream stream;
     stream << "Expected [ ";
-    std::vector<T>::const_iterator p;
+    typename std::vector<T>::const_iterator p;
     for (p = expected.begin(); p != expected.end(); ++p)
       stream << *p << " ";
 
@@ -203,7 +203,7 @@ bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, c
     stream.precision (prec);
     stream.setf (std::ios::fixed);
     stream << "Expected [ ";
-    std::vector<T>::const_iterator p;
+    typename std::vector<T>::const_iterator p;
     for (p = expected.begin(); p != expected.end(); ++p)
       stream << *p << " ";
 
