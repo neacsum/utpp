@@ -8,7 +8,7 @@
 */
 #include <string>
 #include <cassert>
-#include <utpp/test_suite.h>
+#include "test_suite.h"
 
 namespace UnitTest {
 

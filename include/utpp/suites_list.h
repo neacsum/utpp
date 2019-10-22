@@ -7,7 +7,7 @@
   See README file for full copyright information.
 */
 #include <deque>
-#include <utpp/test_suite.h>
+#include "test_suite.h"
 
 namespace UnitTest {
 class Reporter;

@@ -7,8 +7,8 @@
   See README file for full copyright information.
 */
 
-#include <utpp/checks.h>
-#include <utpp/test_reporter.h>
+#include "checks.h"
+#include "test_reporter.h"
 
 #ifdef CHECK
   #error Macro CHECK is already defined

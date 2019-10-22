@@ -7,7 +7,7 @@
   See README file for full copyright information.
 */
 
-#include <utpp/deferred_test_reporter.h>
+#include "deferred_test_reporter.h"
 
 #include <iosfwd>
 

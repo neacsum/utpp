@@ -14,15 +14,15 @@
 #define UTPP_CPP11    //use newer features of C++
 #endif
 
-#include <utpp/test.h>
-#include <utpp/test_suite.h>
-#include <utpp/test_reporter.h>
-#include <utpp/test_reporter_dbgout.h>
-#include <utpp/xml_test_reporter.h>
-#include <utpp/test_macros.h>
-#include <utpp/suites_list.h>
-#include <utpp/check_macros.h>
-#include <utpp/time_constraint.h>
+#include "test.h"
+#include "test_suite.h"
+#include "test_reporter.h"
+#include "test_reporter_dbgout.h"
+#include "xml_test_reporter.h"
+#include "test_macros.h"
+#include "suites_list.h"
+#include "check_macros.h"
+#include "time_constraint.h"
 
 namespace UnitTest {
 

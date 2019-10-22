@@ -8,8 +8,8 @@
 */
 #include <string>
 #include <deque>
-#include <utpp/test_reporter.h>
-#include <utpp/time_helpers.h>
+#include "test_reporter.h"
+#include "time_helpers.h"
 
 /// Name of default suite
 #define DEFAULT_SUITE "DefaultSuite"

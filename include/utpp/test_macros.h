@@ -6,7 +6,7 @@
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
-#include <utpp/test.h>
+#include "test.h"
 #include <sstream>
 
 
