@@ -7,6 +7,7 @@
   See README file for full copyright information.
 */
 #include <string>
+#include <stdexcept>
 #include <cassert>
 #include "test_suite.h"
 
