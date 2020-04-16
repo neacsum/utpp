@@ -13,7 +13,7 @@
 #ifdef CHECK
   #error Macro CHECK is already defined
 #endif
-///Generate a failure if value is 0. Failure message is the value itself.
+/// Generate a failure if value is 0. Failure message is the value itself.
 #define CHECK(value)                                                          \
   do                                                                          \
   {                                                                           \
@@ -49,7 +49,7 @@
 #ifdef CHECK_EQUAL
   #error Macro CHECK_EQUAL is already defined
 #endif
-///Generate a failure if actual value is different from expected
+/// Generate a failure if actual value is different from expected.
 #define CHECK_EQUAL(expected, actual)                                         \
   do                                                                          \
   {                                                                           \
@@ -124,12 +124,12 @@
     }                                                                         \
   } while (0)
 
-#ifdef CHECK_ARRY2D_EQUAL
+#ifdef CHECK_ARRAY2D_EQUAL
   #error Macro CHECK_ARRAY2D_EQUAL is already defined
 #endif
 /*!
   Generate a failure if an array differs from expected values with more than
-  given tolerance
+  given tolerance.
 */
 #define CHECK_ARRAY2D_EQUAL(expected, actual, rows, columns)                  \
   do                                                                          \
@@ -151,7 +151,7 @@
 #endif
 /*!
   Generate a failure if a two-dimensional array differs from expected values
-  with more than given tolerance
+  with more than given tolerance.
 */
 #define CHECK_ARRAY2D_CLOSE(expected, actual, rows, columns, tolerance) \
   do                                                                          \
@@ -170,7 +170,7 @@
 #ifdef CHECK_THROW
   #error Macro CHECK_THROW is already defined
 #endif
-/// Checks if evaluating the expression triggers an exception of the given type
+/// Checks if evaluating the expression triggers an exception of the given type.
 #define CHECK_THROW(ExpectedExceptionType, expression) \
   do                                                                          \
   {                                                                           \
@@ -210,7 +210,7 @@
 #ifdef CHECK_FILE_EQUAL
 #error Macro CHECK_FILE_EQUAL is already defined
 #endif
-///Generate a failure if the two files are different
+/// Generate a failure if the two files are different.
 #define CHECK_FILE_EQUAL(expected, actual)                                    \
   do                                                                          \
   {                                                                           \
