@@ -9,6 +9,7 @@
 
 #include <sstream>
 #include <vector>
+#include <array>
 #include <string.h>
 #include <math.h>
 namespace UnitTest {
@@ -52,6 +53,29 @@ bool CheckEqual (const std::vector<T>& expected, const std::vector<T>& actual, s
     stream << "] but was [ ";
     for (p = actual.begin(); p != actual.end(); ++p)
       stream << *p << " ";
+
+    stream << "]";
+    msg = stream.str ();
+    return false;
+  }
+  return true;
+}
+
+/// Specialization of CheckEqual for arrays
+template <typename T, size_t N>
+inline
+bool CheckEqual (const std::array<T,N>& expected, const std::array<T,N>& actual, std::string& msg)
+{
+  if (expected != actual)
+  {
+    std::stringstream stream;
+    stream << "Expected [ ";
+    for (size_t i = 0; i < N; ++i)
+      stream << expected[i] << " ";
+
+    stream << "] but was [ ";
+    for (size_t i = 0; i < N; ++i)
+      stream << actual[i] << " ";
 
     stream << "]";
     msg = stream.str ();
@@ -138,12 +162,12 @@ bool CheckArrayEqual (const Expected& expected, const Actual& actual,
   {
     std::stringstream stream;
     stream << "Expected [ ";
-    for (size_t expectedIndex = 0; expectedIndex < count; ++expectedIndex)
-      stream << expected[expectedIndex] << " ";
+    for (size_t i = 0; i < count; ++i)
+      stream << expected[i] << " ";
 
     stream << "] but was [ ";
-    for (size_t actualIndex = 0; actualIndex < count; ++actualIndex)
-      stream << actual[actualIndex] << " ";
+    for (size_t i = 0; i < count; ++i)
+      stream << actual[i] << " ";
 
     stream << "]";
     msg = stream.str ();
@@ -178,12 +202,12 @@ bool CheckArrayClose (const Expected& expected, const Actual& actual,
     stream.precision (prec);
     stream.setf (std::ios::fixed);
     stream << "Expected [ ";
-    for (size_t expectedIndex = 0; expectedIndex < count; ++expectedIndex)
-      stream << expected[expectedIndex] << " ";
+    for (size_t i = 0; i < count; ++i)
+      stream << expected[i] << " ";
 
     stream << "] +/- " << tolerance << " but was [ ";
-    for (size_t actualIndex = 0; actualIndex < count; ++actualIndex)
-      stream << actual[actualIndex] << " ";
+    for (size_t i = 0; i < count; ++i)
+      stream << actual[i] << " ";
     stream << "]";
     msg = stream.str ();
     return false;
@@ -217,11 +241,37 @@ bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, c
   return true;
 }
 
+/// Specialization of CheckClose function for arrays
+template <typename T, size_t N>
+bool CheckClose (const std::array<T, N>& expected, const std::array<T, N>& actual, const T& tolerance,
+  std::string& msg)
+{
+  if (!Close1D (&expected[0], &actual[0], N, tolerance))
+  {
+    int prec = (int)(1 - log10 ((double)tolerance));
+    std::stringstream stream;
+    stream.precision (prec);
+    stream.setf (std::ios::fixed);
+    stream << "Expected [ ";
+    typename std::array<T,N>::const_iterator p;
+    for (p = expected.begin (); p != expected.end (); ++p)
+      stream << *p << " ";
+
+    stream << "] +/- " << tolerance << " but was [ ";
+    for (p = actual.begin (); p != actual.end (); ++p)
+      stream << *p << " ";
+    stream << "]";
+    msg = stream.str ();
+    return false;
+  }
+  return true;
+}
+
 /// Return true if two 2D arrays are equal
 template <typename Expected, typename Actual>
 bool Equal2D (const Expected& expected, const Actual& actual, size_t rows, size_t columns)
 {
-  for (size_t i = 0; i < rows; i++)
+  for (size_t i = 0; i < rows; ++i)
     if (!Equal1D (expected[i], actual[i], columns))
       return false;
   return true;
@@ -237,21 +287,22 @@ bool CheckArray2DEqual (const Expected& expected, const Actual& actual,
   if (!Equal2D (expected, actual, rows, columns))
   {
     std::stringstream stream;
+    size_t i, j;
     stream << "Expected [\n";
-    for (size_t expectedRow = 0; expectedRow < rows; ++expectedRow)
+    for (i = 0; i < rows; ++i)
     {
-      stream << "[";
-      for (int expectedColumn = 0; expectedColumn < columns; ++expectedColumn)
-        stream << expected[expectedRow][expectedColumn] << " ";
+      stream << " [";
+      for (j = 0; j < columns; ++j)
+        stream << expected[i][j] << " ";
       stream << "]\n";
     }
 
     stream << "] but was [\n";
-    for (size_t actualRow = 0; actualRow < rows; ++actualRow)
+    for (i = 0; i < rows; ++i)
     {
-      stream << "[ ";
-      for (int actualColumn = 0; actualColumn < columns; ++actualColumn)
-        stream << actual[actualRow][actualColumn] << " ";
+      stream << " [";
+      for (j = 0; j < columns; ++j)
+        stream << actual[i][j] << " ";
       stream << "]\n";
     }
     stream << "]";
@@ -265,7 +316,7 @@ bool CheckArray2DEqual (const Expected& expected, const Actual& actual,
 template <typename Expected, typename Actual, typename Tolerance>
 bool Close2D (const Expected& expected, const Actual& actual, size_t rows, size_t columns, const Tolerance& tolerance)
 {
-  for (size_t i = 0; i < rows; i++)
+  for (size_t i = 0; i < rows; ++i)
     if (!Close1D (expected[i], actual[i], columns, tolerance))
       return false;
   return true;
@@ -288,20 +339,21 @@ bool CheckArray2DClose (const Expected& expected, const Actual& actual,
     stream.precision (prec);
     stream.setf (std::ios::fixed);
     stream << "Expected [\n";
-    for (size_t expectedRow = 0; expectedRow < rows; ++expectedRow)
+    size_t i, j;
+    for (i = 0; i < rows; ++i)
     {
-      stream << "[ ";
-      for (size_t expectedColumn = 0; expectedColumn < (int)columns; ++expectedColumn)
-        stream << expected[expectedRow][expectedColumn] << " ";
+      stream << " [ ";
+      for (j = 0; j < columns; ++j)
+        stream << expected[i][j] << " ";
       stream << "]\n";
     }
 
     stream << "] +/- " << tolerance << " but was [\n";
-    for (size_t actualRow = 0; actualRow < rows; ++actualRow)
+    for (i = 0; i < rows; ++i)
     {
-      stream << "[ ";
-      for (size_t actualColumn = 0; actualColumn < columns; ++actualColumn)
-        stream << actual[actualRow][actualColumn] << " ";
+      stream << " [ ";
+      for (j = 0; j < columns; ++j)
+        stream << actual[i][j] << " ";
       stream << "]\n";
     }
     stream << "]";

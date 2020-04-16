@@ -2,6 +2,7 @@
 
 /*-------------------------- Functions under test ---------------------------*/
 #include <vector>
+#include <array>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -42,7 +43,7 @@ void fibonacci (int n, std::vector<int>& numbers)
   numbers.push_back (1);
   if (!--n)
     return;
-  int i = 2;
+  size_t i = 2;
   while (n--)
   {
     numbers.push_back (numbers[i - 1] + numbers[i - 2]);
@@ -136,10 +137,10 @@ TEST (CheckThowEqual)
 int ex[] = { 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
 TEST (Fibonacci_10)
 {
-	std::vector<int> expected;
+  std::vector<int> expected;
   std::vector<int> fibs;
   for(size_t i=0;i<sizeof(ex)/sizeof(ex[0]);i++)
-	 expected.push_back(ex[i]);
+    expected.push_back(ex[i]);
   fibonacci (10, fibs);
   CHECK_ARRAY_EQUAL (&expected[0], &fibs[0], 10);
 
@@ -150,23 +151,44 @@ TEST (Fibonacci_10)
   CHECK_EQUAL (expected, fibs);
 }
 
-// Example of CHECK_ARRAY_CLOSE
-TEST (Array_Close)
+// Example of CHECK_CLOSE for vectors
+TEST (Vector_Close)
 {
   std::vector<double> expected;//{ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
   std::vector<double> actual (10);
   for(size_t i=0;i<sizeof(ex)/sizeof(ex[0]);i++)
-	 expected.push_back(ex[i]);
+    expected.push_back(ex[i]);
   for (size_t i=0; i<expected.size(); i++)
   {
     actual[i] = expected[i] + (double)std::rand () / RAND_MAX / 10. - 0.05;
   }
-  CHECK_ARRAY_CLOSE (&expected[0], &actual[0], expected.size (), 0.05);
 
-  //for vectors we can also use CHECK_CLOSE
+  //for vectors we can use CHECK_CLOSE
   CHECK_CLOSE (expected, actual, 0.05);
   actual[1] += 1;
   //this shows error message produced when vectors are different
+  CHECK_CLOSE (expected, actual, 0.05);
+}
+
+// Use CHECK_EQUAL and CHECK_CLOSE macros for std::array
+TEST (Array_Checks)
+{
+  std::array<double, 10> expected { 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
+  std::array<double, 10> actual;
+  for (size_t i = 0; i < expected.size (); i++)
+  {
+    actual[i] = expected[i];
+  }
+
+  CHECK_EQUAL (expected, actual);
+
+  for (size_t i = 0; i < expected.size (); i++)
+    actual [i] += (double)std::rand () / RAND_MAX / 10. - 0.05;
+
+  CHECK_CLOSE (expected, actual, 0.05);
+
+  actual[1] += 1;
+  //this shows error message produced when arrays are different
   CHECK_CLOSE (expected, actual, 0.05);
 }
 
