@@ -42,7 +42,7 @@
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "Unhandled exception in CHECK_EX(" #value #message ")");                          \
+        "Unhandled exception in CHECK_EX(" #value #message ")");              \
     }                                                                         \
   } while (0)
 
@@ -123,6 +123,28 @@
         "Unhandled exception in CHECK_ARRAY_CLOSE(" #expected ", " #actual ")"); \
     }                                                                         \
   } while (0)
+
+#ifdef CHECK_ARRY2D_EQUAL
+  #error Macro CHECK_ARRAY2D_EQUAL is already defined
+#endif
+/*!
+  Generate a failure if an array differs from expected values with more than
+  given tolerance
+*/
+#define CHECK_ARRAY2D_EQUAL(expected, actual, rows, columns)                  \
+  do                                                                          \
+  {                                                                           \
+    try {                                                                     \
+      std::string msg;                                                        \
+      if (!UnitTest::CheckArray2DEqual ((expected), (actual), (rows), (columns), msg)) \
+        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
+    }                                                                         \
+    catch (...) {                                                             \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+        "Unhandled exception in CHECK_ARRAY2D_EQUAL(" #expected ", " #actual ")"); \
+    }                                                                         \
+  } while (0)
+
 
 #ifdef CHECK_ARRAY2D_CLOSE
   #error Macro CHECK_ARRAY2D_CLOSE is already defined

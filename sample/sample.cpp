@@ -170,6 +170,48 @@ TEST (Array_Close)
   CHECK_CLOSE (expected, actual, 0.05);
 }
 
+// Example of CHECK_ARRAY2D_EQUAL
+TEST (Array2D_Equal)
+{
+  int expected[10][8];
+  int actual[10][8];
+
+  for (int i = 0; i < 10; i++)
+  {
+    for (int j = 0; j < 8; j++)
+    {
+      expected[i][j] = i * 10 + j;
+      actual[i][j] = i * 10 + j;
+    }
+  }
+  CHECK_ARRAY2D_EQUAL (expected, actual, 10, 8);
+
+  //the next CHECK will fail
+  actual[2][3] = 0;
+  CHECK_ARRAY2D_EQUAL (expected, actual, 10, 8);
+}
+
+// Example of CHECK_ARRAY2D_CLOSE
+TEST (Array2D_Close)
+{
+  double expected[10][8];
+  double actual[10][8];
+
+  for (int i = 0; i < 10; i++)
+  {
+    for (int j = 0; j < 8; j++)
+    {
+      expected[i][j] = i * 10. + j;
+      actual[i][j] = i * 10. + j + (double)std::rand () / RAND_MAX / 10. - 0.05;
+    }
+  }
+  CHECK_ARRAY2D_CLOSE (expected, actual, 10, 8, 0.05);
+
+  //the next CHECK will fail
+  CHECK_ARRAY2D_CLOSE (expected, actual, 10, 8, 0.001);
+}
+
+
 // CHECK_THROW can catch a base class of the exception
 TEST (AnotherException)
 {

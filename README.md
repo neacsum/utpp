@@ -65,7 +65,7 @@ Randy Coulman
 Lieven van der Heide  
 
 ## Building ##
-For Windows users, there is a Visual Studio 2017 solution file. Just open it and
+For Windows users, there is a Visual Studio 2019 solution file. Just open it and
 build any configuration you need (debug, release, 32-bit, 64-bit).
 
 For Unix users there is a makefile that creates a static library `libutpp.a`.

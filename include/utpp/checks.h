@@ -237,22 +237,22 @@ bool CheckArray2DEqual (const Expected& expected, const Actual& actual,
   if (!Equal2D (expected, actual, rows, columns))
   {
     std::stringstream stream;
-    stream << "Expected [ ";
+    stream << "Expected [\n";
     for (size_t expectedRow = 0; expectedRow < rows; ++expectedRow)
     {
-      stream << "[ ";
+      stream << "[";
       for (int expectedColumn = 0; expectedColumn < columns; ++expectedColumn)
         stream << expected[expectedRow][expectedColumn] << " ";
-      stream << "] ";
+      stream << "]\n";
     }
 
-    stream << "] but was [ ";
+    stream << "] but was [\n";
     for (size_t actualRow = 0; actualRow < rows; ++actualRow)
     {
       stream << "[ ";
       for (int actualColumn = 0; actualColumn < columns; ++actualColumn)
         stream << actual[actualRow][actualColumn] << " ";
-      stream << "] ";
+      stream << "]\n";
     }
     stream << "]";
     msg = stream.str ();
@@ -287,22 +287,22 @@ bool CheckArray2DClose (const Expected& expected, const Actual& actual,
     std::stringstream stream;
     stream.precision (prec);
     stream.setf (std::ios::fixed);
-    stream << "Expected [ ";
+    stream << "Expected [\n";
     for (size_t expectedRow = 0; expectedRow < rows; ++expectedRow)
     {
       stream << "[ ";
       for (size_t expectedColumn = 0; expectedColumn < (int)columns; ++expectedColumn)
         stream << expected[expectedRow][expectedColumn] << " ";
-      stream << "] ";
+      stream << "]\n";
     }
 
-    stream << "] +/- " << tolerance << " but was [ ";
+    stream << "] +/- " << tolerance << " but was [\n";
     for (size_t actualRow = 0; actualRow < rows; ++actualRow)
     {
       stream << "[ ";
       for (size_t actualColumn = 0; actualColumn < columns; ++actualColumn)
         stream << actual[actualRow][actualColumn] << " ";
-      stream << "] ";
+      stream << "]\n";
     }
     stream << "]";
     msg = stream.str ();
