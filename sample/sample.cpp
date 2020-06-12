@@ -1,4 +1,5 @@
 #include <utpp/utpp.h>
+#include <Windows.h>
 
 /*-------------------------- Functions under test ---------------------------*/
 #include <vector>
@@ -92,6 +93,7 @@ void throw_2 ()
 
 
 using namespace UnitTest;
+
 
 SUITE (EarthSuite)
 {
@@ -290,7 +292,6 @@ TEST_FIXTURE (ImpossibleFixture, ImpossibleTest)
   printf ("Never gets here");
 }
 
-
 /* An example of a disabled suite*/
 SUITE (not_run)
 {
@@ -300,17 +301,52 @@ SUITE (not_run)
   }
 }
 
+SUITE (time_limits)
+{
+  // No errors as this is less than the global time constraint
+  TEST (SlowTest)
+  {
+    Sleep (2000);
+  }
+
+  // This should trigger the global time constraint limit
+  TEST (TooSlowTest)
+  {
+    Sleep (4000);
+  }
+
+  // This breaks a local time constraint
+  TEST (MustBeQuick)
+  {
+    UTPP_TIME_CONSTRAINT (1000);
+    Sleep (2000);
+  }
+
+  // Test exempt from global limit
+  TEST (LetMeRun)
+  {
+    UTPP_TIME_CONSTRAINT_EXEMPT ();
+    Sleep (4000);
+  }
+}
+
 int main (int argc, char** argv)
 {
+  int ret;
+
   //Suites can be disabled using the "DisableSuite" function
   DisableSuite ("not_run");
+  DisableSuite ("time_limits"); //
 
   GetDefaultReporter ().SetTrace (true);
 
-  int ret = RunAllTests ();
+  ret = RunAllTests ();
+
   std::ofstream os ("test.xml");
   UnitTest::ReporterXml xml (os);
-  UnitTest::RunAllTests (xml);
+  EnableSuite ("time_limits");
+  //Run tests setting a general time limit for each test
+  ret = UnitTest::RunAllTests (xml, 3000);
 
   // CHECK macros can be used outside of tests also.
   // The following check should fail

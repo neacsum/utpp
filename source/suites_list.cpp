@@ -82,7 +82,14 @@ SuitesList& SuitesList::GetSuitesList ()
   return all_suites;
 }
 
-void SuitesList::Disable (const std::string& suite)
+/*!
+  Changes the enabled state of a suite. A suite that is not enabled will not
+  be run.
+
+  \param suite name of suite to be enabled or disabled
+  \param enable suite state
+*/
+void SuitesList::Enable (const std::string& suite, bool enable)
 {
   std::deque <TestSuite>::iterator s;
   for (s = suites.begin (); s != suites.end (); s++)
@@ -91,7 +98,7 @@ void SuitesList::Disable (const std::string& suite)
       break;
   }
   if (s != suites.end ())
-    s->Enable (false);
+    s->Enable (enable);
 }
 
 }

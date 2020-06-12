@@ -32,10 +32,10 @@ private:
 };
 
 /// Defines a local (per scope) time constraint
-#define UNITTEST_TIME_CONSTRAINT(ms) \
+#define UTPP_TIME_CONSTRAINT(ms) \
   UnitTest::TimeConstraint unitTest__timeConstraint__(ms, __FILE__, __LINE__)
 
 /// Flags a test as not subject to the global time constraint
-#define UNITTEST_TIME_CONSTRAINT_EXEMPT() no_time_constraint ()
+#define UTPP_TIME_CONSTRAINT_EXEMPT() no_time_constraint ()
 
 }

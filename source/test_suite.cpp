@@ -256,6 +256,13 @@ int RunSuite (const char *suite_name, Reporter& rpt, int max_time_ms)
 
 void DisableSuite (const std::string& suite_name)
 {
-  SuitesList::GetSuitesList ().Disable (suite_name);
+  SuitesList::GetSuitesList ().Enable (suite_name, false);
 }
+
+void EnableSuite (const std::string& suite_name)
+{
+  SuitesList::GetSuitesList ().Enable (suite_name, true);
+}
+
+
 }
