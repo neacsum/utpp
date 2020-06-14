@@ -1,23 +1,20 @@
 UTPP - A New Generation of UnitTest++
 =====================================
 
-This test library is based on UnitTest++.
+This is a test framework based on UnitTest++.
 
-Latest version can be downloaded from [GitHub](https://neacsum.github.com/utpp) or
-[BitBucket](https://bitbucket.org/neacsum/utpp).
+Latest version can be downloaded from [GitHub](https://neacsum.github.com/utpp).
 
 There is also [documentation](https://neacsum.github.io/utpp) generated with Doxygen.
 
 
 Author:
 Mircea Neacsu (mircea@neacsu.net)
-See [architecture](docs/achitecture.md) file for details
 
 ## License ##
-
 The MIT License (MIT)
  
-Copyright (c) 2017-2019 Mircea Neacsu
+Copyright (c) 2017-2020 Mircea Neacsu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,39 +34,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-
-### UnitTest++ License ###
-Version: v1.4
-Last update: 2008-10-30
-
-UnitTest++ is free software. You may copy, distribute, and modify it under
-the terms of the License contained in the file COPYING distributed
-with this package. This license is the same as the MIT/X Consortium
-license.
-
-Authors:
-Noel Llopis (llopis@convexhull.com)  
-Charles Nicholson (charles.nicholson@gmail.com)
-
-Contributors:  
-Jim Tilander  
-Kim Grasman  
-Jonathan Jansson  
-Dirck Blaskey  
-Rory Driscoll  
-Dan Lind  
-Matt Kimmel -- Submitted with permission from Blue Fang Games  
-Anthony Moralez  
-Jeff Dixon  
-Randy Coulman  
-Lieven van der Heide  
+For more information see the [LICENSE](LICENSE) file.
 
 ## Building ##
 For Windows users, there is a Visual Studio 2019 solution file. Just open it and
-build any configuration you need (debug, release, 32-bit, 64-bit).
+build any configuration you need (debug, release, 32-bit, 64-bit). You can also
+build everything using the `BUILD.bat` script. 
 
-For Unix users there is a makefile that creates a static library `libutpp.a`.
+For Unix users there is a `makefile` that creates a static library `libutpp.a`.
 
 ## Usage ##
+See [using.md](docs/using.md) for details.
 
-See [using.md](docs/using.md) for details
+More details about the internal architecture of this framework can be found in
+the [architecture](docs/achitecture.md) file.

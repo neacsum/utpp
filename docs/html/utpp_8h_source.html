@@ -91,12 +91,14 @@ $(function() {
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keywordtype">void</span> <a class="code" href="utpp_8h.html#aa17aee970a0eec69b081c2ef314fbe78">DisableSuite</a> (<span class="keyword">const</span> std::string&amp; suite_name);</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">int</span> <a class="code" href="utpp_8h.html#a392224b71e7359957c8f64ed596cba95">RunSuite</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> *suite_name, Reporter&amp; rpt = GetDefaultReporter (), <span class="keywordtype">int</span> max_time_ms = 0);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keywordtype">void</span> <a class="code" href="utpp_8h.html#a21da2274dce68fe3f78324cbfcb7651f">EnableSuite</a> (<span class="keyword">const</span> std::string&amp; suite_name);</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifdef _MSC_VER</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#pragma comment (lib, &quot;utpp.lib&quot;)</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keywordtype">int</span> <a class="code" href="utpp_8h.html#a392224b71e7359957c8f64ed596cba95">RunSuite</a> (<span class="keyword">const</span> <span class="keywordtype">char</span> *suite_name, Reporter&amp; rpt = GetDefaultReporter (), <span class="keywordtype">int</span> max_time_ms = 0);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#ifdef _MSC_VER</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#pragma comment (lib, &quot;utpp.lib&quot;)</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="autpp_8h_html_aa17aee970a0eec69b081c2ef314fbe78"><div class="ttname"><a href="utpp_8h.html#aa17aee970a0eec69b081c2ef314fbe78">UnitTest::DisableSuite</a></div><div class="ttdeci">void DisableSuite(const std::string &amp;suite_name)</div><div class="ttdoc">Disable a test suite.</div><div class="ttdef"><b>Definition:</b> test_suite.cpp:257</div></div>
 <div class="ttc" id="atime__constraint_8h_html"><div class="ttname"><a href="time__constraint_8h.html">time_constraint.h</a></div><div class="ttdoc">Definition of UnitTest::TimeConstraint class.</div></div>
@@ -108,6 +110,7 @@ $(function() {
 <div class="ttc" id="autpp_8h_html_a392224b71e7359957c8f64ed596cba95"><div class="ttname"><a href="utpp_8h.html#a392224b71e7359957c8f64ed596cba95">UnitTest::RunSuite</a></div><div class="ttdeci">int RunSuite(const char *suite_name, Reporter &amp;rpt=GetDefaultReporter(), int max_time_ms=0)</div><div class="ttdoc">Run all tests from one suite.</div><div class="ttdef"><b>Definition:</b> test_suite.cpp:252</div></div>
 <div class="ttc" id="autpp_8h_html_a011d106d4150ae0c8d3fdd63ef8762e5"><div class="ttname"><a href="utpp_8h.html#a011d106d4150ae0c8d3fdd63ef8762e5">UnitTest::RunAllTests</a></div><div class="ttdeci">int RunAllTests(Reporter &amp;rpt=GetDefaultReporter(), int max_time_ms=0)</div><div class="ttdoc">Run all tests from all test suites.</div><div class="ttdef"><b>Definition:</b> test_suite.cpp:237</div></div>
 <div class="ttc" id="acheck__macros_8h_html"><div class="ttname"><a href="check__macros_8h.html">check_macros.h</a></div><div class="ttdoc">CHECK... macro-definitions.</div></div>
+<div class="ttc" id="autpp_8h_html_a21da2274dce68fe3f78324cbfcb7651f"><div class="ttname"><a href="utpp_8h.html#a21da2274dce68fe3f78324cbfcb7651f">UnitTest::EnableSuite</a></div><div class="ttdeci">void EnableSuite(const std::string &amp;suite_name)</div><div class="ttdoc">Enable a test suite.</div><div class="ttdef"><b>Definition:</b> test_suite.cpp:262</div></div>
 <div class="ttc" id="atest__suite_8h_html"><div class="ttname"><a href="test__suite_8h.html">test_suite.h</a></div><div class="ttdoc">Definition of UnitTest::TestSuite class.</div></div>
 <div class="ttc" id="atest__reporter__dbgout_8h_html"><div class="ttname"><a href="test__reporter__dbgout_8h.html">test_reporter_dbgout.h</a></div><div class="ttdoc">Definition of UnitTest::ReporterDbgout class.</div></div>
 <!-- start footer part -->

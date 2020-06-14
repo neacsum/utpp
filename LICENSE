@@ -19,3 +19,34 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+This work is inspired by UnitTest++.
+
+UnitTest++ License
+Version: v1.4
+Last update: 2008-10-30
+
+UnitTest++ is free software. You may copy, distribute, and modify it under
+the terms of the License contained in the file COPYING distributed
+with this package. This license is the same as the MIT/X Consortium
+license.
+
+Authors:
+Noel Llopis (llopis@convexhull.com)  
+Charles Nicholson (charles.nicholson@gmail.com)
+
+Contributors:  
+Jim Tilander  
+Kim Grasman  
+Jonathan Jansson  
+Dirck Blaskey  
+Rory Driscoll  
+Dan Lind  
+Matt Kimmel -- Submitted with permission from Blue Fang Games  
+Anthony Moralez  
+Jeff Dixon  
+Randy Coulman  
+Lieven van der Heide  
+
+
