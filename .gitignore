@@ -8,6 +8,7 @@
 *.obj
 *.bak
 *.ipch
+*.user
 .vs/
 /o
 sample/x86/
