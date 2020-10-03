@@ -175,8 +175,8 @@
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
-    try { expression; }                                                       \
-    catch (const ExpectedExceptionType&) { caught_ = true; }                  \
+    try { try { (expression); }                                               \
+          catch (const ExpectedExceptionType& ) { caught_ = true; } }         \
     catch (...) {}                                                            \
     if (!caught_)                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -194,13 +194,13 @@
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
-    try { expression; }                                                       \
-    catch (const ExpectedExceptionType& actual) {                             \
-      caught_ = true;                                                         \
-      std::string msg;                                                        \
-      if (!UnitTest::CheckEqual(expected, actual, msg))                       \
-        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
-    }                                                                         \
+    try { try { expression; }                                                 \
+          catch (const ExpectedExceptionType& actual) {                       \
+            caught_ = true;                                                   \
+            std::string msg;                                                  \
+            if (!UnitTest::CheckEqual(expected, actual, msg))                 \
+              UnitTest::ReportFailure (__FILE__, __LINE__, msg);              \
+          } }                                                                 \
     catch (...) {}                                                            \
     if (!caught_)                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
