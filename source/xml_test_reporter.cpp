@@ -7,11 +7,14 @@
 */
 
 #include <utpp/utpp.h>
-
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <iomanip>
+#include <time.h>
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 
 using namespace std;
 
@@ -48,21 +51,46 @@ namespace UnitTest {
 ReporterXml::ReporterXml (std::ostream& ostream)
   : os (ostream)
 {
+  char tmp[80];
+  time_t now;
+  time (&now);
+  struct tm* t = gmtime (&now);
+  strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M%SZ", t);
+  start_time = tmp;
 }
 
 /// Generate XML report
 int ReporterXml::Summary ()
 {
   string suite;
+  string cmd;
+#ifdef _WIN32
+  wstring wcmd{ GetCommandLineW () };
+  int nsz = WideCharToMultiByte (CP_UTF8, 0, wcmd.c_str (), -1, 0, 0, 0, 0);
+  if (nsz)
+  {
+    cmd.resize (nsz);
+    WideCharToMultiByte (CP_UTF8, 0, wcmd.c_str (), -1, &cmd[0], nsz, 0, 0);
+    cmd.resize (nsz - 1); //output is null-terminated
+  }
+#endif
+  time_t now;
+  char tmp[80];
+  time (&now);
+  struct tm* t = gmtime (&now);
+  strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M%SZ", t);
 
   os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
 
-  os << "<unittest-results"
-    << " tests=\"" << total_test_count << "\""
-    << " failedtests=\"" << total_failed_count << "\""
-    << " failures=\"" << total_failures_count << "\""
-    << " time_sec=\"" << fixed << setprecision (3) << total_time_msec / 1000. << "\""
-    << ">" << endl;
+  os << "<utpp-results"
+    << " total=\"" << total_test_count << '\"'
+    << " failed=\"" << total_failed_count << '\"'
+    << " failures=\"" << total_failures_count << '\"'
+    << " duration=\"" << fixed << setprecision (3) << total_time_msec / 1000. << '\"'
+    << '>' << endl;
+  os << " <start-time>" << start_time << "</start-time>" << endl;
+
+  os << " <command-line>" <<  XmlEscape (cmd) << "</command-line>" << endl;
 
   std::deque<TestResult>::iterator i;
   for (i = results.begin (); i != results.end (); ++i)
@@ -93,7 +121,10 @@ int ReporterXml::Summary ()
   }
   if (!suite.empty())
     os << " </suite>" << endl;
-  os << "</unittest-results>" << endl;
+  os << " <end-time>"
+    << tmp
+    << "</end-time>" << endl;
+  os << "</utpp-results>" << endl;
   return ReporterDeferred::Summary ();
 }
 

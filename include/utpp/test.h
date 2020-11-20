@@ -33,6 +33,7 @@ public:
   Test (const std::string& testName);
   virtual ~Test ();
   void no_time_constraint ();
+  bool is_time_constraint () const;
 
   int failure_count () const;
   int test_time_ms () const;
@@ -47,7 +48,8 @@ public:
 protected:
   std::string name;                   ///< Name of this test
   int failures;                       ///< Number of failures in this test
-  int time;                           ///< Run time or -1 if exempt from time constraints 
+  int time;                           ///< Run time
+  bool time_exempt;                   ///< _true_ if exempt from time constraints
 
 private:
 #ifdef UTPP_CPP11
@@ -83,7 +85,14 @@ const std::string& Test::test_name () const
 inline
 void Test::no_time_constraint ()
 {
-  time = -1;
+  time_exempt = true;
+}
+
+/// Return _true_ if test must be run under global time constraints
+inline 
+bool Test::is_time_constraint () const
+{
+  return !time_exempt;
 }
 
 ///Currently executing test

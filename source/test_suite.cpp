@@ -157,7 +157,7 @@ void TestSuite::RunCurrentTest (const Inserter* inf)
   }
 
   int actual_time = CurrentTest->test_time_ms ();
-  if (actual_time >= 0 && max_runtime && actual_time > max_runtime)
+  if (CurrentTest->is_time_constraint() && max_runtime && actual_time > max_runtime)
   {
     std::stringstream stream;
     stream << "Global time constraint failed while running test " << inf->test_name

@@ -34,6 +34,7 @@ private:
 #endif
 
   std::ostream& os;
+  std::string start_time;
 };
 
 }

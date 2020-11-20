@@ -22,6 +22,7 @@ Test::Test (const std::string& test_name)
   : name (test_name)
   , failures (0)
   , time (0)
+  , time_exempt (false)
 {
 }
 
