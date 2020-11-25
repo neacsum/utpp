@@ -18,9 +18,6 @@
     <ClCompile Include="source\test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\xml_test_reporter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\deferred_test_reporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,6 +42,9 @@
     <ClCompile Include="source\test_reporter_dbgout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\test_reporter_xml.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\utpp\test.h">
@@ -57,9 +57,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utpp\test_reporter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\utpp\xml_test_reporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utpp\deferred_test_reporter.h">
@@ -87,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\utpp\test_reporter_dbgout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utpp\test_reporter_xml.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,5 @@
 /*!
-  \file xml_test_reporter.cpp
+  \file test_reporter_xml.cpp
   \brief Implementation of UnitTest::ReporterXml class
 
   (c) Mircea Neacsu 2017
@@ -55,7 +55,7 @@ ReporterXml::ReporterXml (std::ostream& ostream)
   time_t now;
   time (&now);
   struct tm* t = gmtime (&now);
-  strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M%SZ", t);
+  strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
   start_time = tmp;
 }
 
@@ -78,7 +78,7 @@ int ReporterXml::Summary ()
   char tmp[80];
   time (&now);
   struct tm* t = gmtime (&now);
-  strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M%SZ", t);
+  strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
 
   os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
 
