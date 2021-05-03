@@ -626,8 +626,8 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span>                                                                          \</div>
 <div class="line">  {                                                                           \</div>
 <div class="line">    bool caught_ = <span class="keyword">false</span>;                                                     \</div>
-<div class="line">    try { expression; }                                                       \</div>
-<div class="line">    catch (<span class="keyword">const</span> ExpectedExceptionType&amp;) { caught_ = <span class="keyword">true</span>; }                  \</div>
+<div class="line">    try { <span class="keywordflow">try</span> { (expression); }                                               \</div>
+<div class="line">          catch (<span class="keyword">const</span> ExpectedExceptionType&amp; ) { caught_ = <span class="keyword">true</span>; } }         \</div>
 <div class="line">    catch (...) {}                                                            \</div>
 <div class="line">    if (!caught_)                                                             \</div>
 <div class="line">      UnitTest::ReportFailure (__FILE__, __LINE__,                            \</div>
@@ -672,13 +672,13 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">do</span>                                                                          \</div>
 <div class="line">  {                                                                           \</div>
 <div class="line">    bool caught_ = <span class="keyword">false</span>;                                                     \</div>
-<div class="line">    try { expression; }                                                       \</div>
-<div class="line">    catch (<span class="keyword">const</span> ExpectedExceptionType&amp; actual) {                             \</div>
-<div class="line">      caught_ = <span class="keyword">true</span>;                                                         \</div>
-<div class="line">      std::string msg;                                                        \</div>
-<div class="line">      if (!UnitTest::CheckEqual(expected, actual, msg))                       \</div>
-<div class="line">        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \</div>
-<div class="line">    }                                                                         \</div>
+<div class="line">    try { <span class="keywordflow">try</span> { expression; }                                                 \</div>
+<div class="line">          catch (<span class="keyword">const</span> ExpectedExceptionType&amp; actual) {                       \</div>
+<div class="line">            caught_ = <span class="keyword">true</span>;                                                   \</div>
+<div class="line">            std::string msg;                                                  \</div>
+<div class="line">            if (!UnitTest::CheckEqual(expected, actual, msg))                 \</div>
+<div class="line">              UnitTest::ReportFailure (__FILE__, __LINE__, msg);              \</div>
+<div class="line">          } }                                                                 \</div>
 <div class="line">    catch (...) {}                                                            \</div>
 <div class="line">    if (!caught_)                                                             \</div>
 <div class="line">      UnitTest::ReportFailure (__FILE__, __LINE__,                            \</div>

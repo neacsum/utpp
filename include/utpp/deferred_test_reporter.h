@@ -7,7 +7,7 @@
   See README file for full copyright information.
 */
 
-#include <utpp/test_reporter.h>
+#include "test_reporter.h"
 #include <deque>
 
 namespace UnitTest

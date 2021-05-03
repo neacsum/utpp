@@ -160,12 +160,12 @@
     <ClCompile Include="source\suites_list.cpp" />
     <ClCompile Include="source\test.cpp" />
     <ClCompile Include="source\test_reporter_dbgout.cpp" />
+    <ClCompile Include="source\test_reporter_xml.cpp" />
     <ClCompile Include="source\test_suite.cpp" />
     <ClCompile Include="source\test_reporter.cpp" />
     <ClCompile Include="source\test_reporter_stdout.cpp" />
     <ClCompile Include="source\time_constraint.cpp" />
     <ClCompile Include="source\time_helpers.cpp" />
-    <ClCompile Include="source\xml_test_reporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\utpp\check_macros.h" />
@@ -177,11 +177,11 @@
     <ClInclude Include="include\utpp\test_reporter.h" />
     <ClInclude Include="include\utpp\test_reporter_dbgout.h" />
     <ClInclude Include="include\utpp\test_reporter_stdout.h" />
+    <ClInclude Include="include\utpp\test_reporter_xml.h" />
     <ClInclude Include="include\utpp\test_suite.h" />
     <ClInclude Include="include\utpp\time_constraint.h" />
     <ClInclude Include="include\utpp\time_helpers.h" />
     <ClInclude Include="include\utpp\utpp.h" />
-    <ClInclude Include="include\utpp\xml_test_reporter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="docs\using.md">
