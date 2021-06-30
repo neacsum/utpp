@@ -5,10 +5,16 @@
         <MSBuild Projects="utpp.sln" Properties="Configuration=Debug;Platform=x86"/>  
         <MSBuild Projects="utpp.sln" Properties="Configuration=Release;Platform=x86"/> 
     </Target>
-    <Target Name="Sample">
-        <MSBuild Projects="sample/sample.sln" Properties="Configuration=Debug;Platform=x64"/>  
-        <MSBuild Projects="sample/sample.sln" Properties="Configuration=Release;Platform=x64"/> 
-        <MSBuild Projects="sample/sample.sln" Properties="Configuration=Debug;Platform=x86"/>  
-        <MSBuild Projects="sample/sample.sln" Properties="Configuration=Release;Platform=x86"/> 
+    <Target Name="clean">  
+        <MSBuild Projects="utpp.sln" Properties="Configuration=Debug;Platform=x64" Targets="clean"/>  
+        <MSBuild Projects="utpp.sln" Properties="Configuration=Release;Platform=x64" Targets="clean"/> 
+        <MSBuild Projects="utpp.sln" Properties="Configuration=Debug;Platform=x86" Targets="clean"/>  
+        <MSBuild Projects="utpp.sln" Properties="Configuration=Release;Platform=x86" Targets="clean"/> 
+    </Target>
+    <Target Name="rebuild">  
+        <MSBuild Projects="utpp.sln" Properties="Configuration=Debug;Platform=x64" Targets="rebuild"/>  
+        <MSBuild Projects="utpp.sln" Properties="Configuration=Release;Platform=x64" Targets="rebuild"/> 
+        <MSBuild Projects="utpp.sln" Properties="Configuration=Debug;Platform=x86" Targets="rebuild"/>  
+        <MSBuild Projects="utpp.sln" Properties="Configuration=Release;Platform=x86" Targets="rebuild"/> 
     </Target>
 </Project>
