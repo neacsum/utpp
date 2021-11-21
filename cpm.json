@@ -1,0 +1,5 @@
+{
+    "name": "utpp",
+    "git": "git@github.org:neacsum/utpp.git",
+    "build": "build.bat"
+}
