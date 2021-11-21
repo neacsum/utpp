@@ -17,4 +17,10 @@
         <MSBuild Projects="utpp.sln" Properties="Configuration=Debug;Platform=x86" Targets="rebuild"/>  
         <MSBuild Projects="utpp.sln" Properties="Configuration=Release;Platform=x86" Targets="rebuild"/> 
     </Target>
+    <Target Name="lib">  
+        <MSBuild Projects="utpp.vcxproj" Properties="Configuration=Debug;Platform=x64"/>  
+        <MSBuild Projects="utpp.vcxproj" Properties="Configuration=Release;Platform=x64"/> 
+        <MSBuild Projects="utpp.vcxproj" Properties="Configuration=Debug;Platform=x86"/>  
+        <MSBuild Projects="utpp.vcxproj" Properties="Configuration=Release;Platform=x86"/> 
+    </Target>
 </Project>
