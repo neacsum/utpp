@@ -1,6 +1,6 @@
 {
     "name": "utpp",
-    "git": "git@github.org:neacsum/utpp.git",
+    "git": "git@github.com:neacsum/utpp.git",
     "build": 
       [
         {"os": "windows", "cmd": "build.bat", "args": ["lib"]},
