@@ -330,8 +330,6 @@ template <typename Expected, typename Actual, typename Tolerance>
 bool CheckArray2DClose (const Expected& expected, const Actual& actual,
                         size_t rows, size_t columns, const Tolerance& tolerance, std::string& msg)
 {
-  bool equal = true;
-
   if (!Close2D (expected, actual, rows, columns, tolerance))
   {
     int prec = (int)(1 - log10 ((double)tolerance));

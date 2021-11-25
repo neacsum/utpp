@@ -1,5 +1,4 @@
 #include <utpp/utpp.h>
-#include <Windows.h>
 
 /*-------------------------- Functions under test ---------------------------*/
 #include <vector>
@@ -22,7 +21,7 @@ const char *planet_name () {
 
 class flat_earth_exception : public std::exception {
 public:
-  const char *what () const { return "Earth is not flat!"; }
+  const char *what () const noexcept { return "Earth is not flat!"; }
 };
 
 void go_to_end_of_earth ()
@@ -306,27 +305,27 @@ SUITE (time_limits)
   // No errors as this is less than the global time constraint
   TEST (SlowTest)
   {
-    Sleep (2000);
+    SleepMs (2000);
   }
 
   // This should trigger the global time constraint limit
   TEST (TooSlowTest)
   {
-    Sleep (4000);
+    SleepMs (4000);
   }
 
   // This breaks a local time constraint
   TEST (MustBeQuick)
   {
     UTPP_TIME_CONSTRAINT (1000);
-    Sleep (2000);
+    SleepMs (2000);
   }
 
   // Test exempt from global limit
   TEST (LetMeRun)
   {
     UTPP_TIME_CONSTRAINT_EXEMPT ();
-    Sleep (4000);
+    SleepMs (4000);
   }
 }
 

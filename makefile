@@ -34,7 +34,7 @@ endif
 LIB = $(LIBDIR)/libutpp.a
 
 OFILES =  deferred_test_reporter.o suites_list.o test.o test_reporter.o test_reporter_stdout.o \
- test_suite.o time_constraint.o time_helpers.o xml_test_reporter.o
+ test_suite.o time_constraint.o time_helpers.o test_reporter_xml.o
  
 OBJS = $(addprefix $(OBJDIR)/,$(OFILES))
 

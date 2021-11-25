@@ -47,9 +47,9 @@ int Timer::GetTimeInMs () const
 /// Return elapsed time in microseconds since the starting time
 long long Timer::GetTimeInUs () const
 {
-  long long elapsedTime = GetTime () - startTime;
+  long long int elapsedTime = GetTime () - startTime;
   double seconds = double (elapsedTime) / double (frequency);
-  return long long (seconds * 1000000.0);
+  return (long long int) (seconds * 1000000.0);
 }
 
 long long Timer::GetTime () const
