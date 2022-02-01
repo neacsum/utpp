@@ -114,6 +114,7 @@
 #ifdef CHECK_ARRAY_EQUAL
 #error Macro CHECK_ARRAY_EQUAL is already defined
 #endif
+
 ///Generate a failure if an array is different from expected results
 #define CHECK_ARRAY_EQUAL(expected, actual, count) \
   do                                                                          \
@@ -197,16 +198,16 @@
 #error Macro CHECK_THROW is already defined
 #endif
 /// Checks if evaluating the expression triggers an exception of the given type.
-#define CHECK_THROW(ExpectedExceptionType, expression) \
+#define CHECK_THROW(expected_TExceptionType, expression) \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
     try { try { (expression); }                                               \
-          catch (const ExpectedExceptionType& ) { caught_ = true; } }         \
+          catch (const expected_TExceptionType& ) { caught_ = true; } }       \
     catch (...) {}                                                            \
     if (!caught_)                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "Expected exception: \"" #ExpectedExceptionType "\" not thrown");     \
+        "expected_T exception: \"" #expected_TExceptionType "\" not thrown"); \
   } while(0)
 
 #ifdef CHECK_THROW_EQUAL
@@ -216,12 +217,12 @@
   Checks if evaluating the expression triggers an exception of the given type
   and with the expected value.
 */
-#define CHECK_THROW_EQUAL(ExpectedExceptionType, expected, expression) \
+#define CHECK_THROW_EQUAL(expected_TExceptionType, expected, expression) \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
     try { try { expression; }                                                 \
-          catch (const ExpectedExceptionType& actual) {                       \
+          catch (const expected_TExceptionType& actual) {                     \
             caught_ = true;                                                   \
             std::string msg;                                                  \
             if (!UnitTest::CheckEqual(expected, actual, msg))                 \
@@ -230,7 +231,7 @@
     catch (...) {}                                                            \
     if (!caught_)                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "Expected exception: \"" #ExpectedExceptionType "\" not thrown");     \
+        "expected_T exception: \"" #expected_TExceptionType "\" not thrown"); \
   } while(0)
 
 #ifdef CHECK_FILE_EQUAL
@@ -275,21 +276,36 @@
       throw UnitTest::test_abort (__FILE__, __LINE__, message);               \
   } while (0)
 
-///------------------ Check functions -----------------------------------------
 namespace UnitTest {
 
-/// Check if value is true (or not 0)
+//------------------ Check functions -----------------------------------------
+
+/*!
+  Check if value is true (or not 0)
+
+  \param value object to check. Must have convertible to bool
+
+  \return `true` if successful
+*/ 
+
 template <typename Value>
 bool Check (Value const value)
 {
-  return !!value; // doing double negative to avoid silly VS warnings
+  return (bool)value;
 }
 
 /*!
   Check if two values are equal. If not, generate a failure message.
+
+  \param expected - expected_T value
+  \param actual   - actual_T value
+  \param msg      - generated error message
+
+  \return `true` if values compare as equal
+@{
 */
-template <typename Expected, typename Actual>
-bool CheckEqual (const Expected& expected, const Actual& actual, std::string& msg)
+template <typename expected_T, typename actual_T>
+bool CheckEqual (const expected_T& expected, const actual_T& actual, std::string& msg)
 {
   if (!(expected == actual))
   {
@@ -298,10 +314,63 @@ bool CheckEqual (const Expected& expected, const Actual& actual, std::string& ms
     msg = stream.str ();
     return false;
   }
+  else
+    msg.clear ();
   return true;
 }
 
-/// Specialization of CheckEqual for vectors
+template <typename expected_T, typename actual_T>
+bool CheckEqual (const expected_T* expected, const actual_T* actual, std::string& msg)
+{
+  if (!(*expected == *actual))
+  {
+    std::stringstream stream;
+    stream << "Expected " << *expected << " but was " << *actual;
+    msg = stream.str ();
+    return false;
+  }
+  else
+    msg.clear ();
+  return true;
+}
+///@}
+
+/*!
+  CheckEqual function for C strings.
+
+  \param expected - expected_T string value
+  \param actual   - actual_T string value
+  \param msg      - generated error message
+
+  \return `true` if strings match
+*/
+template <>
+inline
+bool CheckEqual<char, char> (const char* expected, const char* actual, std::string& msg)
+{
+  if (strcmp (expected, actual))
+  {
+    std::stringstream stream;
+    stream << "Expected \'" << expected << "\' but was \'" << actual << "\'";
+    msg = stream.str ();
+    return false;
+  }
+  else
+    msg.clear ();
+  return true;
+}
+
+/*!
+  CheckEqual for C++ vectors.
+
+  The generated error message lists the expected and actual vector elements.
+
+  \param expected - expected_T vector values
+  \param actual   - actual_T vector values
+  \param msg      - generated error message
+
+  \return `true` if vectors compare as equal
+*/ 
 template <typename T>
 inline
 bool CheckEqual (const std::vector<T>& expected, const std::vector<T>& actual, std::string& msg)
@@ -311,21 +380,33 @@ bool CheckEqual (const std::vector<T>& expected, const std::vector<T>& actual, s
     std::stringstream stream;
     stream << "Expected [ ";
     typename std::vector<T>::const_iterator p;
-    for (p = expected.begin(); p != expected.end(); ++p)
+    for (p = expected.begin (); p != expected.end (); ++p)
       stream << *p << " ";
 
     stream << "] but was [ ";
-    for (p = actual.begin(); p != actual.end(); ++p)
+    for (p = actual.begin (); p != actual.end (); ++p)
       stream << *p << " ";
 
     stream << "]";
     msg = stream.str ();
     return false;
   }
+  else
+    msg.clear ();
   return true;
 }
 
-/// Specialization of CheckEqual for arrays
+/*!
+  CheckEqual for C++ arrays.
+
+  The generated error message lists the expected and actual array elements.
+
+  \param expected - expected_T array
+  \param actual   - actual_T array
+  \param msg      - generated error message
+
+  \return `true` if arrays compare as equal
+*/
 template <typename T, size_t N>
 inline
 bool CheckEqual (const std::array<T,N>& expected, const std::array<T,N>& actual, std::string& msg)
@@ -345,54 +426,27 @@ bool CheckEqual (const std::array<T,N>& expected, const std::array<T,N>& actual,
     msg = stream.str ();
     return false;
   }
+  else
+    msg.clear ();
   return true;
 }
-
-/*!
-  Specializations of CheckEqual function for C strings
-  @{
-*/
-inline
-bool CheckEqual (const char* expected, const char* actual, std::string& msg)
-{
-  if (strcmp (expected, actual))
-  {
-    std::stringstream stream;
-    stream << "Expected \'" << expected << "\' but was \'" << actual << "\'";
-    msg = stream.str ();
-    return false;
-  }
-  return true;
-}
-
-inline
-bool CheckEqual (char* expected, char* actual, std::string& msg)
-{
-  return CheckEqual (const_cast<const char *>(expected), const_cast<const char*>(actual), msg);
-}
-
-inline
-bool CheckEqual (const char* expected, char* actual, std::string& msg)
-{
-  return CheckEqual (const_cast<const char *>(expected), const_cast<const char*>(actual), msg);
-}
-
-inline
-bool CheckEqual (char* expected, const char* actual, std::string& msg)
-{
-  return CheckEqual (const_cast<const char *>(expected), const_cast<const char*>(actual), msg);
-}
-///@}
 
 /*!
   Check if two values are closer than specified tolerance. If not, generate a
   failure message.
+
+  \param expected   - expected value
+  \param actual     - actual value
+  \param tolerance  - allowed tolerance
+  \param msg        - generated error message
+
+  \return `true` if actual value is within the tolerance range
 */
-template <typename Expected, typename Actual, typename Tolerance>
-bool CheckClose (const Expected& expected, const Actual& actual, const Tolerance& tolerance,
+template <typename expected_T, typename actual_T, typename Tolerance>
+bool CheckClose (const expected_T& expected, const actual_T& actual, const Tolerance& tolerance,
                  std::string& msg)
 {
-  if (abs(actual - expected) > tolerance)
+  if (abs (actual - expected) > tolerance)
   {
     int prec = (int)(1 - log10 ((double)tolerance));
     std::stringstream stream;
@@ -402,12 +456,21 @@ bool CheckClose (const Expected& expected, const Actual& actual, const Tolerance
     msg = stream.str ();
     return false;
   }
+  else
+    msg.clear ();
   return true;
 }
 
-/// Return true if two arrays are equal
-template <typename Expected, typename Actual>
-bool Equal1D (const Expected& expected, const Actual& actual, size_t count)
+/*!
+  Return true if two arrays are equal.
+  \param expected   - array of expected values
+  \param actual     - array of actual values
+  \param count      - number of elements in each array
+
+  \return `true` if the two arrays are equal
+*/
+template <typename expected_T, typename actual_T>
+bool Equal1D (const expected_T& expected, const actual_T& actual, size_t count)
 {
   for (size_t i = 0; i < count; ++i)
     if (expected[i] != actual[i])
@@ -417,9 +480,15 @@ bool Equal1D (const Expected& expected, const Actual& actual, size_t count)
 
 /*!
   Check if two arrays are equal. If not, generate a failure message.
+  \param expected   - Expected value
+  \param actual     - Actual value
+  \param count      - number of elements in each array
+  \param msg        - generated error message
+
+  \return `true` if the two values are equal
 */
-template <typename Expected, typename Actual>
-bool CheckArrayEqual (const Expected& expected, const Actual& actual,
+template <typename expected_T, typename actual_T>
+bool CheckArrayEqual (const expected_T& expected, const actual_T& actual,
                       size_t count, std::string& msg)
 {
   if (!Equal1D (expected, actual, count))
@@ -440,23 +509,42 @@ bool CheckArrayEqual (const Expected& expected, const Actual& actual,
   return true;
 }
 
-/// Return true if values in two arrays are closer than specified tolerance.
-template <typename Expected, typename Actual, typename Tolerance>
-bool Close1D (const Expected& expected, const Actual& actual, size_t count, const Tolerance& tolerance)
+/*!
+  Return true if values in two arrays are closer than specified tolerance.
+
+  \param expected   - array of expected values
+  \param actual     - array of actual values
+  \param count      - number of elements in each array
+  \param tolerance  - allowed tolerance
+
+  \return `true` if all actual values are within the tolerance range
+*/
+template <typename expected_T, typename actual_T, typename Tolerance>
+bool Close1D (const expected_T& expected, const actual_T& actual, size_t count, const Tolerance& tolerance)
 {
-  bool equal = true;
-  for (size_t i = 0; equal && i < count; ++i)
-    equal = abs (expected[i] - actual[i]) <= tolerance;
-  return equal;
+  for (size_t i = 0; i < count; ++i)
+  {
+    if (abs (expected[i] - actual[i]) > tolerance)
+      return false;
+  }
+  return true;
 }
 
 
 /*!
-  Check if values in two arrays are closer than specified tolerance. If not,
+  Check if values in two C arrays are closer than specified tolerance. If not,
   generate a failure message.
+
+  \param expected   - array of expected values
+  \param actual     - array of actual values
+  \param count      - arrays size
+  \param tolerance  - allowed tolerance
+  \param msg        - generated error message
+
+  \return `true` if all actual values are within the tolerance range
 */
-template <typename Expected, typename Actual, typename Tolerance>
-bool CheckArrayClose (const Expected& expected, const Actual& actual,
+template <typename expected_T, typename actual_T, typename Tolerance>
+bool CheckArrayClose (const expected_T& expected, const actual_T& actual,
                       size_t count, const Tolerance& tolerance, std::string& msg)
 {
   if (!Close1D (expected, actual, count, tolerance))
@@ -479,7 +567,16 @@ bool CheckArrayClose (const Expected& expected, const Actual& actual,
   return true;
 }
 
-/// Specialization of CheckClose function for vectors
+/*!
+  Check if values in two C++ vectors are closer than specified tolerance. If not,
+  generate a failure message.
+
+  \param expected   - vector of expected values
+  \param actual     - vector of actual values
+  \param tolerance  - allowed tolerance
+  \param msg        - generated error message
+  \return `true` if all actual values are within the tolerance range
+*/
 template <typename T>
 bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, const T& tolerance,
   std::string& msg)
@@ -505,7 +602,16 @@ bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, c
   return true;
 }
 
-/// Specialization of CheckClose function for arrays
+/*!
+  Check if values in two C++ arrays are closer than specified tolerance. If not,
+  generate a failure message.
+
+  \param expected   - array of expected values
+  \param actual     - array of actual values
+  \param tolerance  - allowed tolerance
+  \param msg        - generated error message
+  \return `true` if all actual values are within the tolerance range
+*/
 template <typename T, size_t N>
 bool CheckClose (const std::array<T, N>& expected, const std::array<T, N>& actual, const T& tolerance,
   std::string& msg)
@@ -531,9 +637,17 @@ bool CheckClose (const std::array<T, N>& expected, const std::array<T, N>& actua
   return true;
 }
 
-/// Return true if two 2D arrays are equal
-template <typename Expected, typename Actual>
-bool Equal2D (const Expected& expected, const Actual& actual, size_t rows, size_t columns)
+/*!
+  Return true if two 2D arrays are equal.
+  \param expected - array of expected values
+  \param actual   - array of actual values
+  \param rows     - number of rows in each array
+  \param columns  - number of columns in each array
+
+  \return `true` if the two arrays are equal
+*/
+template <typename expected_T, typename actual_T>
+bool Equal2D (const expected_T& expected, const actual_T& actual, size_t rows, size_t columns)
 {
   for (size_t i = 0; i < rows; ++i)
     if (!Equal1D (expected[i], actual[i], columns))
@@ -543,9 +657,16 @@ bool Equal2D (const Expected& expected, const Actual& actual, size_t rows, size_
 
 /*!
   Check if two 2D arrays are equal. If not, generate a failure message.
+  \param expected - array of expected values
+  \param actual   - array of actual values
+  \param rows     - number of rows in each array
+  \param columns  - number of columns in each array
+  \param msg      - generated error message
+
+  \return `true` if the two arrays are equal
 */
-template <typename Expected, typename Actual>
-bool CheckArray2DEqual (const Expected& expected, const Actual& actual,
+template <typename expected_T, typename actual_T>
+bool CheckArray2DEqual (const expected_T& expected, const actual_T& actual,
                         size_t rows, size_t columns, std::string& msg)
 {
   if (!Equal2D (expected, actual, rows, columns))
@@ -576,9 +697,18 @@ bool CheckArray2DEqual (const Expected& expected, const Actual& actual,
   return true;
 }
 
-/// Return true if values in two 2D arrays are closer than specified tolerance.
-template <typename Expected, typename Actual, typename Tolerance>
-bool Close2D (const Expected& expected, const Actual& actual, size_t rows, size_t columns, const Tolerance& tolerance)
+/*!
+  Return true if values in two 2D arrays are closer than specified tolerance.
+  \param expected   - array of expected values
+  \param actual     - array of actual values
+  \param rows       - number of rows in each array
+  \param columns    - number of columns in each array
+  \param tolerance  - allowed tolerance
+
+  \return `true` if all values in the two arrays are within given tolerance
+*/
+template <typename expected_T, typename actual_T, typename Tolerance>
+bool Close2D (const expected_T& expected, const actual_T& actual, size_t rows, size_t columns, const Tolerance& tolerance)
 {
   for (size_t i = 0; i < rows; ++i)
     if (!Close1D (expected[i], actual[i], columns, tolerance))
@@ -589,9 +719,17 @@ bool Close2D (const Expected& expected, const Actual& actual, size_t rows, size_
 /*!
   Check if values in two 2D arrays are closer than specified tolerance. If not,
   generate a failure message.
+  \param expected   - array of expected values
+  \param actual     - array of actual values
+  \param rows       - number of rows in each array
+  \param columns    - number of columns in each array
+  \param tolerance  - allowed tolerance
+  \param msg        - generated error message
+
+  \return `true` if all values in the two arrays are within given tolerance
 */
-template <typename Expected, typename Actual, typename Tolerance>
-bool CheckArray2DClose (const Expected& expected, const Actual& actual,
+template <typename expected_T, typename actual_T, typename Tolerance>
+bool CheckArray2DClose (const expected_T& expected, const actual_T& actual,
                         size_t rows, size_t columns, const Tolerance& tolerance, std::string& msg)
 {
   if (!Close2D (expected, actual, rows, columns, tolerance))
@@ -622,8 +760,86 @@ bool CheckArray2DClose (const Expected& expected, const Actual& actual,
     msg = stream.str ();
     return false;
   }
+  msg.clear ();
   return true;
 }
 
-bool CheckFileEqual (const char* ref_file, const char *actual_file, std::string& msg);
+#ifndef _WIN32
+#define sprintf_s sprintf
+#endif
+
+/*!
+  Function called by CHECK_FILE_EQUAL macro to compare two files.
+  \param ref      Name of reference file
+  \param actual   Name of output file
+  \param message  Generated error message
+  \return `true` if files are equal
+
+  Files are compared as ASCII files and the error message tries to show where
+  the first difference is.
+*/
+inline
+bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
+{
+  struct stat st1, st2;
+  char buf[1024];
+
+  stat (ref, &st1);
+  stat (actual, &st2);
+  if (st1.st_size != st2.st_size)
+  {
+    sprintf_s (buf, "Size is different (%ld vs %ld) while comparing %s and %s",
+      st1.st_size, st2.st_size, ref, actual);
+    message = buf;
+    return false;
+  }
+
+  FILE* f1, * f2;
+  f1 = fopen (ref, "r");
+  f2 = fopen (actual, "r");
+  if (!f1 || !f2)
+  {
+    if (f1) fclose (f1);
+    if (f2) fclose (f2);
+    sprintf_s (buf, "Failed to open files while comparing %s and %s",
+      ref, actual);
+    message = buf;
+    return false; //something wrong with files
+  }
+
+  size_t ln = 0;
+  bool ok = true;
+  char ln1[1024], ln2[1024];
+  while (ok)
+  {
+    ln++;
+    if (fgets (ln1, sizeof (ln1), f1)
+      && fgets (ln2, sizeof (ln2), f2))
+      ok = !strcmp (ln1, ln2);
+    else
+      break;
+  }
+  fclose (f1);
+  fclose (f2);
+  if (!ok)
+  {
+    char* p1, * p2;
+    int off;
+    for (off = 0, p1 = ln1, p2 = ln2;
+      *p1 && *p2 && *p1 == *p2;
+      p1++, p2++, off++)
+      ;
+    sprintf_s (buf, "Difference at line %zd position %d while comparing %s and %s",
+      ln, off, ref, actual);
+    message = buf;
+  }
+  else
+    message.clear ();
+  return ok;
+}
+
+#ifndef _WIN32
+#undef sprintf_s
+#endif
+
 }

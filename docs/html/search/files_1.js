@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['deferred_5ftest_5freporter_2ecpp_145',['deferred_test_reporter.cpp',['../deferred__test__reporter_8cpp.html',1,'']]],
-  ['deferred_5ftest_5freporter_2eh_146',['deferred_test_reporter.h',['../deferred__test__reporter_8h.html',1,'']]]
+  ['reporter_5fdbgout_2eh_122',['reporter_dbgout.h',['../reporter__dbgout_8h.html',1,'']]],
+  ['reporter_5fstdout_2eh_123',['reporter_stdout.h',['../reporter__stdout_8h.html',1,'']]],
+  ['reporter_5fxml_2eh_124',['reporter_xml.h',['../reporter__xml_8h.html',1,'']]]
 ];

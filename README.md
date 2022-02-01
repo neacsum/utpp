@@ -41,7 +41,7 @@ This is a headers only library. There is nothing to build.
 
 ## Usage ##
 Here is a simple example of a test program:
-```
+````C++
 #include <utpp/utpp.h>
 
 bool earth_is_round ();
@@ -61,9 +61,9 @@ TEST_MAIN (int argc, char** argv)
 {
   return UnitTest::RunAllTests ();
 }
-```
+````
 The program contains two tests: one that checks if the `earth_is_round` function
-returns _true_ and another one that checks if the earth_radius_km function is close
+returns *true* and another one that checks if the earth_radius_km function is close
 enough to the expected value.
 
 The main program is defined using the `TEST_MAIN` macro. It runs all the tests and, if all goes well, returns 0.
@@ -111,7 +111,7 @@ TEST (EndOfTheEarth)
 Tests can be defined in different source files. The magic behind UTPP will make
 sure that they are all executed but it doesn't make any promise as to the order
 of execution between different files. If you need some kind of ordering, you can
-group tests in _suites_. UTPP will execute all the tests in one suite before starting
+group tests in *suites*. UTPP will execute all the tests in one suite before starting
 another. Suites can also be used to get synthetic results for a group of tests.
 
 Here is an example of a test suite definition:
@@ -124,7 +124,7 @@ SUITE (MyNiceTests)
 
 ### Fixtures ###
 When performing test you need certain objects and values to be in a known state
-before the beginning of the test. This is called a _fixture_. In UTPP any object
+before the beginning of the test. This is called a *fixture*. In UTPP any object
 with a default constructor can be used as a fixture. Your tests will be derived
 from that object and the state of the object is defined by the fixture constructor.
 
@@ -154,7 +154,7 @@ is invoked right before the beginning of the test and it insures that `amount_us
 is set to 100. Because the test object is derived from the fixture object, any
 public or protected members of the fixture are directly available in the test body.
 
-When the test finishes, the fixture destructor gets called and can release any
+When the test finishes, the fixture destructor gets called and should release any
 resources allocated by the constructor.
 
 ### Aborting a Test ###
@@ -173,9 +173,9 @@ TEST_FIXTURE (Account_fixture, Test_Abort)
 ````
 
 ### Results ###
-UTPP results are produced by an object called a _Reporter_. There can be
+UTPP results are produced by an object called a *Reporter*. There can be
 different type of reporters depending on where the output must be directed.
-By default The RunAllTests() function uses a reporter that sends results to `stdout`.
+By default The `RunAllTests()` function uses a reporter that sends results to `stdout`.
 The library provides two other reporters: one that generates the output using
 the `OutputDebugString` function and one that sends results to an XML file with
 a structure similar to the files created by NUnit.
@@ -189,13 +189,30 @@ int main (int argc, char **argv)
   UnitTest::RunAllTests (xml);
 }
 ````
+
+Results file is similar this sample:
+````XML
+<?xml version="1.0" encoding="UTF-8"?>
+<utpp-results total="21" failed="11" failures="11" duration="12.031">
+ <start-time>2022-02-01 01:22:16Z</start-time>
+ <command-line>&quot;C:\development\utpp\sample\x64\Debug\sample.exe&quot; </command-line>
+ <suite name="EarthSuite">
+  <test name="EarthShape" time_ms="0"/>
+  <test name="HowBigIsEarth" time_ms="0"/>
+  <test name="PlanetName" time_ms="0"/>
+  <test name="Martians" time_ms="0">
+   <failure message="C:\development\utpp\sample\sample.cpp(120) : Expected &apos;Mars&apos; but was &apos;Earth&apos;"/>
+  </test>
+  <test name="EndOfTheEarth" time_ms="1"/>
+ </suite>
+ ....
+````
 ### Execution Control ###
 While in most cases `RunAllTests` function is all that's needed to execute all
 tests, there may be cases where you need a finer control. The `UnitTest::RunSuite()`
 function allows you to run one particular suite while the `UnitTest::DisbleSuite()`
 allows you to disable a suite.
 
-See [using.md](docs/using.md) for more details.
 
 More details about the internal architecture of this framework can be found in
 the [architecture](docs/achitecture.md) file.

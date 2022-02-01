@@ -1,6 +1,6 @@
 #pragma once
 /*!
-  \file test_reporter_stdout.h
+  \file reporter_stdout.h
   \brief Definition of UnitTest::ReporterStdout class
 
   (c) Mircea Neacsu 2017

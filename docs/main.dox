@@ -5,15 +5,10 @@ This is a new version of the excellent [UnitTest++](https://github.com/unittest-
 Some of the reasons for making this new version are detailed in the
 [architecture document](achitecture.md).
 
-Latest version can be downloaded from [GitHub](https://neacsum.github.com/utpp) or
-[BitBucket](https://bitbucket.org/neacsum/utpp).
+Latest version can be downloaded from [GitHub](https://neacsum.github.com/utpp).
 
 ## Installation ##
-For Windows users, there is a Visual Studio 2019 solution. Just download the
-repository and build the UTPP library.
-
-For Unix users there is a makefile that creates a static link library. For 32-bit
-version add ARCH=x86 to make command line. For debug version add _DEBUG=1.
+This is a headers only library. There is nothing to build. 
 
 ## Usage ##
 ### Getting Started ###
@@ -159,7 +154,7 @@ a structure similar to the files created by NUnit.
 
 Here is an example how to use the XML reporter:
 ```
-int main (int argc, char **argv)
+TEST_MAIN (int argc, char **argv)
 {
   std::ofstream os ("tests.xml");
   UnitTest::ReporterXml xml (os);

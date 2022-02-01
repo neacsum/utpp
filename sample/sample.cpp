@@ -111,7 +111,10 @@ SUITE (EarthSuite)
   // Example of CHECK_EQUAL macro
   TEST (PlanetName)
   {
+    char name[] = "Earth";
     CHECK_EQUAL ("Earth", planet_name ());
+    //alternate specialization
+    CHECK_EQUAL (name, planet_name ());
   }
 
   // Example of a test that fails
@@ -328,7 +331,6 @@ SUITE (time_limits)
     SleepMs (4000);
   }
 }
-
 
 TEST_MAIN (int argc, char** argv)
 {

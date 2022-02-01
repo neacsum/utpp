@@ -1,6 +1,6 @@
 #pragma once
 /*!
-  \file test_reporter_dbgout.h
+  \file reporter_dbgout.h
   \brief Definition of UnitTest::ReporterDbgout class
 
   (c) Mircea Neacsu 2017
@@ -23,9 +23,10 @@ protected:
 
   void ReportFailure (const Failure& failure);
   int Summary ();
+private:
+  std::wstring widen (const std::string& s);
 };
 
-std::wstring widen(const std::string& s);
 
 /// If tracing is enabled, show a suite start message 
 inline
@@ -136,8 +137,9 @@ int ReporterDbgout::Summary()
     return Reporter::Summary();
 }
 
+/// Conversion from UTF-16 to UTF-8
 inline
-std::wstring widen(const std::string& s)
+std::wstring ReporterDbgout::widen(const std::string& s)
 {
     int nsz = (int)s.size();
     int wsz = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), nsz, 0, 0);

@@ -1,6 +1,6 @@
 #pragma once
 /*!
-  \file test_reporter_xml.h
+  \file reporter_xml.h
   \brief Definition of UnitTest::ReporterXml class
 
   (c) Mircea Neacsu 2017

@@ -6,7 +6,7 @@
   This is the only header that users have to include. It takes care of pulling
   in all the other required headers.
 
-  (c) Mircea Neacsu 2017
+  (c) Mircea Neacsu 2017-2022
   See README file for full copyright information.
 */
 
@@ -22,6 +22,11 @@
 #include <stdexcept>
 #include <sstream>
 #include <assert.h>
+#ifndef _WIN32
+#include <sys/time.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
 
 /// Name of default suite
 #define DEFAULT_SUITE "DefaultSuite"
@@ -39,12 +44,31 @@
 #error Macro SUITE is already defined
 #endif
 
-#define TEST_MAIN(A, B) \
+/* VC doesn't define the proper value for __cplusplus but _MSVC_LANG is correct.
+  Here fake it for non-MS compilers
+*/
+#ifndef _MSVC_LANG
+#define _MSVC_LANG __cplusplus
+#endif
+
+/*!
+  Replacement macro for main function.
+
+  \note This macro is the price to pay for having a header only library.
+  UTPP needs a few global variables and C++14 does not allow inline static
+  variables. 
+*/
+
+#if _MSVC_LANG < 201703L
+#define TEST_MAIN(ARGC, ARGV) \
 UnitTest::Test *UnitTest::CurrentTest; \
 UnitTest::Reporter *UnitTest::CurrentReporter; \
 std::string UnitTest::CurrentSuite; \
-__int64 UnitTest::Timer::frequency; \
-int main (A,B)
+int main (ARGC,ARGV)
+#else
+#define TEST_MAIN(ARGC, ARGV) int main (ARGC, ARGV)
+#endif
+
 
 /// Declares the beginning of a new test suite
 #define SUITE(Name)                                                           \
@@ -93,6 +117,8 @@ namespace UnitTest {
 
 // forward declarations
 struct Failure;
+class TestSuite;
+
 void ReportFailure(const std::string& filename, int line, const std::string& message);
 
 ///Representation of a test case
@@ -266,7 +292,7 @@ public:
 private:
   long long GetTime () const;
   long long startTime;
-  static long long frequency;
+  static double frequency();
 };
 
 ///Defines maximum run time of a test
@@ -747,12 +773,6 @@ inline
 Timer::Timer ()
   : startTime (0)
 {
-#ifdef _WIN32
-  if (!frequency)
-    ::QueryPerformanceFrequency (reinterpret_cast<LARGE_INTEGER*>(&frequency));
-#else
-  frequency = 1000000;
-#endif
 }
 
 /// Record starting time
@@ -767,7 +787,7 @@ inline
 int Timer::GetTimeInMs () const
 {
   long long elapsedTime = GetTime () - startTime;
-  double seconds = double (elapsedTime) / double (frequency);
+  double seconds = (double)elapsedTime / frequency ();
   return int (seconds * 1000.0);
 }
 
@@ -776,7 +796,7 @@ inline
 long long Timer::GetTimeInUs () const
 {
   long long int elapsedTime = GetTime () - startTime;
-  double seconds = double (elapsedTime) / double (frequency);
+  double seconds = (double)elapsedTime / frequency ();
   return (long long int) (seconds * 1000000.0);
 }
 
@@ -790,8 +810,21 @@ long long Timer::GetTime () const
 #else
   struct timeval currentTime;
   gettimeofday (&currentTime, 0);
-  return currentTime.tv_sec * frequency + currentTime.tv_usec;
+  return currentTime.tv_sec * frequency () + currentTime.tv_usec;
 #endif
+}
+
+inline
+double Timer::frequency ()
+{
+  static long long f;
+#ifdef _WIN32
+  if (!f)
+    ::QueryPerformanceFrequency (reinterpret_cast<LARGE_INTEGER*>(&f));
+#else
+  f = 1000000;
+#endif
+  return (double)f;
 }
 
 /// Pause current thread for the specified time
@@ -971,12 +1004,20 @@ int RunSuite (const char* suite_name, Reporter& rpt, int max_time_ms)
   return SuitesList::GetSuitesList ().Run (suite_name, rpt, max_time_ms);
 }
 
+/*!
+  Disable a suite.
+  \param suite_name name of suite to disable
+*/
 inline
 void DisableSuite (const std::string& suite_name)
 {
   SuitesList::GetSuitesList ().Enable (suite_name, false);
 }
 
+/*!
+  Disable a suite.
+  \param suite_name name of suite to enable
+*/
 inline
 void EnableSuite (const std::string& suite_name)
 {
@@ -1001,72 +1042,6 @@ void ReportFailure(const std::string& filename, int line, const std::string& mes
     CurrentReporter->ReportFailure(f);
 }
 
-/*!
-  The function called by CHECK_FILE_EQUAL macro to compare two files.
-  \param ref      Name of reference file
-  \param actual   Name of output file
-  \param message  Error message
-*/
-inline
-bool CheckFileEqual(const char* ref, const char* actual, std::string& message)
-{
-    struct stat st1, st2;
-    char buf[1024];
-
-    stat(ref, &st1);
-    stat(actual, &st2);
-    if (st1.st_size != st2.st_size)
-    {
-        sprintf_s(buf, "Size is different (%ld vs %ld) while comparing %s and %s",
-            st1.st_size, st2.st_size, ref, actual);
-        message = buf;
-        return false;
-    }
-
-    FILE* f1, * f2;
-    f1 = fopen(ref, "r");
-    f2 = fopen(actual, "r");
-    if (!f1 || !f2)
-    {
-        if (f1) fclose(f1);
-        if (f2) fclose(f2);
-        sprintf_s(buf, "Failed to open files while comparing %s and %s",
-            ref, actual);
-        message = buf;
-        return false; //something wrong with files
-    }
-
-    size_t ln = 0;
-    bool ok = true;
-    char ln1[1024], ln2[1024];
-    while (ok)
-    {
-        ln++;
-        if (fgets(ln1, sizeof(ln1), f1)
-            && fgets(ln2, sizeof(ln2), f2))
-            ok = !strcmp(ln1, ln2);
-        else
-            break;
-    }
-    fclose(f1);
-    fclose(f2);
-    if (!ok)
-    {
-        char* p1, * p2;
-        int off;
-        for (off = 0, p1 = ln1, p2 = ln2;
-            *p1 && *p2 && *p1 == *p2;
-            p1++, p2++, off++)
-            ;
-        sprintf_s(buf, "Difference at line %zd position %d while comparing %s and %s",
-            ln, off, ref, actual);
-        message = buf;
-    }
-    else
-        message = std::string();
-    return ok;
-}
-
 } // end of UnitTest namespace
 
 
@@ -1081,8 +1056,10 @@ const char* GetSuiteName ()
 }
 
 #include "reporter_stdout.h"
-#include "reporter_dbgout.h"
 #include "reporter_xml.h"
+#ifdef _WIN32
+#include "reporter_dbgout.h"
+#endif
 #include "checks.h"
 
 /// Return the default reporter object. 
@@ -1092,3 +1069,10 @@ UnitTest::Reporter& UnitTest::GetDefaultReporter ()
   static UnitTest::ReporterStdout the_default_reporter;
   return the_default_reporter;
 }
+
+#if _MSVC_LANG >= 201703L
+// In C++ 17 and later we have inline data. TEST_MAIN is not really needed.
+inline UnitTest::Test* UnitTest::CurrentTest;
+inline UnitTest::Reporter* UnitTest::CurrentReporter;
+inline std::string UnitTest::CurrentSuite;
+#endif

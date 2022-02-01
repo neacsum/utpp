@@ -6,13 +6,17 @@ UnitTest++ is an excellent lightweight test framework but it has a number of
 irritants like:
 
 * complete lack of comments
+
 * baroque internal structure with tests, test suites, test lists, test results, test details,
 test reporters, etc.
-* stylistical issues with 'const madness' like this:
+
+* stylistic issues with 'const madness' like this:
   ```
   void RunTest(TestResults* const result, Test* const curTest, int const maxTestTimeInMs) const;
   ```
   (an int parameter is always const)
+
+* the GitHub project seems dormant now.
 
 This rewrite tried to maintain as much as possible the pubic "API" of the original
 UnitTest++ but on the inside almost everything has been rewritten.
@@ -23,7 +27,7 @@ in _test suites_. Test suites are executed and the results are displayed using
 a _repoter_.
 
 Included are three reporters: 
-* [ReporterStdout](@ref UnitTest::ReporterStdout) generates output to stdout.
+* [ReporterStdout](@ref UnitTest::ReporterStdout) generates output to `stdout`.
 * [ReporterXml](@ref UnitTest::ReporterXml) generates results in an XML file
   with a structure similar to the files created by NUnit.
 * [ReporterDbgout](@ref UnitTest::ReporterDbgout) writes messages to debug output
@@ -158,7 +162,7 @@ In many (most) cases one needs a certain environment for executing the test and
 the same environment might be reused in multiple tests. This environment is
 represented by a 'fixture' class. The constructor of the fixture is responsible
 for bringing up the environment. Here is an example of some tests with a fixture:
-``````
+````
 struct Account_fixture {
   Account_fixture () : amount_usd(100), amount_eur(0), amount_chf(0) {};
 
@@ -178,7 +182,7 @@ TEST_FIXTURE (Account_fixture, TestExchangeChf)
   CHECK_EQUAL (0, amount_usd);
   CHECK (amount_chf > 0);
 }
-``````
+````
 At the beginning of each test, the amounts are initialized by the `Account_fixture`
 constructor. Because each test object inherits from the fixture, all members
 (or methods) of the fixture can be freely accessed during the test.
@@ -190,9 +194,17 @@ which in turn invokes the fixture constructor (and the Test constructor).
 
 ## Global Objects ##
 There are two global object pointers: `CurrentTest` and `CurrentReporter`.
-They need to be global to be able to call check macros from anywhere.
-The TestSuite::RunTests function also initializes the CurrentReporter pointer.
+They need to be global to allow calls to check macros from anywhere.
+The TestSuite::RunTests function also initializes the `CurrentReporter` pointer.
 
-In addition, the global string object CurrentSuite contains the name of the
+In addition, the global string object `CurrentSuite` contains the name of the
 currently running suite.
+
+Unfortunately, prior to C++17, global objects cannot be easily used in C++ header-only libraries.
+To solve this problem, UTPP replaces the `main` with a macro `TEST_MAIN` that can be used just like
+the usual main function. Behind the scenes, `TEST_MAIN` defines all the required global objects
+and generates the `main` function.
+
+If you are using C++17 or higher, you can use the usual `main` function. In this case `TEST_MAIN`
+is defined only for compatibility with previous C++ versions.
 

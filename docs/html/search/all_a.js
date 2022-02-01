@@ -1,17 +1,19 @@
 var searchData=
 [
-  ['reporter_57',['Reporter',['../class_unit_test_1_1_reporter.html',1,'UnitTest']]],
-  ['reporterdbgout_58',['ReporterDbgout',['../class_unit_test_1_1_reporter_dbgout.html',1,'UnitTest']]],
-  ['reporterdeferred_59',['ReporterDeferred',['../class_unit_test_1_1_reporter_deferred.html',1,'UnitTest']]],
-  ['reporterstdout_60',['ReporterStdout',['../class_unit_test_1_1_reporter_stdout.html',1,'UnitTest']]],
-  ['reporterxml_61',['ReporterXml',['../class_unit_test_1_1_reporter_xml.html#a8b5ff1c6075ee420f61c3e6ea3ea31a3',1,'UnitTest::ReporterXml::ReporterXml()'],['../class_unit_test_1_1_reporter_xml.html',1,'UnitTest::ReporterXml']]],
-  ['reportfailure_62',['ReportFailure',['../class_unit_test_1_1_reporter_deferred.html#ae8c2789ccc132f2d88095b4ce2394421',1,'UnitTest::ReporterDeferred::ReportFailure()'],['../class_unit_test_1_1_reporter.html#a9762f97d702ab15d62d4bd7592312351',1,'UnitTest::Reporter::ReportFailure()'],['../class_unit_test_1_1_reporter_dbgout.html#abc9c11e1993ee7e25a96457fee6b7fd2',1,'UnitTest::ReporterDbgout::ReportFailure()'],['../class_unit_test_1_1_reporter_stdout.html#a77dc40496d9a63b72afba5bd789a2acf',1,'UnitTest::ReporterStdout::ReportFailure()'],['../test_8h.html#a4446fa39a8485e9c434934acf2f30038',1,'UnitTest::ReportFailure()']]],
-  ['results_63',['results',['../class_unit_test_1_1_reporter_deferred.html#a768dc0e2441338d20f665d6c3bb7e97c',1,'UnitTest::ReporterDeferred']]],
-  ['run_64',['Run',['../class_unit_test_1_1_suites_list.html#acb541f5444c1869a52e75234de856daf',1,'UnitTest::SuitesList']]],
-  ['run_65',['run',['../class_unit_test_1_1_test.html#a4b702d7baafab91dc061256a3228257a',1,'UnitTest::Test']]],
-  ['runall_66',['RunAll',['../class_unit_test_1_1_suites_list.html#a644b68728e730eb86fe0567b7229ffe4',1,'UnitTest::SuitesList']]],
-  ['runalltests_67',['RunAllTests',['../utpp_8h.html#a011d106d4150ae0c8d3fdd63ef8762e5',1,'UnitTest']]],
-  ['runimpl_68',['RunImpl',['../class_unit_test_1_1_test.html#a63e8dc2a9a8e2314bd025d1d28df61f7',1,'UnitTest::Test']]],
-  ['runsuite_69',['RunSuite',['../utpp_8h.html#a392224b71e7359957c8f64ed596cba95',1,'UnitTest']]],
-  ['runtests_70',['RunTests',['../class_unit_test_1_1_test_suite.html#aad7a1a05054f5ad1b2d944f4df7326ee',1,'UnitTest::TestSuite']]]
+  ['reporter_53',['Reporter',['../class_unit_test_1_1_reporter.html',1,'UnitTest']]],
+  ['reporter_5fdbgout_2eh_54',['reporter_dbgout.h',['../reporter__dbgout_8h.html',1,'']]],
+  ['reporter_5fstdout_2eh_55',['reporter_stdout.h',['../reporter__stdout_8h.html',1,'']]],
+  ['reporter_5fxml_2eh_56',['reporter_xml.h',['../reporter__xml_8h.html',1,'']]],
+  ['reporterdbgout_57',['ReporterDbgout',['../class_unit_test_1_1_reporter_dbgout.html',1,'UnitTest']]],
+  ['reporterdeferred_58',['ReporterDeferred',['../class_unit_test_1_1_reporter_deferred.html',1,'UnitTest']]],
+  ['reporterstdout_59',['ReporterStdout',['../class_unit_test_1_1_reporter_stdout.html',1,'UnitTest']]],
+  ['reporterxml_60',['ReporterXml',['../class_unit_test_1_1_reporter_xml.html',1,'UnitTest::ReporterXml'],['../class_unit_test_1_1_reporter_xml.html#a8b5ff1c6075ee420f61c3e6ea3ea31a3',1,'UnitTest::ReporterXml::ReporterXml()']]],
+  ['reportfailure_61',['ReportFailure',['../class_unit_test_1_1_reporter_dbgout.html#abc9c11e1993ee7e25a96457fee6b7fd2',1,'UnitTest::ReporterDbgout::ReportFailure()'],['../class_unit_test_1_1_reporter_stdout.html#a77dc40496d9a63b72afba5bd789a2acf',1,'UnitTest::ReporterStdout::ReportFailure()'],['../class_unit_test_1_1_reporter.html#a9762f97d702ab15d62d4bd7592312351',1,'UnitTest::Reporter::ReportFailure()'],['../class_unit_test_1_1_reporter_deferred.html#a48b8308427984706246d883fadc1b3bd',1,'UnitTest::ReporterDeferred::ReportFailure()'],['../utpp_8h.html#a4446fa39a8485e9c434934acf2f30038',1,'UnitTest::ReportFailure()']]],
+  ['results_62',['results',['../class_unit_test_1_1_reporter_deferred.html#a768dc0e2441338d20f665d6c3bb7e97c',1,'UnitTest::ReporterDeferred']]],
+  ['run_63',['run',['../class_unit_test_1_1_test.html#a4b702d7baafab91dc061256a3228257a',1,'UnitTest::Test::run()'],['../class_unit_test_1_1_suites_list.html#acb541f5444c1869a52e75234de856daf',1,'UnitTest::SuitesList::Run()']]],
+  ['runall_64',['RunAll',['../class_unit_test_1_1_suites_list.html#a644b68728e730eb86fe0567b7229ffe4',1,'UnitTest::SuitesList']]],
+  ['runalltests_65',['RunAllTests',['../utpp_8h.html#a011d106d4150ae0c8d3fdd63ef8762e5',1,'UnitTest']]],
+  ['runimpl_66',['RunImpl',['../class_unit_test_1_1_test.html#a63e8dc2a9a8e2314bd025d1d28df61f7',1,'UnitTest::Test']]],
+  ['runsuite_67',['RunSuite',['../utpp_8h.html#a392224b71e7359957c8f64ed596cba95',1,'UnitTest']]],
+  ['runtests_68',['RunTests',['../class_unit_test_1_1_test_suite.html#aad7a1a05054f5ad1b2d944f4df7326ee',1,'UnitTest::TestSuite']]]
 ];
