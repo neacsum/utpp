@@ -160,6 +160,13 @@
   <ItemGroup>
     <ClCompile Include="sample.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\utpp\checks.h" />
+    <ClInclude Include="..\include\utpp\reporter_dbgout.h" />
+    <ClInclude Include="..\include\utpp\reporter_stdout.h" />
+    <ClInclude Include="..\include\utpp\reporter_xml.h" />
+    <ClInclude Include="..\include\utpp\utpp.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -329,7 +329,8 @@ SUITE (time_limits)
   }
 }
 
-int main (int argc, char** argv)
+
+TEST_MAIN (int argc, char** argv)
 {
   int ret;
 

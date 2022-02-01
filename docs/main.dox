@@ -34,7 +34,7 @@ TEST (HowBigIsEarth)
   CHECK_CLOSE (6371., earth_radius_km(), 1.);
 }
 
-int main (int argc, char** argv)
+TEST_MAIN (int argc, char** argv)
 {
   return UnitTest::RunAllTests ();
 }
@@ -43,7 +43,7 @@ The program contains two tests: one that checks if the `earth_is_round` function
 returns _true_ and another one that checks if the earth_radius_km function is close
 enough to the expected value.
 
-The main program runs all the tests and, if all goes well, returns 0.
+The main program is defined using the TEST_MAIN macro. It runs all the tests and, if all goes well, returns 0.
 
 Tests are introduced by the TEST macro followed by a block of code. Throughout
 the test you can check different conditions using one of the CHECK_... macros.

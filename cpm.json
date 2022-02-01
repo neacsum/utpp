@@ -1,9 +1,4 @@
 {
     "name": "utpp",
-    "git": "git@github.com:neacsum/utpp.git",
-    "build": 
-      [
-        {"os": "windows", "cmd": "build.bat", "args": ["lib"]},
-        {"os": "linux",   "cmd": "make"}
-      ]
+    "git": "git@github.com:neacsum/utpp.git"
 }
