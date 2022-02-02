@@ -14,7 +14,19 @@
 #if !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
+//Acrobatics to leave out winsock.h (for the benefit of winsock2.h)
+#ifndef _WINSOCKAPI_
+#define _WINSOCKAPI_
+#define MUST_UNDEF_WINSOCK
+#endif
+
 #include <windows.h>
+
+#ifdef MUST_UNDEF_WINSOCK
+#undef _WINSOCKAPI_
+#undef MUST_UNDEF_WINSOCK
+#endif
+
 #endif
 
 #include <string>

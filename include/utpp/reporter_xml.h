@@ -7,7 +7,7 @@
   See README file for full copyright information.
 */
 
-#include <utpp/utpp.h>
+#include "utpp.h"
 
 #include <iostream>
 #include <iomanip>
