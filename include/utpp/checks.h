@@ -432,6 +432,42 @@ bool CheckEqual (const std::array<T,N>& expected, const std::array<T,N>& actual,
 }
 
 /*!
+  Specializations of CheckEqual function for C strings
+  @{
+*/
+inline
+bool CheckEqual (const char* expected, const char* actual, std::string& msg)
+{
+  if (strcmp (expected, actual))
+  {
+    std::stringstream stream;
+    stream << "Expected \'" << expected << "\' but was \'" << actual << "\'";
+    msg = stream.str ();
+    return false;
+  }
+  return true;
+}
+
+inline
+bool CheckEqual (char* expected, char* actual, std::string& msg)
+{
+  return CheckEqual (const_cast<const char *>(expected), const_cast<const char*>(actual), msg);
+}
+
+inline
+bool CheckEqual (const char* expected, char* actual, std::string& msg)
+{
+  return CheckEqual (const_cast<const char *>(expected), const_cast<const char*>(actual), msg);
+}
+
+inline
+bool CheckEqual (char* expected, const char* actual, std::string& msg)
+{
+  return CheckEqual (const_cast<const char *>(expected), const_cast<const char*>(actual), msg);
+}
+///@}
+
+/*!
   Check if two values are closer than specified tolerance. If not, generate a
   failure message.
 
