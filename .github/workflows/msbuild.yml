@@ -40,6 +40,6 @@ jobs:
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:Platform=${{env.MACHINE}} ${{env.SOLUTION_FILE_PATH}}
   
     - name: Run sample
-      working-directory: ${{env.GITHUB_WORKSPACE}}/sample/${{env.MACHINE}}/${{env.BUILD_CONFIGURATION}}
-      run: sample.exe
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: sample\${{env.MACHINE}}\${{env.BUILD_CONFIGURATION}}\sample.exe
     
