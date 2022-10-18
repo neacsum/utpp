@@ -359,6 +359,7 @@ TEST_MAIN (int argc, char** argv)
   //and this one too
   CHECK_EQUAL (def, abc);
 
-  return ret;
+  //expecting 11 failures
+  return (ret == 11)? 0 : 1;
 }
 
