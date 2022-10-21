@@ -38,6 +38,7 @@ private:
 
   std::ostream& os;
   std::string start_time;
+  std::ios orig_state;
 };
 
 inline
@@ -70,6 +71,7 @@ std::string ReporterXml::build_failure_message (const std::string& file, int lin
 inline
 ReporterXml::ReporterXml (std::ostream& ostream)
   : os (ostream)
+  , orig_state (nullptr)
 {
   char tmp[80];
   time_t now;
@@ -77,6 +79,7 @@ ReporterXml::ReporterXml (std::ostream& ostream)
   struct tm* t = gmtime (&now);
   strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
   start_time = tmp;
+  orig_state.copyfmt (os);
 }
 
 /// Generate XML report
@@ -100,7 +103,7 @@ int ReporterXml::Summary ()
   time (&now);
   struct tm* t = gmtime (&now);
   strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
-
+  os.copyfmt (orig_state);
   os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
 
   os << "<utpp-results"
