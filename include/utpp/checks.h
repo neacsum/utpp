@@ -6,10 +6,14 @@
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
+#if !defined(_CRT_SECURE_NO_WARNINGS)
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 #include <sstream>
 #include <vector>
 #include <array>
+#include <list>
 #include <string.h>
 #include <math.h>
 
@@ -423,6 +427,41 @@ bool CheckEqual (const std::array<T,N>& expected, const std::array<T,N>& actual,
       stream << actual[i] << " ";
 
     stream << "]";
+    msg = stream.str ();
+    return false;
+  }
+  else
+    msg.clear ();
+  return true;
+}
+
+/*!
+  CheckEqual for C++ lists.
+
+  The generated error message shows the expected and actual list elements.
+
+  \param expected - expected_T list
+  \param actual   - actual_T list
+  \param msg      - generated error message
+
+  \return `true` if lists compare as equal
+*/
+template <typename T>
+inline
+bool CheckEqual (const std::list<T>& expected, const std::list<T>& actual, std::string& msg)
+{
+  if (expected != actual)
+  {
+    std::stringstream stream;
+    stream << "Expected ( ";
+    for (auto& x : expected)
+      stream << x << " ";
+
+    stream << ") but was ( ";
+    for (auto& x : actual)
+      stream << x << " ";
+
+    stream << ")";
     msg = stream.str ();
     return false;
   }
