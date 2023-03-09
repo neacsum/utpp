@@ -913,8 +913,31 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
   return ok;
 }
 
+}
 #ifndef _WIN32
 #undef sprintf_s
 #endif
 
-}
+//macro definitions for (somewhat) compatibility with Google Test
+#define EXPECT_TRUE(x) CHECK (x)
+#define EXPECT_FALSE(x) CHECK (!(x))
+#define EXPECT_EQ(A, B) CHECK ((A) == (B))
+#define EXPECT_NE(A, B) CHECK ((A) != (B))
+#define EXPECT_GE(A, B) CHECK ((A) >= (B))
+#define EXPECT_GT(A, B) CHECK ((A) > (B))
+#define EXPECT_LE(A, B) CHECK ((A) <= (B))
+#define EXPECT_LT(A, B) CHECK ((A) < (B))
+
+#define EXPECT_NEAR(A, B, tol) CHECK_CLOSE(B, A, tol)
+#define EXPECT_THROW(expr, except) CHECK_THROW(except, expr)
+#define ASSERT_THROW(expr, except) CHECK_THROW(except, expr)
+
+#define ASSERT_FALSE(expr) ABORT (!expr)
+#define ASSERT_TRUE(expr) ABORT (expr)
+#define ASSERT_EQ(e1, e2) ABORT ((e1) == (e2))
+#define ASSERT_NE(e1, e2) ABORT ((e1) != (e2))
+#define ASSERT_GE(e1, e2) ABORT ((e1) >= (e2))
+#define ASSERT_GT(e1, e2) ABORT ((e1) > (e2))
+#define ASSERT_LE(e1, e2) ABORT ((e1) <= (e2))
+#define ASSERT_LT(e1, e2) ABORT ((e1) < (e2))
+
