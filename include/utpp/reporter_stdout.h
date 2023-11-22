@@ -17,13 +17,13 @@ namespace UnitTest {
 class ReporterStdout : public Reporter
 {
 protected:
-  void SuiteStart (const TestSuite& suite);
-  void TestStart (const Test& test);
-  void TestFinish (const Test& test);
-  int SuiteFinish (const TestSuite& suite);
+  void SuiteStart (const TestSuite& suite) override;
+  void TestStart (const Test& test) override;
+  void TestFinish (const Test& test) override;
+  int SuiteFinish (const TestSuite& suite) override;
 
-  void ReportFailure (const Failure& failure);
-  int Summary ();
+  void ReportFailure (const Failure& failure) override;
+  int Summary () override;
 };
 
 /// If tracing is enabled, show a suite start message

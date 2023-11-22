@@ -454,11 +454,11 @@ bool CheckEqual (const std::list<T>& expected, const std::list<T>& actual, std::
   {
     std::stringstream stream;
     stream << "Expected ( ";
-    for (auto& x : expected)
+    for (auto const& x : expected)
       stream << x << " ";
 
     stream << ") but was ( ";
-    for (auto& x : actual)
+    for (auto const& x : actual)
       stream << x << " ";
 
     stream << ")";
@@ -904,7 +904,7 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
       *p1 && *p2 && *p1 == *p2;
       p1++, p2++, off++)
       ;
-    sprintf_s (buf, "Difference at line %zd position %d while comparing %s and %s",
+    sprintf_s (buf, "Difference at line %zu position %d while comparing %s and %s",
       ln, off, ref, actual);
     message = buf;
   }

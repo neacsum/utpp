@@ -97,7 +97,7 @@ int main (ARGC,ARGV)
   public:                                                                     \
     Test##Name() : Test(#Name) {}                                             \
   private:                                                                    \
-    void RunImpl();                                                           \
+    void RunImpl() override;                                                           \
   };                                                                          \
   UnitTest::Test* Name##_maker() {return new Test##Name; }                   \
   UnitTest::TestSuite::Inserter Name##_inserter (GetSuiteName(), #Name, __FILE__, __LINE__,\
@@ -111,7 +111,7 @@ int main (ARGC,ARGV)
   public:                                                                     \
     Test##Name() : Fixture (), Test(#Name) {}                                 \
   private:                                                                    \
-    void RunImpl();                                                           \
+    void RunImpl() override;                                                           \
   };                                                                          \
   UnitTest::Test* Name##_maker() {return new Test##Name;}                     \
   UnitTest::TestSuite::Inserter Name##_inserter (GetSuiteName(), #Name,       \
@@ -222,10 +222,10 @@ class ReporterDeferred : public Reporter
 {
 public:
   ReporterDeferred () {};
-  void SuiteStart (const TestSuite& suite);
-  void TestStart (const Test& test);
-  void ReportFailure (const Failure& failure);
-  void TestFinish (const Test& test);
+  void SuiteStart (const TestSuite& suite) override;
+  void TestStart (const Test& test) override;
+  void ReportFailure (const Failure& failure) override;
+  void TestFinish (const Test& test) override;
 
 protected:
   /// %Test results including all failure messages
@@ -274,7 +274,7 @@ public:
     friend class TestSuite;
   };
 
-  TestSuite (const std::string& name);
+  explicit TestSuite (const std::string& name);
   void Add (const Inserter* inf);
   bool IsEnabled () const;
   void Enable (bool on_off);
@@ -629,7 +629,7 @@ int TestSuite::RunTests(Reporter& rep, int maxtime)
                 TearDownCurrentTest(*listp);  /// Tear down test context
             }
             /// Repeat for all tests
-            listp++;
+            ++listp;
         }
     }
     else
@@ -925,11 +925,11 @@ void SuitesList::Add (const std::string& suite_name, const TestSuite::Inserter* 
 inline
 int SuitesList::Run (const std::string& suite_name, Reporter& reporter, int max_time_ms)
 {
-  for (auto p = suites.begin (); p != suites.end (); p++)
+  for (auto& s : suites)
   {
-    if (p->name == suite_name)
+    if (s.name == suite_name)
     {
-      p->RunTests (reporter, max_time_ms);
+      s.RunTests (reporter, max_time_ms);
       return reporter.Summary ();
     }
   }
@@ -946,8 +946,8 @@ int SuitesList::Run (const std::string& suite_name, Reporter& reporter, int max_
 inline
 int SuitesList::RunAll (Reporter& reporter, int max_time_ms)
 {
-  for (auto p = suites.begin (); p != suites.end (); p++)
-    p->RunTests (reporter, max_time_ms);
+  for (auto& s : suites)
+    s.RunTests (reporter, max_time_ms);
 
   return reporter.Summary ();
 }

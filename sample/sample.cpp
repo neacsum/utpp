@@ -308,6 +308,7 @@ SUITE (time_limits)
   // No errors as this is less than the global time constraint
   TEST (SlowTest)
   {
+    std::cout << "This suite take about 12 seconds to run. Please be patient.\n";
     SleepMs (2000);
   }
 

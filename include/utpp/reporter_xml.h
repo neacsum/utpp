@@ -20,9 +20,9 @@ namespace UnitTest
 class ReporterXml : public ReporterDeferred
 {
 public:
-  ReporterXml (std::ostream& ostream);
+  explicit ReporterXml (std::ostream& ostream);
 
-  int Summary ();
+  int Summary () override;
 
 protected:
   void BeginTest (const ReporterDeferred::TestResult& result);
@@ -76,7 +76,7 @@ ReporterXml::ReporterXml (std::ostream& ostream)
   char tmp[80];
   time_t now;
   time (&now);
-  struct tm* t = gmtime (&now);
+  const struct tm* t = gmtime (&now);
   strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
   start_time = tmp;
   orig_state.copyfmt (os);
@@ -101,7 +101,7 @@ int ReporterXml::Summary ()
   time_t now;
   char tmp[80];
   time (&now);
-  struct tm* t = gmtime (&now);
+  const struct tm* t = gmtime (&now);
   strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
   os.copyfmt (orig_state);
   os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
