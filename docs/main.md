@@ -140,4 +140,6 @@ TEST_MAIN (int argc, char **argv)
 While in most cases `RunAllTests`` function is all that is needed to execute all tests, there may be cases where you need a finer control. The UnitTest::RunSuite()
 function allows you to run one particular suite while the UnitTest::DisbleSuite() allows you to disable a suite.
 
+---
+
 <div>Icon made from <a href="https://www.onlinewebfonts.com/icon">svg icons</a> is licensed by CC BY 4.0</div>
