@@ -6,9 +6,12 @@
   (c) Mircea Neacsu 2017
   See README file for full copyright information.
 */
+
+/// \cond
 #if !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
+/// \endcond
 
 #include <sstream>
 #include <vector>
@@ -17,10 +20,20 @@
 #include <string.h>
 #include <math.h>
 
+/*!
+  \ingroup checks
+@{
+*/
+
+/*!
+  \def CHECK
+  \brief Generate a failure if value is 0. Failure message is the value itself.
+
+  \hideinitializer
+*/
 #ifdef CHECK
 #error Macro CHECK is already defined
 #endif
-/// Generate a failure if value is 0. Failure message is the value itself.
 #define CHECK(value)                                                          \
   do                                                                          \
   {                                                                           \
@@ -36,10 +49,15 @@
     }                                                                         \
   } while (0)
 
+/*!
+  \def CHECK_EX
+  \brief Generate a failure with the given message if value is 0
+
+  \hideinitializer
+*/
 #ifdef CHECK_EX
 #error Macro CHECK_EX is already defined
 #endif
-///Generate a failure with the given message if value is 0
 #define CHECK_EX(value, message)                                              \
   do                                                                          \
   {                                                                           \
@@ -53,10 +71,16 @@
     }                                                                         \
   } while (0)
 
+/*!
+  \def CHECK_EQUAL
+  \brief Generate a failure if actual value is different from expected.
+
+  \hideinitializer
+*/
 #ifdef CHECK_EQUAL
 #error Macro CHECK_EQUAL is already defined
 #endif
-/// Generate a failure if actual value is different from expected.
+
 #define CHECK_EQUAL(expected, actual)                                         \
   do                                                                          \
   {                                                                           \
@@ -71,11 +95,16 @@
     }                                                                         \
   } while (0)
 
+/*!
+  \def CHECK_EQUAL_EX
+  \brief  Generate a failure if actual value is different from expected.
+          The given message is appended to the standard CHECK_EQUAL message. 
+
+  \hideinitializer
+*/
 #ifdef CHECK_EQUAL_EX
 #error Macro CHECK_EQUAL_EX is already defined
 #endif
-/// Generate a failure if actual value is different from expected.
-/// Output message is appended with given message. 
 #define CHECK_EQUAL_EX(expected, actual, message)                             \
   do                                                                          \
   {                                                                           \
@@ -94,13 +123,17 @@
     }                                                                         \
   } while (0)
 
+/*!
+  \def CHECK_CLOSE
+  \brief  Generate a failure if actual value differs from expected value with
+          more than given tolerance
+
+  \hideinitializer
+*/
+
 #ifdef CHECK_CLOSE
 #error Macro CHECK_CLOSE is already defined
 #endif
-/*!
-  Generate a failure if actual value differs from expected value with more than
-  given tolerance
-*/
 #define CHECK_CLOSE(expected, actual, tolerance)                              \
   do                                                                          \
   {                                                                           \
@@ -115,11 +148,16 @@
     }                                                                         \
   } while (0)
 
+/*!
+  \def CHECK_ARRAY_EQUAL
+  \brief Generate a failure if actual array is different from expected one
+
+  \hideinitializer
+*/
 #ifdef CHECK_ARRAY_EQUAL
 #error Macro CHECK_ARRAY_EQUAL is already defined
 #endif
 
-///Generate a failure if an array is different from expected results
 #define CHECK_ARRAY_EQUAL(expected, actual, count) \
   do                                                                          \
   {                                                                           \
@@ -134,13 +172,17 @@
     }                                                                         \
   } while (0)
 
+/*!
+  \def CHECK_ARRAY_CLOSE
+  \brief  Generate a failure if `actual` array elements differs from `expected`
+          ones with more than given `tolerance`.
+
+  \hideinitializer
+*/
 #ifdef CHECK_ARRAY_CLOSE
 #error Macro CHECK_ARRAY_CLOSE is already defined
 #endif
-/*!
-  Generate a failure if an array differs from expected values with more than
-  given tolerance
-*/
+
 #define CHECK_ARRAY_CLOSE(expected, actual, count, tolerance)                 \
   do                                                                          \
   {                                                                           \
@@ -155,13 +197,17 @@
     }                                                                         \
   } while (0)
 
+/*!
+  \def CHECK_ARRAY2D_EQUAL
+  \brief  Generate a failure if 2D array `actual` differs from `expected` values.
+
+  \hideinitializer
+*/
+
 #ifdef CHECK_ARRAY2D_EQUAL
 #error Macro CHECK_ARRAY2D_EQUAL is already defined
 #endif
-/*!
-  Generate a failure if an array differs from expected values with more than
-  given tolerance.
-*/
+
 #define CHECK_ARRAY2D_EQUAL(expected, actual, rows, columns)                  \
   do                                                                          \
   {                                                                           \
@@ -177,13 +223,17 @@
   } while (0)
 
 
+/*!
+  \def CHECK_ARRAY2D_CLOSE
+  \brief  Generate a failure if 2D array `actual` differs from `expected` values
+  with more than given `tolerance`.
+
+  \hideinitializer
+*/
 #ifdef CHECK_ARRAY2D_CLOSE
 #error Macro CHECK_ARRAY2D_CLOSE is already defined
 #endif
-/*!
-  Generate a failure if a two-dimensional array differs from expected values
-  with more than given tolerance.
-*/
+
 #define CHECK_ARRAY2D_CLOSE(expected, actual, rows, columns, tolerance) \
   do                                                                          \
   {                                                                           \
@@ -198,50 +248,65 @@
     }                                                                         \
   } while (0)
 
+/*!
+  \def CHECK_THROW
+  \brief  Generate a failure if evaluating the expression __does not__ throw
+          an exception of the `expected` type.
+
+  \hideinitializer
+*/
 #ifdef CHECK_THROW
 #error Macro CHECK_THROW is already defined
 #endif
-/// Checks if evaluating the expression triggers an exception of the given type.
-#define CHECK_THROW(expected_TExceptionType, expression) \
+#define CHECK_THROW(expected, expression) \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
     try { try { (expression); }                                               \
-          catch (const expected_TExceptionType& ) { caught_ = true; } }       \
+          catch (const expected& ) { caught_ = true; } }                      \
     catch (...) {}                                                            \
     if (!caught_)                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "expected_T exception: \"" #expected_TExceptionType "\" not thrown"); \
+        "expected: exception: \"" #expected "\" not thrown");                 \
   } while(0)
+
+/*!
+  \def CHECK_THROW_EQUAL
+  \brief  Checks if evaluating the expression triggers an exception of the given
+          type and with the expected value.
+
+  \hideinitializer
+*/
 
 #ifdef CHECK_THROW_EQUAL
 #error Macro CHECK_THROW_EQUAL is already defined
 #endif
-/*!
-  Checks if evaluating the expression triggers an exception of the given type
-  and with the expected value.
-*/
-#define CHECK_THROW_EQUAL(expected_TExceptionType, expected, expression) \
+#define CHECK_THROW_EQUAL(expected_type, expected_value, expression)          \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
     try { try { expression; }                                                 \
-          catch (const expected_TExceptionType& actual) {                     \
+          catch (const expected_type& actual) {                               \
             caught_ = true;                                                   \
             std::string msg;                                                  \
-            if (!UnitTest::CheckEqual(expected, actual, msg))                 \
+            if (!UnitTest::CheckEqual(expected_value, actual, msg))           \
               UnitTest::ReportFailure (__FILE__, __LINE__, msg);              \
           } }                                                                 \
     catch (...) {}                                                            \
     if (!caught_)                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "expected_T exception: \"" #expected_TExceptionType "\" not thrown"); \
+        "expected exception: \"" #expected_type "\" not thrown");             \
   } while(0)
 
+/*!
+  \def CHECK_FILE_EQUAL
+  \brief  Generate a failure if the two files are different.
+
+  \hideinitializer
+*/
 #ifdef CHECK_FILE_EQUAL
 #error Macro CHECK_FILE_EQUAL is already defined
 #endif
-/// Generate a failure if the two files are different.
 #define CHECK_FILE_EQUAL(expected, actual)                                    \
   do                                                                          \
   {                                                                           \
@@ -260,7 +325,12 @@
 #error Macro ABORT is already defined
 #endif
 
-/// Abort current test is value is 0. Abort message is the value itself
+/*!
+  \def ABORT
+  \brief   Abort current test is value is 0. Abort message is the value itself
+
+  \hideinitializer
+*/
 #define ABORT(value) \
   do                                                                          \
   {                                                                           \
@@ -272,13 +342,20 @@
 #error Macro ABORT_EX is already defined
 #endif
 
-/// Abort current test is value is 0.
+/*!
+  \def ABORT_EX
+  \brief  Abort current test is value is 0. Outputs the given message.
+
+  \hideinitializer
+*/
 #define ABORT_EX(value, message) \
   do                                                                          \
   {                                                                           \
     if (!UnitTest::Check(value))                                              \
       throw UnitTest::test_abort (__FILE__, __LINE__, message);               \
   } while (0)
+
+///@}
 
 namespace UnitTest {
 
@@ -288,7 +365,6 @@ namespace UnitTest {
   Check if value is true (or not 0)
 
   \param value object to check. Must have convertible to bool
-
   \return `true` if successful
 */ 
 
@@ -304,7 +380,6 @@ bool Check (Value const value)
   \param expected - expected_T value
   \param actual   - actual_T value
   \param msg      - generated error message
-
   \return `true` if values compare as equal
 @{
 */
@@ -844,7 +919,7 @@ bool CheckArray2DClose (const expected_T& expected, const actual_T& actual,
 #endif
 
 /*!
-  Function called by CHECK_FILE_EQUAL macro to compare two files.
+  Function called by CHECK_FILE_EQUAL() macro to compare two files.
   \param ref      Name of reference file
   \param actual   Name of output file
   \param message  Generated error message
@@ -914,11 +989,19 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
 }
 
 }
+
+/// \cond
 #ifndef _WIN32
 #undef sprintf_s
 #endif
+/// \endcond
 
-//macro definitions for (somewhat) compatibility with Google Test
+/*!
+  \ingroup gt 
+  These macro definitions provide some compatibility with GoogleTest
+@{
+*/
+
 #define EXPECT_TRUE(x) CHECK (x)
 #define EXPECT_FALSE(x) CHECK (!(x))
 #define EXPECT_EQ(A, B) CHECK ((A) == (B))
@@ -940,4 +1023,12 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
 #define ASSERT_GT(e1, e2) ABORT ((e1) > (e2))
 #define ASSERT_LE(e1, e2) ABORT ((e1) <= (e2))
 #define ASSERT_LT(e1, e2) ABORT ((e1) < (e2))
+///@}
 
+/*!
+  \defgroup checks  Assertion Checking Macros
+  \defgroup tests   Test Definition Macros
+  \defgroup time    Time Control Macros
+  \defgroup gt      Compatibility Macros
+  \defgroup exec    Execution Control 
+*/

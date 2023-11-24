@@ -57,7 +57,7 @@
 #endif
 
 /* VC doesn't define the proper value for __cplusplus but _MSVC_LANG is correct.
-  Here fake it for non-MS compilers
+  Fake it here for non-MS compilers
 */
 #ifndef _MSVC_LANG
 #define _MSVC_LANG __cplusplus
@@ -66,9 +66,17 @@
 /*!
   Replacement macro for main function.
 
+  This macro is used instead of `int main(int argc, char** argv)` function
+  if you are compiling under C++11 or C++14 language rules. If you are
+  compiling under C++17 or newer language rules, you can use the normal `main`
+  function.
+
   \note This macro is the price to pay for having a header only library.
   UTPP needs a few global variables and C++14 does not allow inline static
-  variables. 
+  variables.
+
+  \hideinitializer
+  \ingroup exec
 */
 
 #if _MSVC_LANG < 201703L
@@ -82,7 +90,21 @@ int main (ARGC,ARGV)
 #endif
 
 
-/// Declares the beginning of a new test suite
+/*!
+  \ingroup tests
+@{
+*/
+
+/*!
+  \brief Declares the beginning of a new test suite
+
+  A test suite is a collection of test cases. You can control the execution of
+  a test suite using the UnitTest::EnableSuite() and UnitTest::DisableSuite() functions.
+
+  To execute a specific suite use the UnitTest::RunSuite() function.
+
+  \hideinitializer
+*/
 #define SUITE(Name)                                                           \
   namespace Suite##Name                                                       \
   {                                                                           \
@@ -90,21 +112,37 @@ int main (ARGC,ARGV)
   }                                                                           \
   namespace Suite##Name
 
-/// Defines a test case
+/*!
+  \brief Defines a test case
+  This macro must be followed by a code block containing the test.
+
+  \hideinitializer
+*/ 
 #define TEST(Name)                                                            \
   class Test##Name : public UnitTest::Test                                    \
   {                                                                           \
   public:                                                                     \
     Test##Name() : Test(#Name) {}                                             \
   private:                                                                    \
-    void RunImpl() override;                                                           \
+    void RunImpl() override;                                                  \
   };                                                                          \
-  UnitTest::Test* Name##_maker() {return new Test##Name; }                   \
+  UnitTest::Test* Name##_maker() {return new Test##Name; }                    \
   UnitTest::TestSuite::Inserter Name##_inserter (GetSuiteName(), #Name, __FILE__, __LINE__,\
     Name##_maker);                                                            \
   void Test##Name::RunImpl()
 
-/// Defines a test case with an associated fixture
+
+/*!
+  \brief  Defines a test case with an associated fixture
+
+  A fixture can be any class or structure that has a default constructor.
+  The fixture is initialized prior to running the test and teared down at the
+  end of the test.
+
+  This macro must be followed by a code block containing the test.
+
+  \hideinitializer
+*/
 #define TEST_FIXTURE(Fixture, Name)                                           \
   class Test##Name : public Fixture, public UnitTest::Test                    \
   {                                                                           \
@@ -117,13 +155,28 @@ int main (ARGC,ARGV)
   UnitTest::TestSuite::Inserter Name##_inserter (GetSuiteName(), #Name,       \
     __FILE__, __LINE__, Name##_maker);                                        \
   void Test##Name::RunImpl()
+///@}
 
-/// Defines a local (per scope) time constraint
+/// \ingroup time
+///@{
+
+/*!
+  \brief Defines a local (per scope) time constraint
+  \param ms Maximum allowed run time (in milliseconds)
+
+  \hideinitializer
+*/
 #define UTPP_TIME_CONSTRAINT(ms) \
   UnitTest::TimeConstraint unitTest__timeConstraint__(ms, __FILE__, __LINE__)
 
-/// Flags a test as not subject to the global time constraint
+/*!
+  \brief  Flags a test as not subject to the global time constraint
+
+  \hideinitializer
+*/
 #define UTPP_TIME_CONSTRAINT_EXEMPT() no_time_constraint ()
+
+///@}
 
 namespace UnitTest {
 
@@ -993,6 +1046,8 @@ void SuitesList::Enable (const std::string& suite, bool enable)
 
   Each test is expected to run in under max_time_ms milliseconds. If a test takes
   longer, it generates a time constraint failure.
+
+  \ingroup exec
 */
 inline
 int RunAllTests (Reporter& rpt, int max_time_ms)
@@ -1009,6 +1064,7 @@ int RunAllTests (Reporter& rpt, int max_time_ms)
 
   \return number of tests that failed or -1 if there is no such suite
 
+  \ingroup exec
 */
 inline
 int RunSuite (const char* suite_name, Reporter& rpt, int max_time_ms)
@@ -1017,8 +1073,12 @@ int RunSuite (const char* suite_name, Reporter& rpt, int max_time_ms)
 }
 
 /*!
-  Disable a suite.
+  By default, the UnitTest::RunAllTests() function runs all test suites.
+  You can disable a specific suite using this function.
+
   \param suite_name name of suite to disable
+
+  \ingroup exec
 */
 inline
 void DisableSuite (const std::string& suite_name)
@@ -1027,8 +1087,11 @@ void DisableSuite (const std::string& suite_name)
 }
 
 /*!
-  Disable a suite.
+  Re-enables a test suite that has been previously disabled.
+
   \param suite_name name of suite to enable
+
+  \ingroup exec
 */
 inline
 void EnableSuite (const std::string& suite_name)
