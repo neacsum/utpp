@@ -1,10 +1,15 @@
 #pragma once
+/*
+  UTPP - A New Generation of UnitTest++
+  (c) Mircea Neacsu 2017-2023
+
+  See LICENSE file for full copyright information.
+*/
+
 /*!
   \file checks.h
-  \brief Definition of Check... template functions
-
-  (c) Mircea Neacsu 2017
-  See README file for full copyright information.
+  \brief Definition of Check... template functions and 
+  CHECK_... macro-definitions
 */
 
 /// \cond
@@ -39,9 +44,7 @@
   {                                                                           \
     try {                                                                     \
       if (!UnitTest::Check(value))                                            \
-      {                                                                       \
         UnitTest::ReportFailure (__FILE__, __LINE__, "Check failed: " #value);\
-      }                                                                       \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -58,16 +61,19 @@
 #ifdef CHECK_EX
 #error Macro CHECK_EX is already defined
 #endif
-#define CHECK_EX(value, message)                                              \
+#define CHECK_EX(value, ...)                                                  \
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      if (!UnitTest::Check(value))                                            \
+      if (!UnitTest::Check(value)){                                           \
+        char message[UnitTest::MAX_MESSAGE_SIZE];                             \
+        sprintf (message, __VA_ARGS__);                                       \
         UnitTest::ReportFailure (__FILE__, __LINE__, message);                \
+      }                                                                       \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "Unhandled exception in CHECK_EX(" #value #message ")");              \
+        "Unhandled exception in CHECK_EX(" #value ")");                       \
     }                                                                         \
   } while (0)
 
@@ -85,13 +91,13 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string __msg;                                                      \
-      if (!UnitTest::CheckEqual((expected), (actual), __msg))                 \
-        UnitTest::ReportFailure (__FILE__, __LINE__, __msg);                  \
+      std::string str;                                                        \
+      if (!UnitTest::CheckEqual((expected), (actual), str))                   \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str);                    \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "Unhandled exception in CHECK_EQUAL_EX(" #expected ", " #actual ")"); \
+        "Unhandled exception in CHECK_EQUAL(" #expected ", " #actual ")");    \
     }                                                                         \
   } while (0)
 
@@ -105,16 +111,18 @@
 #ifdef CHECK_EQUAL_EX
 #error Macro CHECK_EQUAL_EX is already defined
 #endif
-#define CHECK_EQUAL_EX(expected, actual, message)                             \
+#define CHECK_EQUAL_EX(expected, actual, ...)                                 \
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string __msg;                                                      \
-      if (!UnitTest::CheckEqual((expected), (actual), __msg))                 \
+      std::string str;                                                        \
+      if (!UnitTest::CheckEqual((expected), (actual), str))                   \
       {                                                                       \
-        __msg += " - ";                                                       \
-        __msg += message;                                                     \
-        UnitTest::ReportFailure (__FILE__, __LINE__, __msg);                  \
+        char message[UnitTest::MAX_MESSAGE_SIZE];                             \
+        sprintf (message, __VA_ARGS__);                                       \
+        str += " - ";                                                         \
+        str += message;                                                       \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str);                    \
       }                                                                       \
     }                                                                         \
     catch (...) {                                                             \
@@ -138,13 +146,44 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string __msg;                                                      \
-      if (!UnitTest::CheckClose ((expected), (actual), (tolerance), __msg))   \
-        UnitTest::ReportFailure (__FILE__, __LINE__, __msg);                  \
+      std::string str;                                                        \
+      if (!UnitTest::CheckClose ((expected), (actual), (tolerance), str))     \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str);                    \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
         "Unhandled exception in CHECK_CLOSE(" #expected ", " #actual ")");    \
+    }                                                                         \
+  } while (0)
+
+/*!
+  \def CHECK_CLOSE_EX
+  \brief  Generate a failure if actual value differs from expected value with
+          more than given tolerance.
+          The given message is appended to the standard CHECK_CLOSE message.
+  \hideinitializer
+*/
+
+#ifdef CHECK_CLOSE_EX
+#error Macro CHECK_CLOSE_EX is already defined
+#endif
+#define CHECK_CLOSE_EX(expected, actual, tolerance, ...)                      \
+  do                                                                          \
+  {                                                                           \
+    try {                                                                     \
+      std::string str;                                                        \
+      if (!UnitTest::CheckClose ((expected), (actual), (tolerance), str))     \
+      {                                                                       \
+        char message[UnitTest::MAX_MESSAGE_SIZE];                             \
+        sprintf (message, __VA_ARGS__);                                       \
+        str += " - ";                                                         \
+        str += message;                                                       \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str);                    \
+      }                                                                       \
+    }                                                                         \
+    catch (...) {                                                             \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+        "Unhandled exception in CHECK_CLOSE_EX(" #expected ", " #actual ")"); \
     }                                                                         \
   } while (0)
 
@@ -162,9 +201,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string __msg;                                                      \
-      if (!UnitTest::CheckArrayEqual ((expected), (actual), (count), __msg))  \
-        UnitTest::ReportFailure (__FILE__, __LINE__, __msg);                  \
+      std::string msg;                                                        \
+      if (!UnitTest::CheckArrayEqual ((expected), (actual), (count), msg))    \
+        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -187,9 +226,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string __msg;                                                      \
-      if (!UnitTest::CheckArrayClose ((expected), (actual), (count), (tolerance), __msg)) \
-        UnitTest::ReportFailure (__FILE__, __LINE__, __msg);                  \
+      std::string msg;                                                        \
+      if (!UnitTest::CheckArrayClose ((expected), (actual), (count), (tolerance), msg)) \
+        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -212,9 +251,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string __msg;                                                      \
-      if (!UnitTest::CheckArray2DEqual ((expected), (actual), (rows), (columns), __msg)) \
-        UnitTest::ReportFailure (__FILE__, __LINE__, __msg);                  \
+      std::string msg;                                                        \
+      if (!UnitTest::CheckArray2DEqual ((expected), (actual), (rows), (columns), msg)) \
+        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -238,9 +277,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string __msg;                                                      \
-      if (!UnitTest::CheckArray2DClose (expected, actual, rows, columns, tolerance, __msg)) \
-        UnitTest::ReportFailure (__FILE__, __LINE__, __msg);                  \
+      std::string msg;                                                        \
+      if (!UnitTest::CheckArray2DClose (expected, actual, rows, columns, tolerance, msg)) \
+        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -252,23 +291,59 @@
   \def CHECK_THROW
   \brief  Generate a failure if evaluating the expression __does not__ throw
           an exception of the `expected` type.
-
+  \param except   Expected exception type
+  \param expr     Expression to evaluate
   \hideinitializer
 */
 #ifdef CHECK_THROW
 #error Macro CHECK_THROW is already defined
 #endif
-#define CHECK_THROW(expected, expression) \
+#define CHECK_THROW(except, expr) \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
-    try { try { (expression); }                                               \
-          catch (const expected& ) { caught_ = true; } }                      \
-    catch (...) {}                                                            \
+    try { (expr); }                                                           \
+    catch (const except& ) { caught_ = true; }                                \
+    catch (...) {                                                             \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+        "Unexpected exception in CHECK_THROW");                               \
+    }                                                                         \
     if (!caught_)                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "expected: exception: \"" #expected "\" not thrown");                 \
+        "expected: exception: \"" #except "\" not thrown");                   \
   } while(0)
+
+/*!
+  \def CHECK_THROW_EX
+  \brief  Generate a failure if evaluating the expression __does not__ throw
+          an exception of the `expected` type.
+
+  Appends a printf type string to standard failure message.
+  \hideinitializer
+*/
+#ifdef CHECK_THROW_EX
+#error Macro CHECK_THROW_EX is already defined
+#endif
+#define CHECK_THROW_EX(except, expr, ...) \
+  do                                                                          \
+  {                                                                           \
+    bool caught_ = false;                                                     \
+    try { (expr); }                                                           \
+    catch (const except& ) { caught_ = true; }                                \
+    catch (...) {                                                             \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+        "Unexpected exception in CHECK_THROW_EX");                            \
+    }                                                                         \
+    if (!caught_) {                                                           \
+      std::string str{"expected: exception: \"" #except "\" not thrown"};     \
+      char message[UnitTest::MAX_MESSAGE_SIZE];                               \
+      sprintf (message, __VA_ARGS__);                                         \
+      str += " - ";                                                           \
+      str += message;                                                         \
+      UnitTest::ReportFailure (__FILE__, __LINE__, str);                      \
+    }                                                                         \
+  } while(0)
+
 
 /*!
   \def CHECK_THROW_EQUAL
@@ -281,21 +356,24 @@
 #ifdef CHECK_THROW_EQUAL
 #error Macro CHECK_THROW_EQUAL is already defined
 #endif
-#define CHECK_THROW_EQUAL(expected_type, expected_value, expression)          \
+#define CHECK_THROW_EQUAL(except, value, expression)                          \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
-    try { try { expression; }                                                 \
-          catch (const expected_type& actual) {                               \
-            caught_ = true;                                                   \
-            std::string msg;                                                  \
-            if (!UnitTest::CheckEqual(expected_value, actual, msg))           \
-              UnitTest::ReportFailure (__FILE__, __LINE__, msg);              \
-          } }                                                                 \
-    catch (...) {}                                                            \
+    try { expression; }                                                       \
+    catch (const except& actual) {                                            \
+      caught_ = true;                                                         \
+      std::string msg;                                                        \
+      if (!UnitTest::CheckEqual(value, actual, msg))                          \
+        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
+    }                                                                         \
+    catch (...) {                                                             \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+        "Unexpected exception in CHECK_THROW_EQUAL");                         \
+    }                                                                         \
     if (!caught_)                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "expected exception: \"" #expected_type "\" not thrown");             \
+        "expected exception: \"" #except "\" not thrown");                    \
   } while(0)
 
 /*!
@@ -311,9 +389,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string __msg;                                                      \
-      if (!UnitTest::CheckFileEqual((expected), (actual), __msg))             \
-        UnitTest::ReportFailure (__FILE__, __LINE__, __msg);                  \
+      std::string msg;                                                        \
+      if (!UnitTest::CheckFileEqual((expected), (actual), msg))               \
+        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -348,11 +426,14 @@
 
   \hideinitializer
 */
-#define ABORT_EX(value, message) \
+#define ABORT_EX(value, ...) \
   do                                                                          \
   {                                                                           \
-    if (!UnitTest::Check(value))                                              \
+    if (!UnitTest::Check(value)) {                                            \
+      char message[UnitTest::MAX_MESSAGE_SIZE];                               \
+      sprintf (message, __VA_ARGS__);                                         \
       throw UnitTest::test_abort (__FILE__, __LINE__, message);               \
+    }                                                                         \
   } while (0)
 
 ///@}

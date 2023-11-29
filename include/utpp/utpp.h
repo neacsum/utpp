@@ -1,13 +1,17 @@
 #pragma once
+/*
+  UTPP - A New Generation of UnitTest++
+  (c) Mircea Neacsu 2017-2023
+
+  See LICENSE file for full copyright information.
+*/
+
 /*!
   \file utpp.h
   \brief Master include file 
 
   This is the only header that users have to include. It takes care of pulling
   in all the other required headers.
-
-  (c) Mircea Neacsu 2017-2022
-  See README file for full copyright information.
 */
 
 #ifdef _WIN32
@@ -40,6 +44,12 @@
 #include <unistd.h>
 #endif
 
+namespace UnitTest {
+
+///Maximum size of message buffer for ..._EX macro definitions
+const size_t MAX_MESSAGE_SIZE = 1024;
+
+}
 /// Name of default suite
 #define DEFAULT_SUITE "DefaultSuite"
 
@@ -203,7 +213,7 @@ public:
   void run ();
 
   /// Actual body of test.
-  virtual void RunImpl () = 0;
+  virtual void RunImpl () {};
 
 protected:
   std::string name;                   ///< Name of this test
@@ -696,7 +706,7 @@ int TestSuite::RunTests(Reporter& rep, int maxtime)
   Invoke the maker function to create the test object.
 
   The actual test object might be derived also from a fixture. When maker
-  function is called, it triggers the construction of the fixture and this
+  function is called, it triggers the construction of the fixture that
   might fail. That is why the construction is wrapped in a try...catch block.
 
   \return true if constructor was successful
@@ -713,18 +723,29 @@ bool TestSuite::SetupCurrentTest(const Inserter* inf)
     {
         std::stringstream stream;
         stream << " Aborted setup of " << inf->test_name << " - " << x.what();
+        CurrentTest = new Test (inf->test_name); //mock-up to keep ReportFailure happy
         ReportFailure(x.file, x.line, stream.str());
+        delete CurrentTest;
+        CurrentTest = 0;
     }
     catch (const std::exception& e)
     {
         std::stringstream stream;
         stream << "Unhandled exception: " << e.what()
             << " while setting up test " << inf->test_name;
+        CurrentTest = new Test (inf->test_name); //mock-up to keep ReportFailure happy
         ReportFailure(inf->file_name, inf->line, stream.str());
+        delete CurrentTest;
+        CurrentTest = 0;
     }
     catch (...)
     {
-        ReportFailure(inf->file_name, inf->line, "Setup unhandled exception: Crash!");
+      std::stringstream stream;
+      stream << "Setup unhandled exception while setting up test " << inf->test_name;
+      CurrentTest = new Test (inf->test_name); //mock-up to keep ReportFailure happy
+      ReportFailure(inf->file_name, inf->line, stream.str ());
+      delete CurrentTest;
+      CurrentTest = 0;
     }
     return ok;
 }
@@ -1000,7 +1021,7 @@ inline
 int SuitesList::RunAll (Reporter& reporter, int max_time_ms)
 {
   for (auto& s : suites)
-    s.RunTests (reporter, max_time_ms);
+   s.RunTests (reporter, max_time_ms);
 
   return reporter.Summary ();
 }

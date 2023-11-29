@@ -1,3 +1,12 @@
+/*
+  UTPP - A New Generation of UnitTest++
+  (c) Mircea Neacsu 2017-2023
+
+  See LICENSE file for full copyright information.
+
+  Sample test program for UTPP library
+*/
+
 #include <utpp/utpp.h>
 
 /*-------------------------- Functions under test ---------------------------*/
@@ -6,6 +15,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <exception>
 
 bool earth_is_round () {
   return true;
@@ -91,9 +101,6 @@ void throw_2 ()
 /*------------------------- End of functions under test ---------------------*/
 
 
-using namespace UnitTest;
-
-
 SUITE (EarthSuite)
 {
   // Example of CHECK macro
@@ -106,6 +113,8 @@ SUITE (EarthSuite)
   TEST (HowBigIsEarth)
   {
     CHECK_CLOSE (6371., earth_radius_km (), 1.);
+    CHECK_EQUAL_EX (6371.0, earth_radius_km (), "difference=%lf", fabs(6371.0-earth_radius_km ()) );
+    CHECK_CLOSE_EX (6371., earth_radius_km (), 0.5, "This is an expected failure");
   }
 
   // Example of CHECK_EQUAL macro
@@ -127,13 +136,18 @@ SUITE (EarthSuite)
   TEST (EndOfTheEarth)
   {
     CHECK_THROW (flat_earth_exception, go_to_end_of_earth ());
+    CHECK_THROW_EX (flat_earth_exception, planet_name (), "just testing CHECK_THROW_EX macro");
   }
 }
 
 // Example of CHECK_THROW_EQUAL
-TEST (CheckThowEqual)
+TEST (CheckThrowEqual)
 {
   CHECK_THROW_EQUAL (int, 2, throw_2());
+
+  //Handling unexpected exceptions - logs an error
+  //Shows also how small closures can become arguments to CHECK macros
+  CHECK_THROW (int, []() {throw std::exception{ "Other exception" };}());
 }
 
 
@@ -308,48 +322,50 @@ SUITE (time_limits)
   // No errors as this is less than the global time constraint
   TEST (SlowTest)
   {
-    std::cout << "This suite take about 12 seconds to run. Please be patient.\n";
-    SleepMs (2000);
+    std::cout << "This suite takes about 12 seconds to run. Please be patient.\n";
+    UnitTest::SleepMs (2000);
   }
 
   // This should trigger the global time constraint limit
   TEST (TooSlowTest)
   {
-    SleepMs (4000);
+    UnitTest::SleepMs (4000);
   }
 
   // This breaks a local time constraint
   TEST (MustBeQuick)
   {
     UTPP_TIME_CONSTRAINT (1000);
-    SleepMs (2000);
+    UnitTest::SleepMs (2000);
   }
 
   // Test exempt from global limit
   TEST (LetMeRun)
   {
     UTPP_TIME_CONSTRAINT_EXEMPT ();
-    SleepMs (4000);
+    UnitTest::SleepMs (4000);
   }
 }
 
 TEST_MAIN (int argc, char** argv)
 {
-  int ret;
+  int ret, ret1;
 
   //Suites can be disabled using the "DisableSuite" function
-  DisableSuite ("not_run");
-  DisableSuite ("time_limits"); //
+  UnitTest::DisableSuite ("not_run");
+  UnitTest::DisableSuite ("time_limits"); //
 
-  GetDefaultReporter ().SetTrace (true);
+  UnitTest::GetDefaultReporter ().SetTrace (true);
 
-  ret = RunAllTests ();
-
+  ret = UnitTest::RunAllTests ();
+  std::cout << "RunAllTests() returned " << ret << std::endl
+            << "Running again with results sent to TEST.XML file..." << std::endl;
   std::ofstream os ("test.xml");
   UnitTest::ReporterXml xml (os);
-  EnableSuite ("time_limits");
+  UnitTest::EnableSuite ("time_limits");
   //Run tests setting a general time limit for each test
-  ret = UnitTest::RunAllTests (xml, 3000);
+  ret1 = UnitTest::RunAllTests (xml, 3000);
+  std::cout << "RunAllTests() returned " << ret1 << std::endl;
 
   // CHECK macros can be used outside of tests also.
   // The following check should fail
@@ -360,7 +376,7 @@ TEST_MAIN (int argc, char** argv)
   //and this one too
   CHECK_EQUAL (def, abc);
 
-  //expecting 11 failures
-  return (ret == 11)? 0 : 1;
+  //Expecting 14 failures
+  return (ret1 == 14)? 0 : 1;
 }
 

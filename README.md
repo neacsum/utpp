@@ -14,7 +14,7 @@ Mircea Neacsu (mircea@neacsu.net)
 ## License ##
 The MIT License (MIT)
  
-Copyright (c) 2017-2022 Mircea Neacsu
+Copyright (c) 2017-2023 Mircea Neacsu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -190,7 +190,7 @@ int main (int argc, char **argv)
 }
 ````
 
-Results file is similar this sample:
+Results file is similar to this sample:
 ````XML
 <?xml version="1.0" encoding="UTF-8"?>
 <utpp-results total="21" failed="11" failures="11" duration="12.031">
@@ -214,5 +214,11 @@ function allows you to run one particular suite while the `UnitTest::DisbleSuite
 allows you to disable a suite.
 
 
-More details about the internal architecture of this framework can be found in
-the [architecture](docs/achitecture.md) file.
+## Comparison with GoogleTest
+1. Macro definitions for assertion verification have different names. `CHECK_...` macros are almost direct correspondents to GoogleTest `EXPECT_...` macros and `ABORT_...` correspond to `ASSERT_...` definitions.
+   
+2. In GoogleTest, additional messages are streamed into assertion macros while UTPP `..._EX` macros accept arguments similar to `printf` function.
+   
+3. GoogleTest fixtures are classes derived from `testing::Test`; meanwhile UTPP fixtures are arbitrary objects that can be default-constructed.
+
+

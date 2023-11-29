@@ -1,10 +1,14 @@
 #pragma once
+/*
+  UTPP - A New Generation of UnitTest++
+  (c) Mircea Neacsu 2017-2023
+
+  See LICENSE file for full copyright information.
+*/
+
 /*!
   \file reporter_stdout.h
   \brief Definition of UnitTest::ReporterStdout class
-
-  (c) Mircea Neacsu 2017
-  See README file for full copyright information.
 */
 
 #include "utpp.h"

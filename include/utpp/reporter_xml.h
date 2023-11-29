@@ -1,10 +1,14 @@
 #pragma once
+/*
+  UTPP - A New Generation of UnitTest++
+  (c) Mircea Neacsu 2017-2023
+
+  See LICENSE file for full copyright information.
+*/
+
 /*!
   \file reporter_xml.h
   \brief Definition of UnitTest::ReporterXml class
-
-  (c) Mircea Neacsu 2017
-  See README file for full copyright information.
 */
 
 #include "utpp.h"
