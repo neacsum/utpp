@@ -91,9 +91,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string str;                                                        \
-      if (!UnitTest::CheckEqual((expected), (actual), str))                   \
-        UnitTest::ReportFailure (__FILE__, __LINE__, str);                    \
+      std::string str__;                                                      \
+      if (!UnitTest::CheckEqual((expected), (actual), str__))                 \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -115,14 +115,14 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string str;                                                        \
-      if (!UnitTest::CheckEqual((expected), (actual), str))                   \
+      std::string str__;                                                      \
+      if (!UnitTest::CheckEqual((expected), (actual), str__))                 \
       {                                                                       \
         char message[UnitTest::MAX_MESSAGE_SIZE];                             \
         sprintf (message, __VA_ARGS__);                                       \
-        str += " - ";                                                         \
-        str += message;                                                       \
-        UnitTest::ReportFailure (__FILE__, __LINE__, str);                    \
+        str__ += " - ";                                                       \
+        str__ += message;                                                     \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
       }                                                                       \
     }                                                                         \
     catch (...) {                                                             \
@@ -146,9 +146,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string str;                                                        \
-      if (!UnitTest::CheckClose ((expected), (actual), (tolerance), str))     \
-        UnitTest::ReportFailure (__FILE__, __LINE__, str);                    \
+      std::string str__;                                                      \
+      if (!UnitTest::CheckClose ((expected), (actual), (tolerance), str__))   \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -171,14 +171,14 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string str;                                                        \
-      if (!UnitTest::CheckClose ((expected), (actual), (tolerance), str))     \
+      std::string str__;                                                      \
+      if (!UnitTest::CheckClose ((expected), (actual), (tolerance), str__))   \
       {                                                                       \
         char message[UnitTest::MAX_MESSAGE_SIZE];                             \
         sprintf (message, __VA_ARGS__);                                       \
-        str += " - ";                                                         \
-        str += message;                                                       \
-        UnitTest::ReportFailure (__FILE__, __LINE__, str);                    \
+        str__ += " - ";                                                       \
+        str__ += message;                                                     \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
       }                                                                       \
     }                                                                         \
     catch (...) {                                                             \
@@ -201,9 +201,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string msg;                                                        \
-      if (!UnitTest::CheckArrayEqual ((expected), (actual), (count), msg))    \
-        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
+      std::string str__;                                                      \
+      if (!UnitTest::CheckArrayEqual ((expected), (actual), (count), str__))  \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -226,9 +226,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string msg;                                                        \
-      if (!UnitTest::CheckArrayClose ((expected), (actual), (count), (tolerance), msg)) \
-        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
+      std::string str__;                                                      \
+      if (!UnitTest::CheckArrayClose ((expected), (actual), (count), (tolerance), str__)) \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -251,9 +251,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string msg;                                                        \
-      if (!UnitTest::CheckArray2DEqual ((expected), (actual), (rows), (columns), msg)) \
-        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
+      std::string str__;                                                        \
+      if (!UnitTest::CheckArray2DEqual ((expected), (actual), (rows), (columns), str__)) \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__)                   \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -277,9 +277,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string msg;                                                        \
-      if (!UnitTest::CheckArray2DClose (expected, actual, rows, columns, tolerance, msg)) \
-        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
+      std::string str__;                                                        \
+      if (!UnitTest::CheckArray2DClose (expected, actual, rows, columns, tolerance, str__)) \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                    \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -335,12 +335,12 @@
         "Unexpected exception in CHECK_THROW_EX");                            \
     }                                                                         \
     if (!caught_) {                                                           \
-      std::string str{"expected: exception: \"" #except "\" not thrown"};     \
+      std::string str__{"expected: exception: \"" #except "\" not thrown"};   \
       char message[UnitTest::MAX_MESSAGE_SIZE];                               \
       sprintf (message, __VA_ARGS__);                                         \
-      str += " - ";                                                           \
-      str += message;                                                         \
-      UnitTest::ReportFailure (__FILE__, __LINE__, str);                      \
+      str__ += " - ";                                                         \
+      str__ += message;                                                       \
+      UnitTest::ReportFailure (__FILE__, __LINE__, str__);                    \
     }                                                                         \
   } while(0)
 
@@ -363,9 +363,9 @@
     try { expression; }                                                       \
     catch (const except& actual) {                                            \
       caught_ = true;                                                         \
-      std::string msg;                                                        \
-      if (!UnitTest::CheckEqual(value, actual, msg))                          \
-        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
+      std::string str__;                                                      \
+      if (!UnitTest::CheckEqual(value, actual, str__))                        \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -389,9 +389,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string msg;                                                        \
-      if (!UnitTest::CheckFileEqual((expected), (actual), msg))               \
-        UnitTest::ReportFailure (__FILE__, __LINE__, msg);                    \
+      std::string str__;                                                      \
+      if (!UnitTest::CheckFileEqual((expected), (actual), str__))             \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
