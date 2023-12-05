@@ -251,9 +251,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string str__;                                                        \
+      std::string str__;                                                      \
       if (!UnitTest::CheckArray2DEqual ((expected), (actual), (rows), (columns), str__)) \
-        UnitTest::ReportFailure (__FILE__, __LINE__, str__)                   \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -277,9 +277,9 @@
   do                                                                          \
   {                                                                           \
     try {                                                                     \
-      std::string str__;                                                        \
+      std::string str__;                                                      \
       if (!UnitTest::CheckArray2DClose (expected, actual, rows, columns, tolerance, str__)) \
-        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                    \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
