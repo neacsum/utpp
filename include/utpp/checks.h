@@ -25,6 +25,9 @@
 #include <string.h>
 #include <math.h>
 
+#include <codecvt>
+#include <locale>
+
 /*!
   \ingroup checks
 @{
@@ -458,8 +461,8 @@ bool Check (Value const value)
 /*!
   Check if two values are equal. If not, generate a failure message.
 
-  \param expected - expected_T value
-  \param actual   - actual_T value
+  \param expected - expected value
+  \param actual   - actual value
   \param msg      - generated error message
   \return `true` if values compare as equal
 @{
@@ -494,31 +497,6 @@ bool CheckEqual (const expected_T* expected, const actual_T* actual, std::string
   return true;
 }
 ///@}
-
-/*!
-  CheckEqual function for C strings.
-
-  \param expected - expected_T string value
-  \param actual   - actual_T string value
-  \param msg      - generated error message
-
-  \return `true` if strings match
-*/
-template <>
-inline
-bool CheckEqual<char, char> (const char* expected, const char* actual, std::string& msg)
-{
-  if (strcmp (expected, actual))
-  {
-    std::stringstream stream;
-    stream << "Expected \'" << expected << "\' but was \'" << actual << "\'";
-    msg = stream.str ();
-    return false;
-  }
-  else
-    msg.clear ();
-  return true;
-}
 
 /*!
   CheckEqual for C++ vectors.
@@ -625,6 +603,55 @@ bool CheckEqual (const std::list<T>& expected, const std::list<T>& actual, std::
     msg.clear ();
   return true;
 }
+
+/*!
+  CheckEqual function for wide C strings.
+
+  \param expected - expected string value
+  \param actual   - actual string value
+  \param msg      - generated error message
+
+  \return `true` if strings match
+@{
+*/
+inline 
+bool CheckEqual (const wchar_t *expected, const wchar_t *actual,
+                                          std::string &msg)
+{
+  if (wcscmp (expected, actual))
+  {
+    std::stringstream stream;
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+    std::string u8exp = conv.to_bytes (expected);
+    std::string u8act = conv.to_bytes (actual);
+    stream << "Expected \'" << u8exp << "\' but was \'" << u8act << "\'";
+    msg = stream.str ();
+    return false;
+  }
+  else
+    msg.clear ();
+  return true;
+}
+
+inline
+bool CheckEqual (wchar_t *expected, wchar_t *actual, std::string &msg)
+{
+  return CheckEqual (const_cast<const wchar_t *> (expected), const_cast<const wchar_t *> (actual), msg);
+}
+
+inline
+bool CheckEqual (const wchar_t *expected, wchar_t *actual, std::string &msg)
+{
+  return CheckEqual (expected, const_cast<const wchar_t *> (actual), msg);
+}
+
+inline
+bool CheckEqual (wchar_t *expected, const wchar_t *actual, std::string &msg)
+{
+  return CheckEqual (const_cast<const wchar_t *> (expected), actual, msg);
+}
+
+///@}
 
 /*!
   Specializations of CheckEqual function for C strings
