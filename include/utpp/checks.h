@@ -22,11 +22,8 @@
 #include <vector>
 #include <array>
 #include <list>
-#include <string.h>
+#include <string>
 #include <math.h>
-
-#include <codecvt>
-#include <locale>
 
 /*!
   \ingroup checks
@@ -604,6 +601,81 @@ bool CheckEqual (const std::list<T>& expected, const std::list<T>& actual, std::
   return true;
 }
 
+
+/// Internal function for conversion from UTF-16 to UTF-8
+inline std::string to_utf8 (const std::wstring& ws)
+{
+  std::string out;
+  auto in = ws.cbegin ();
+  while (in != ws.end ())
+  {
+    unsigned int c1 = (unsigned int)*in++;
+    if (c1 < 0xD800 || c1 > 0xe000)
+    {
+      if (c1 < 0x7f)
+        out.push_back ((char)c1);
+      else if (c1 < 0x7ff)
+      {
+        out.push_back (0xC0 | c1 >> 6);
+        out.push_back (0x80 | c1 & 0x3f);
+      }
+      else
+      {
+        out.push_back (0xE0 | c1 >> 12);
+        out.push_back (0x80 | c1 >> 6 & 0x3f);
+        out.push_back (0x80 | c1 & 0x3f);
+      }
+    }
+    else if (in != ws.end ())
+    {
+      unsigned int c2 = (unsigned int)*in++;
+      if (c1 > 0xdbff || c2 < 0xdc00)
+        break; // invalid high/low surrogates order
+
+      c1 &= 0x3ff;
+      c2 &= 0x3ff;
+
+      unsigned int c = (c1 << 10) | c2 + 0x10000;
+
+      out.push_back (0xF0 | c >> 18);
+      out.push_back (0x80 | c >> 12 & 0x3f);
+      out.push_back (0x80 | c >> 6 & 0x3f);
+      out.push_back (0x80 | c & 0x3f);
+    }
+    else
+      break; //malformed input; just bail out
+  }
+  return out;
+}
+
+/*!
+  CheckEqual function for wide C++ strings.
+
+  \param expected - expected string value
+  \param actual   - actual string value
+  \param msg      - generated error message
+
+  \return `true` if strings match
+@{
+*/
+inline
+bool CheckEqual (const std::wstring expected, const std::wstring actual,
+                                          std::string& msg)
+{
+  if (expected != actual)
+  {
+    std::stringstream stream;
+    std::string u8exp = to_utf8 (expected);
+    std::string u8act = to_utf8 (actual);
+    stream << "Expected \'" << u8exp << "\' but was \'" << u8act << "\'";
+    msg = stream.str ();
+    return false;
+  }
+  else
+    msg.clear ();
+  return true;
+}
+
 /*!
   CheckEqual function for wide C strings.
 
@@ -621,9 +693,8 @@ bool CheckEqual (const wchar_t *expected, const wchar_t *actual,
   if (wcscmp (expected, actual))
   {
     std::stringstream stream;
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-    std::string u8exp = conv.to_bytes (expected);
-    std::string u8act = conv.to_bytes (actual);
+    std::string u8exp = to_utf8 (expected);
+    std::string u8act = to_utf8 (actual);
     stream << "Expected \'" << u8exp << "\' but was \'" << u8act << "\'";
     msg = stream.str ();
     return false;
@@ -632,6 +703,7 @@ bool CheckEqual (const wchar_t *expected, const wchar_t *actual,
     msg.clear ();
   return true;
 }
+
 
 inline
 bool CheckEqual (wchar_t *expected, wchar_t *actual, std::string &msg)

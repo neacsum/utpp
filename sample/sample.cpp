@@ -347,6 +347,41 @@ SUITE (time_limits)
   }
 }
 
+SUITE (utf16_checks)
+{
+  TEST (conversion)
+  {
+    const wchar_t* yee = L"𐐷";
+    std::string exp = u8"𐐷";
+    auto s = UnitTest::to_utf8 (yee);
+    CHECK_EQUAL (exp, s);
+  }
+
+  TEST (const_wchar)
+  {
+    const wchar_t *s1 {L"😁 widechar string"};
+    const wchar_t *s2 {L"😒 widechar string"};
+    CHECK_EQUAL (s1, s2);
+    CHECK_EQUAL_EX (s1, s2, "s1 and s2 are different");
+  }
+
+  TEST (const_wstring)
+  {
+    const std::wstring s1{ L"😁 widechar string" };
+    const std::wstring s2{ L"😒 widechar string" };
+    CHECK_EQUAL (s1, s2);
+    CHECK_EQUAL_EX (s1, s2, "s1 and s2 are different");
+  }
+
+  TEST (nonconst_wstring)
+  {
+    std::wstring s1 = L"😁 widechar string";
+    std::wstring s2 = L"😒 widechar string";
+    CHECK_EQUAL (s1, s2);
+    CHECK_EQUAL_EX (s1, s2, "s1 and s2 are different");
+  }
+}
+
 TEST_MAIN (int argc, char** argv)
 {
   int ret, ret1;
@@ -376,7 +411,7 @@ TEST_MAIN (int argc, char** argv)
   //and this one too
   CHECK_EQUAL (def, abc);
 
-  //Expecting 14 failures
-  return (ret1 == 14)? 0 : 1;
+  //Expecting 17 failures
+  return (ret1 == 17)? 0 : 1;
 }
 
