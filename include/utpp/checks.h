@@ -134,7 +134,7 @@
 /*!
   \def CHECK_CLOSE
   \brief  Generate a failure if actual value differs from expected value with
-          more than given tolerance
+          more than tolerance
 
   \hideinitializer
 */
@@ -142,13 +142,17 @@
 #ifdef CHECK_CLOSE
 #error Macro CHECK_CLOSE is already defined
 #endif
-#define CHECK_CLOSE(expected, actual, tolerance)                              \
+#define CHECK_CLOSE(expected, actual,...)                                     \
   do                                                                          \
   {                                                                           \
     try {                                                                     \
       std::string str__;                                                      \
-      if (!UnitTest::CheckClose ((expected), (actual), (tolerance), str__))   \
+      if (!UnitTest::CheckClose ((expected), (actual), (__VA_ARGS__+0), str__)) \
         UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
+    }                                                                         \
+    catch (UnitTest::tolerance_not_set&)                                      \
+    {                                                                         \
+      throw UnitTest::test_abort (__FILE__, __LINE__, "UnitTest::default_tolerance not set"); \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -180,6 +184,10 @@
         str__ += message;                                                     \
         UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
       }                                                                       \
+    }                                                                         \
+    catch (UnitTest::tolerance_not_set&)                                      \
+    {                                                                         \
+      throw UnitTest::test_abort (__FILE__, __LINE__, "UnitTest::default_tolerance not set"); \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -222,13 +230,17 @@
 #error Macro CHECK_ARRAY_CLOSE is already defined
 #endif
 
-#define CHECK_ARRAY_CLOSE(expected, actual, count, tolerance)                 \
+#define CHECK_ARRAY_CLOSE(expected, actual, count, ...)                       \
   do                                                                          \
   {                                                                           \
     try {                                                                     \
       std::string str__;                                                      \
-      if (!UnitTest::CheckArrayClose ((expected), (actual), (count), (tolerance), str__)) \
+      if (!UnitTest::CheckArrayClose ((expected), (actual), (count), (__VA_ARGS__+0), str__)) \
         UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
+    }                                                                         \
+    catch (UnitTest::tolerance_not_set&)                                      \
+    {                                                                         \
+      throw UnitTest::test_abort (__FILE__, __LINE__, "UnitTest::default_tolerance not set"); \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -273,13 +285,17 @@
 #error Macro CHECK_ARRAY2D_CLOSE is already defined
 #endif
 
-#define CHECK_ARRAY2D_CLOSE(expected, actual, rows, columns, tolerance) \
+#define CHECK_ARRAY2D_CLOSE(expected, actual, rows, columns, ...)             \
   do                                                                          \
   {                                                                           \
     try {                                                                     \
       std::string str__;                                                      \
-      if (!UnitTest::CheckArray2DClose (expected, actual, rows, columns, tolerance, str__)) \
+      if (!UnitTest::CheckArray2DClose (expected, actual, rows, columns, (__VA_ARGS__+0), str__)) \
         UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
+    }                                                                         \
+    catch (UnitTest::tolerance_not_set&)                                      \
+    {                                                                         \
+      throw UnitTest::test_abort (__FILE__, __LINE__, "UnitTest::default_tolerance not set"); \
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
@@ -310,7 +326,7 @@
     }                                                                         \
     if (!caught_)                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "expected: exception: \"" #except "\" not thrown");                   \
+        "Expected exception: \"" #except "\", not thrown");                   \
   } while(0)
 
 /*!
@@ -335,7 +351,7 @@
         "Unexpected exception in CHECK_THROW_EX");                            \
     }                                                                         \
     if (!caught_) {                                                           \
-      std::string str__{"expected: exception: \"" #except "\" not thrown"};   \
+      std::string str__{"Expected exception: \"" #except "\", not thrown"};   \
       char message[UnitTest::MAX_MESSAGE_SIZE];                               \
       sprintf (message, __VA_ARGS__);                                         \
       str__ += " - ";                                                         \
@@ -343,7 +359,6 @@
       UnitTest::ReportFailure (__FILE__, __LINE__, str__);                    \
     }                                                                         \
   } while(0)
-
 
 /*!
   \def CHECK_THROW_EQUAL
@@ -373,7 +388,52 @@
     }                                                                         \
     if (!caught_)                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-        "expected exception: \"" #except "\" not thrown");                    \
+        "Expected exception: \"" #except "\", not thrown");                   \
+  } while(0)
+
+/*!
+  \def CHECK_THROW_EQUAL_EX
+  \brief  Checks if evaluating the expression triggers an exception of the given
+          type and with the expected value.
+
+  Appends a printf type string to standard failure message.
+  \hideinitializer
+*/
+
+#ifdef CHECK_THROW_EQUAL_EX
+#error Macro CHECK_THROW_EQUAL_EX is already defined
+#endif
+#define CHECK_THROW_EQUAL_EX(except, value, expression, ...)                  \
+  do                                                                          \
+  {                                                                           \
+    bool caught_ = false;                                                     \
+    try { expression; }                                                       \
+    catch (const except& actual) {                                            \
+      caught_ = true;                                                         \
+      std::string str__;                                                      \
+      if (!UnitTest::CheckEqual(value, actual, str__))                        \
+      {                                                                       \
+        char message[UnitTest::MAX_MESSAGE_SIZE];                             \
+        sprintf (message, __VA_ARGS__);                                       \
+        str__ += " - ";                                                       \
+        str__ += message;                                                     \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
+      }                                                                       \
+    }                                                                         \
+    catch (...) {                                                             \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+        "Unexpected exception in CHECK_THROW_EQUAL");                         \
+    }                                                                         \
+    if (!caught_)                                                             \
+    {                                                                         \
+      std::string str__{ "Expected exception: \"" #except "\", not thrown" }; \
+      char message[UnitTest::MAX_MESSAGE_SIZE];                               \
+      sprintf (message, __VA_ARGS__);                                         \
+      str__ += " - ";                                                         \
+      str__ += message;                                                       \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+        "Expected exception: \"" #except "\", not thrown");                   \
+    }                                                                         \
   } while(0)
 
 /*!
@@ -396,43 +456,6 @@
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
         "Unhandled exception in CHECK_EQUAL(" #expected ", " #actual ")");    \
-    }                                                                         \
-  } while (0)
-
-#ifdef ABORT
-#error Macro ABORT is already defined
-#endif
-
-/*!
-  \def ABORT
-  \brief   Abort current test is value is 0. Abort message is the value itself
-
-  \hideinitializer
-*/
-#define ABORT(value) \
-  do                                                                          \
-  {                                                                           \
-    if (!UnitTest::Check(value))                                              \
-      throw UnitTest::test_abort (__FILE__, __LINE__, #value);                \
-  } while (0)
-
-#ifdef ABORT_EX
-#error Macro ABORT_EX is already defined
-#endif
-
-/*!
-  \def ABORT_EX
-  \brief  Abort current test is value is 0. Outputs the given message.
-
-  \hideinitializer
-*/
-#define ABORT_EX(value, ...) \
-  do                                                                          \
-  {                                                                           \
-    if (!UnitTest::Check(value)) {                                            \
-      char message[UnitTest::MAX_MESSAGE_SIZE];                               \
-      sprintf (message, __VA_ARGS__);                                         \
-      throw UnitTest::test_abort (__FILE__, __LINE__, message);               \
     }                                                                         \
   } while (0)
 
@@ -768,21 +791,48 @@ bool CheckEqual (char* expected, const char* actual, std::string& msg)
   \param expected   - expected value
   \param actual     - actual value
   \param tolerance  - allowed tolerance
+
+  \return `true` if actual value is within the tolerance range
+
+  If \p tolerance is 0, the function uses UnitTest::default_tolerance value.
+  
+  If UnitTest::default_tolerance is 0, the function throws an exception causing
+  test to abort.
+*/
+template <typename T>
+bool isClose (const T& expected, const T& actual, double tolerance)
+{
+  if (tolerance == 0)
+  {
+    if (UnitTest::default_tolerance == 0)
+      throw UnitTest::tolerance_not_set ();
+    tolerance = UnitTest::default_tolerance;
+  }
+  return abs (actual - expected) <= tolerance;
+}
+/*!
+  Check if two values are closer than specified tolerance. If not, generate a
+  failure message.
+
+  \param expected   - expected value
+  \param actual     - actual value
+  \param tolerance  - allowed tolerance
   \param msg        - generated error message
 
   \return `true` if actual value is within the tolerance range
 */
-template <typename expected_T, typename actual_T, typename Tolerance>
-bool CheckClose (const expected_T& expected, const actual_T& actual, const Tolerance& tolerance,
+template <typename T>
+bool CheckClose (const T& expected, const T& actual, double tolerance,
                  std::string& msg)
 {
-  if (abs (actual - expected) > tolerance)
+  if (!isClose(actual, expected, tolerance))
   {
-    int prec = (int)(1 - log10 ((double)tolerance));
+    auto fail_tol = tolerance ? tolerance : UnitTest::default_tolerance;
+    int prec = (int)(1 - log10 (fail_tol));
     std::stringstream stream;
     stream.precision (prec);
     stream.setf (std::ios::fixed);
-    stream << "Expected " << expected << " +/- " << tolerance << " but was " << actual;
+    stream << "Expected " << expected << " +/- " << fail_tol << " but was " << actual;
     msg = stream.str ();
     return false;
   }
@@ -848,13 +898,16 @@ bool CheckArrayEqual (const expected_T& expected, const actual_T& actual,
   \param tolerance  - allowed tolerance
 
   \return `true` if all actual values are within the tolerance range
+
+  Calls isClose() for each element of the array to verify that it is within
+  allowed limits.
 */
-template <typename expected_T, typename actual_T, typename Tolerance>
-bool Close1D (const expected_T& expected, const actual_T& actual, size_t count, const Tolerance& tolerance)
+template <typename T>
+bool isClose1D (const T& expected, const T& actual, size_t count, double tolerance)
 {
   for (size_t i = 0; i < count; ++i)
   {
-    if (abs (expected[i] - actual[i]) > tolerance)
+    if (!isClose(expected[i], actual[i], tolerance))
       return false;
   }
   return true;
@@ -873,13 +926,15 @@ bool Close1D (const expected_T& expected, const actual_T& actual, size_t count, 
 
   \return `true` if all actual values are within the tolerance range
 */
-template <typename expected_T, typename actual_T, typename Tolerance>
-bool CheckArrayClose (const expected_T& expected, const actual_T& actual,
-                      size_t count, const Tolerance& tolerance, std::string& msg)
+template <typename T>
+bool CheckArrayClose (const T& expected, const T& actual, size_t count, 
+                      double tolerance, std::string& msg)
 {
-  if (!Close1D (expected, actual, count, tolerance))
+  if (!isClose1D (expected, actual, count, tolerance))
   {
-    int prec = (int)(1 - log10 ((double)tolerance));
+    auto fail_tol = tolerance ? tolerance : UnitTest::default_tolerance;
+    int prec = (int)(1 - log10 (fail_tol));
+
     std::stringstream stream;
     stream.precision (prec);
     stream.setf (std::ios::fixed);
@@ -887,7 +942,7 @@ bool CheckArrayClose (const expected_T& expected, const actual_T& actual,
     for (size_t i = 0; i < count; ++i)
       stream << expected[i] << " ";
 
-    stream << "] +/- " << tolerance << " but was [ ";
+    stream << "] +/- " << fail_tol << " but was [ ";
     for (size_t i = 0; i < count; ++i)
       stream << actual[i] << " ";
     stream << "]";
@@ -908,12 +963,14 @@ bool CheckArrayClose (const expected_T& expected, const actual_T& actual,
   \return `true` if all actual values are within the tolerance range
 */
 template <typename T>
-bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, const T& tolerance,
+bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, double tolerance,
   std::string& msg)
 {
-  if (expected.size () != actual.size () || !Close1D (&expected[0], &actual[0], expected.size(), tolerance))
+  if (expected.size () != actual.size () 
+   || !isClose1D (&expected[0], &actual[0], expected.size(), tolerance))
   {
-    int prec = (int)(1 - log10 ((double)tolerance));
+    auto fail_tol = tolerance ? tolerance : UnitTest::default_tolerance;
+    int prec = (int)(1 - log10 (fail_tol));
     std::stringstream stream;
     stream.precision (prec);
     stream.setf (std::ios::fixed);
@@ -922,7 +979,7 @@ bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, c
     for (p = expected.begin(); p != expected.end(); ++p)
       stream << *p << " ";
 
-    stream << "] +/- " << tolerance << " but was [ ";
+    stream << "] +/- " << fail_tol << " but was [ ";
     for (p = actual.begin(); p != actual.end(); ++p)
       stream << *p << " ";
     stream << "]";
@@ -943,12 +1000,13 @@ bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, c
   \return `true` if all actual values are within the tolerance range
 */
 template <typename T, size_t N>
-bool CheckClose (const std::array<T, N>& expected, const std::array<T, N>& actual, const T& tolerance,
+bool CheckClose (const std::array<T, N>& expected, const std::array<T, N>& actual, double tolerance,
   std::string& msg)
 {
-  if (!Close1D (&expected[0], &actual[0], N, tolerance))
+  if (!isClose1D (&expected[0], &actual[0], N, tolerance))
   {
-    int prec = (int)(1 - log10 ((double)tolerance));
+    auto fail_tol = tolerance ? tolerance : UnitTest::default_tolerance;
+    int prec = (int)(1 - log10 (fail_tol));
     std::stringstream stream;
     stream.precision (prec);
     stream.setf (std::ios::fixed);
@@ -957,7 +1015,7 @@ bool CheckClose (const std::array<T, N>& expected, const std::array<T, N>& actua
     for (p = expected.begin (); p != expected.end (); ++p)
       stream << *p << " ";
 
-    stream << "] +/- " << tolerance << " but was [ ";
+    stream << "] +/- " << fail_tol << " but was [ ";
     for (p = actual.begin (); p != actual.end (); ++p)
       stream << *p << " ";
     stream << "]";
@@ -1037,11 +1095,12 @@ bool CheckArray2DEqual (const expected_T& expected, const actual_T& actual,
 
   \return `true` if all values in the two arrays are within given tolerance
 */
-template <typename expected_T, typename actual_T, typename Tolerance>
-bool Close2D (const expected_T& expected, const actual_T& actual, size_t rows, size_t columns, const Tolerance& tolerance)
+template <typename T>
+bool isClose2D (const T& expected, const T& actual, size_t rows, size_t columns,
+              double tolerance)
 {
   for (size_t i = 0; i < rows; ++i)
-    if (!Close1D (expected[i], actual[i], columns, tolerance))
+    if (!isClose1D (expected[i], actual[i], columns, tolerance))
       return false;
   return true;
 }
@@ -1058,13 +1117,14 @@ bool Close2D (const expected_T& expected, const actual_T& actual, size_t rows, s
 
   \return `true` if all values in the two arrays are within given tolerance
 */
-template <typename expected_T, typename actual_T, typename Tolerance>
-bool CheckArray2DClose (const expected_T& expected, const actual_T& actual,
-                        size_t rows, size_t columns, const Tolerance& tolerance, std::string& msg)
+template <typename T>
+bool CheckArray2DClose (const T& expected, const T& actual,
+                        size_t rows, size_t columns, double tolerance, std::string& msg)
 {
-  if (!Close2D (expected, actual, rows, columns, tolerance))
+  if (!isClose2D (expected, actual, rows, columns, tolerance))
   {
-    int prec = (int)(1 - log10 ((double)tolerance));
+    auto fail_tol = tolerance ? tolerance : UnitTest::default_tolerance;
+    int prec = (int)(1 - log10 (fail_tol));
     std::stringstream stream;
     stream.precision (prec);
     stream.setf (std::ios::fixed);
@@ -1078,7 +1138,7 @@ bool CheckArray2DClose (const expected_T& expected, const actual_T& actual,
       stream << "]\n";
     }
 
-    stream << "] +/- " << tolerance << " but was [\n";
+    stream << "] +/- " << fail_tol << " but was [\n";
     for (i = 0; i < rows; ++i)
     {
       stream << " [ ";
@@ -1168,7 +1228,14 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
   return ok;
 }
 
-}
+#if _MSVC_LANG < 201703L
+/// Default tolerance for CLOSE... macros
+extern double default_tolerance;
+#else
+/// Default tolerance for CLOSE... macros
+inline double default_tolerance=0;
+#endif
+} //end namespace
 
 /// \cond
 #ifndef _WIN32
@@ -1193,16 +1260,15 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
 
 #define EXPECT_NEAR(A, B, tol) CHECK_CLOSE(B, A, tol)
 #define EXPECT_THROW(expr, except) CHECK_THROW(except, expr)
-#define ASSERT_THROW(expr, except) CHECK_THROW(except, expr)
 
-#define ASSERT_FALSE(expr) ABORT (!expr)
-#define ASSERT_TRUE(expr) ABORT (expr)
-#define ASSERT_EQ(e1, e2) ABORT ((e1) == (e2))
-#define ASSERT_NE(e1, e2) ABORT ((e1) != (e2))
-#define ASSERT_GE(e1, e2) ABORT ((e1) >= (e2))
-#define ASSERT_GT(e1, e2) ABORT ((e1) > (e2))
-#define ASSERT_LE(e1, e2) ABORT ((e1) <= (e2))
-#define ASSERT_LT(e1, e2) ABORT ((e1) < (e2))
+#define ASSERT_TRUE(expr) ABORT (!(expr))
+#define ASSERT_FALSE(expr) ABORT (expr)
+#define ASSERT_EQ(e1, e2) ABORT ((e1) != (e2))
+#define ASSERT_NE(e1, e2) ABORT ((e1) == (e2))
+#define ASSERT_GE(e1, e2) ABORT ((e1) < (e2))
+#define ASSERT_GT(e1, e2) ABORT ((e1) <= (e2))
+#define ASSERT_LE(e1, e2) ABORT ((e1) > (e2))
+#define ASSERT_LT(e1, e2) ABORT ((e1) >= (e2))
 ///@}
 
 /*!

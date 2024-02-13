@@ -93,6 +93,7 @@ const size_t MAX_MESSAGE_SIZE = 1024;
 #define TEST_MAIN(ARGC, ARGV) \
 UnitTest::Test *UnitTest::CurrentTest; \
 UnitTest::Reporter *UnitTest::CurrentReporter; \
+double UnitTest::default_tolerance; \
 std::string UnitTest::CurrentSuite; \
 int main (ARGC,ARGV)
 #else
@@ -165,6 +166,44 @@ int main (ARGC,ARGV)
   UnitTest::TestSuite::Inserter Name##_inserter (GetSuiteName(), #Name,       \
     __FILE__, __LINE__, Name##_maker);                                        \
   void Test##Name::RunImpl()
+
+#ifdef ABORT
+#error Macro ABORT is already defined
+#endif
+
+/*!
+  \def ABORT
+  \brief   Abort current test if `value` is __true__. Abort message is the value itself
+
+  \hideinitializer
+*/
+#define ABORT(value) \
+  do                                                                          \
+  {                                                                           \
+    if (UnitTest::Check(value))                                              \
+      throw UnitTest::test_abort (__FILE__, __LINE__, #value);                \
+  } while (0)
+
+#ifdef ABORT_EX
+#error Macro ABORT_EX is already defined
+#endif
+
+/*!
+  \def ABORT_EX
+  \brief  Abort current test if `value` is __true__. Outputs the given message.
+
+  \hideinitializer
+*/
+#define ABORT_EX(value, ...) \
+  do                                                                          \
+  {                                                                           \
+    if (UnitTest::Check(value)) {                                            \
+      char message[UnitTest::MAX_MESSAGE_SIZE];                               \
+      sprintf (message, __VA_ARGS__);                                         \
+      throw UnitTest::test_abort (__FILE__, __LINE__, message);               \
+    }                                                                         \
+  } while (0)
+
 ///@}
 
 /// \ingroup time
@@ -411,6 +450,13 @@ struct test_abort : public std::runtime_error
   {};
   const char* file;
   int line;
+};
+
+struct tolerance_not_set : public std::runtime_error
+{
+  tolerance_not_set ()
+    : std::runtime_error ("UnitTest::default_tolerance not set")
+  {};
 };
 
 ///Currently executing test

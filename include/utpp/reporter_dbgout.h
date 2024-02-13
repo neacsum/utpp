@@ -98,8 +98,8 @@ void ReporterDbgout::ReportFailure(const Failure& failure)
     if (CurrentTest)
     {
         if (CurrentSuite != DEFAULT_SUITE)
-            ss << " suite " << CurrentSuite;
-        ss << " test " << CurrentTest->test_name();
+            ss << "suite " << CurrentSuite << ' ';
+        ss << "test " << CurrentTest->test_name();
     }
     ss << std::endl;
 

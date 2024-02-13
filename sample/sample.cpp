@@ -107,12 +107,13 @@ SUITE (EarthSuite)
   TEST (EarthShape)
   {
     CHECK (earth_is_round ());
+    EXPECT_TRUE (earth_is_round ()); //GTest form
   }
 
   // Example of CHECK_CLOSE macro
   TEST (HowBigIsEarth)
   {
-    CHECK_CLOSE (6371., earth_radius_km (), 1.);
+    CHECK_CLOSE (6371., earth_radius_km ());
     CHECK_EQUAL_EX (6371.0, earth_radius_km (), "difference=%lf", fabs(6371.0-earth_radius_km ()) );
     CHECK_CLOSE_EX (6371., earth_radius_km (), 0.5, "This is an expected failure");
   }
@@ -122,6 +123,7 @@ SUITE (EarthSuite)
   {
     char name[] = "Earth";
     CHECK_EQUAL ("Earth", planet_name ());
+    EXPECT_EQ (planet_name (), "Earth"); //GTest form; notice swapped args
     //alternate specialization
     CHECK_EQUAL (name, planet_name ());
   }
@@ -144,6 +146,9 @@ SUITE (EarthSuite)
 TEST (CheckThrowEqual)
 {
   CHECK_THROW_EQUAL (int, 2, throw_2());
+
+  int val = 3;
+  CHECK_THROW_EQUAL_EX (int, val, throw_2 (), "Value is %d - This is expected", val);
 
   //Handling unexpected exceptions - logs an error
   //Shows also how small closures can become arguments to CHECK macros
@@ -205,9 +210,8 @@ TEST (Array_Checks)
 
   CHECK_CLOSE (expected, actual, 0.05);
 
-  actual[1] += 1;
   //this shows error message produced when arrays are different
-  CHECK_CLOSE (expected, actual, 0.05);
+  CHECK_CLOSE (expected, actual);
 }
 
 // Example of CHECK_ARRAY2D_EQUAL
@@ -220,8 +224,8 @@ TEST (Array2D_Equal)
   {
     for (int j = 0; j < 8; j++)
     {
-      expected[i][j] = i * 10 + j;
-      actual[i][j] = i * 10 + j;
+      expected[i][j] = (i+1) * 10 + j;
+      actual[i][j] = (i+1) * 10 + j;
     }
   }
   CHECK_ARRAY2D_EQUAL (expected, actual, 10, 8);
@@ -241,14 +245,14 @@ TEST (Array2D_Close)
   {
     for (int j = 0; j < 8; j++)
     {
-      expected[i][j] = i * 10. + j;
-      actual[i][j] = i * 10. + j + (double)std::rand () / RAND_MAX / 10. - 0.05;
+      expected[i][j] = (i+1) * 10. + j;
+      actual[i][j] = (i+1) * 10. + j + (double)std::rand () / RAND_MAX / 10. - 0.05;
     }
   }
   CHECK_ARRAY2D_CLOSE (expected, actual, 10, 8, 0.05);
 
   //the next CHECK will fail
-  CHECK_ARRAY2D_CLOSE (expected, actual, 10, 8, 0.001);
+  CHECK_ARRAY2D_CLOSE (expected, actual, 10, 8);
 }
 
 
@@ -285,27 +289,143 @@ TEST_FIXTURE (Account_fixture, Uncaught_exception)
 TEST_FIXTURE (Account_fixture, Test_Abort)
 {
   exchange_to_chf (amount_usd, amount_chf);
-  ABORT (amount_usd);
-  printf ("Never gets here");
+  ASSERT_EQ (amount_usd, 0);
+  ABORT (amount_usd == 0); //this condition is true so we abort test
+  printf ("Never gets here\n");
 }
 /// Same thing but with ABORT_EX
 TEST_FIXTURE (Account_fixture, Test_AbortEx)
 {
   exchange_to_chf (amount_usd, amount_chf);
-  ABORT_EX (amount_usd, "USD amount is 0!!");
-  printf ("Never gets here");
+  ABORT_EX (amount_usd == 0, "USD amount is 0!!");
+  printf ("Never gets here\n");
+}
+
+TEST (GTest_macros)
+{
+  int v1 = 2, v2 = 3;
+
+  EXPECT_FALSE (v1 == v2);
+  EXPECT_NE (v1, v2);
+  EXPECT_LT (v1, v2);
+  EXPECT_LE (v1, v2);
+  EXPECT_LE (v1, v1);
+  EXPECT_GT (v2, v1);
+  EXPECT_GE (v2, v1);
+  EXPECT_GE (v1, v1);
+
+  bool thrown;
+  ASSERT_TRUE (v1 == v1);
+  try {
+    thrown = false;
+    ASSERT_FALSE (v1 == v1);
+  }
+  catch (UnitTest::test_abort&) {
+    thrown = true;
+  }
+  CHECK (thrown);
+
+  ASSERT_FALSE (v1 == v2);
+  try {
+    thrown = false;
+    ASSERT_TRUE (v1 == v2);
+  }
+  catch (UnitTest::test_abort&) {
+    thrown = true;
+  }
+  CHECK (thrown);
+
+  ASSERT_EQ (v1, v1);
+  try {
+    thrown = false;
+    ASSERT_NE (v1, v1);
+  }
+  catch (UnitTest::test_abort&) {
+    thrown = true;
+  }
+  CHECK (thrown);
+
+  ASSERT_NE (v1, v2);
+  try {
+    thrown = false;
+    ASSERT_EQ (v1, v2);
+  }
+  catch (UnitTest::test_abort&) {
+    thrown = true;
+  }
+  CHECK (thrown);
+
+  ASSERT_LE (v1, v2);
+  try {
+    thrown = false;
+    ASSERT_GT (v1, v2);
+  }
+  catch (UnitTest::test_abort&) {
+    thrown = true;
+  }
+  CHECK (thrown);
+
+  ASSERT_LE (v1, v1);
+  try {
+    thrown = false;
+    ASSERT_GT (v1, v1);
+  }
+  catch (UnitTest::test_abort&) {
+    thrown = true;
+  }
+  CHECK (thrown);
+
+  ASSERT_LT (v1, v2);
+  try {
+    thrown = false;
+    ASSERT_GE (v1, v2);
+  }
+  catch (UnitTest::test_abort&) {
+    thrown = true;
+  }
+  CHECK (thrown);
+
+  ASSERT_GE (v2, v1);
+  try {
+    thrown = false;
+    ASSERT_LT (v2, v1);
+  }
+  catch (UnitTest::test_abort&) {
+    thrown = true;
+  }
+  CHECK (thrown);
+
+  ASSERT_GE (v1, v1);
+  try {
+    thrown = false;
+    ASSERT_LT (v1, v1);
+  }
+  catch (UnitTest::test_abort&) {
+    thrown = true;
+  }
+  CHECK (thrown);
+
+  ASSERT_GT (v2, v1);
+  try {
+    thrown = false;
+    ASSERT_LE (v2, v1);
+  }
+  catch (UnitTest::test_abort&) {
+    thrown = true;
+  }
+  CHECK (thrown);
 }
 
 /* Abort while setting up a fixture */
 struct ImpossibleFixture {
   ImpossibleFixture () {
-    ABORT_EX (0, "This fixture cannot be setup");
+    ABORT_EX (true, "This fixture cannot be setup");
   }
 };
 
 TEST_FIXTURE (ImpossibleFixture, ImpossibleTest)
 {
-  printf ("Never gets here");
+  printf ("Never gets here - fixture aborted\n");
 }
 
 /* An example of a disabled suite*/
@@ -389,6 +509,7 @@ TEST_MAIN (int argc, char** argv)
   //Suites can be disabled using the "DisableSuite" function
   UnitTest::DisableSuite ("not_run");
   UnitTest::DisableSuite ("time_limits"); //
+  UnitTest::default_tolerance = .001;
 
   UnitTest::GetDefaultReporter ().SetTrace (true);
 
@@ -411,7 +532,7 @@ TEST_MAIN (int argc, char** argv)
   //and this one too
   CHECK_EQUAL (def, abc);
 
-  //Expecting 17 failures
+  //Expecting 17 tests to fail
   return (ret1 == 17)? 0 : 1;
 }
 

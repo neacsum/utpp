@@ -82,10 +82,10 @@ void ReporterStdout::ReportFailure (const Failure& failure)
   if (CurrentTest)
   {
     if (CurrentSuite != DEFAULT_SUITE)
-      std::cout << " suite " << CurrentSuite;
-    std::cout << " test " << CurrentTest->test_name ();
+      std::cout << "suite " << CurrentSuite << ' ';
+    std::cout << "test " << CurrentTest->test_name ();
   }
-  std::cout << std::endl << failure.filename << "(" << failure.line_number << "):"
+  std::cout << std::endl << failure.filename << "(" << failure.line_number << "): "
     << failure.message << std::endl;
   Reporter::ReportFailure (failure);
 }
