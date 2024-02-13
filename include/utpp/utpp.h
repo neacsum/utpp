@@ -1016,6 +1016,8 @@ TimeConstraint::~TimeConstraint ()
 
   \param suite_name name of suite that will contain the test
   \param inf test information
+
+  If a suite with that name does not exist, it is created now.
 */
 inline
 void SuitesList::Add (const std::string& suite_name, const TestSuite::Inserter* inf)
@@ -1093,11 +1095,11 @@ SuitesList& SuitesList::GetSuitesList ()
 inline
 void SuitesList::Enable (const std::string& suite, bool enable)
 {
-  for (auto s = suites.begin (); s != suites.end (); s++)
+  for (auto& s : suites)
   {
-    if (s->name == suite)
+    if (s.name == suite)
     {
-      s->Enable (enable);
+      s.Enable (enable);
       break;
     }
   }
