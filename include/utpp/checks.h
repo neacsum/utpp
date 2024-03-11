@@ -464,6 +464,14 @@
 
 namespace UnitTest {
 
+#if _MSVC_LANG < 201703L
+/// Default tolerance for CLOSE... macros
+extern double default_tolerance;
+#else
+/// Default tolerance for CLOSE... macros
+inline double default_tolerance = 0;
+#endif
+
 //------------------ Check functions -----------------------------------------
 
 /*!
@@ -1229,13 +1237,6 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
   return ok;
 }
 
-#if _MSVC_LANG < 201703L
-/// Default tolerance for CLOSE... macros
-extern double default_tolerance;
-#else
-/// Default tolerance for CLOSE... macros
-inline double default_tolerance=0;
-#endif
 } //end namespace
 
 /// \cond
