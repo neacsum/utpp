@@ -37,7 +37,7 @@
 #include <deque>
 #include <stdexcept>
 #include <sstream>
-#include <assert.h>
+#include <cassert>
 #ifndef _WIN32
 #include <sys/time.h>
 #include <sys/stat.h>

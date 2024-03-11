@@ -23,7 +23,7 @@
 #include <array>
 #include <list>
 #include <string>
-#include <math.h>
+#include <cmath>
 
 /*!
   \ingroup checks
