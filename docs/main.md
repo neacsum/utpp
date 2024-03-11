@@ -69,7 +69,7 @@ void go_to_end_of_earth ()
 
 TEST (EndOfTheEarth)
 {
-  CHECK_THROW (flat_earth_exception, go_to_end_of_earth ());
+  CHECK_THROW (go_to_end_of_earth (), flat_earth_exception);
 }
 
 ```
