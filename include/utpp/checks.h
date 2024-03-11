@@ -24,6 +24,7 @@
 #include <list>
 #include <string>
 #include <cmath>
+#include <cstring>
 
 /*!
   \ingroup checks
