@@ -124,10 +124,10 @@ running a test:
 `CHECK_ARRAY2D_CLOSE(expected, actual, rows, columns, tolerance)` Checks that
  two matrices are within the specified tolerance.
  
-`CHECK_THROW(ExceptionType, expression)` Verifies that expression throws an 
+`CHECK_THROW(expression, ExceptionType)` Verifies that expression throws an 
  of the given type.
 
-`CHECK_THROW_EQUAL(ExceptionType, expected, expression)` Verifies that expression
+`CHECK_THROW_EQUAL(expression, expected, ExceptionType)` Verifies that expression
  throws an of the given type and with the expected value.
 
 CHECK_EQUAL and CHECK_THOW_EQUAL macros use a template function UnitTest::CheckEqual()

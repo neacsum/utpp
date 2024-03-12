@@ -137,22 +137,22 @@ SUITE (EarthSuite)
   // Example of CHECK_THROW macro
   TEST (EndOfTheEarth)
   {
-    CHECK_THROW (flat_earth_exception, go_to_end_of_earth ());
-    CHECK_THROW_EX (flat_earth_exception, planet_name (), "just testing CHECK_THROW_EX macro");
+    CHECK_THROW (go_to_end_of_earth (), flat_earth_exception);
+    CHECK_THROW_EX (planet_name (), flat_earth_exception, "just testing CHECK_THROW_EX macro");
   }
 }
 
 // Example of CHECK_THROW_EQUAL
 TEST (CheckThrowEqual)
 {
-  CHECK_THROW_EQUAL (int, 2, throw_2());
+  CHECK_THROW_EQUAL (throw_2(), 2, int);
 
   int val = 3;
-  CHECK_THROW_EQUAL_EX (int, val, throw_2 (), "Value is %d - This is expected", val);
+  CHECK_THROW_EQUAL_EX (throw_2 (), val, int, "Value is %d - This is expected", val);
 
   //Handling unexpected exceptions - logs an error
   //Shows also how small closures can become arguments to CHECK macros
-  CHECK_THROW (int, []() {throw std::exception{ "Other exception" };}());
+  CHECK_THROW ([]() {throw std::exception{ "Other exception" };}(), int);
 }
 
 
@@ -260,8 +260,8 @@ TEST (Array2D_Close)
 TEST (AnotherException)
 {
   std::vector<int> fibs;
-  CHECK_THROW (std::exception, fibonacci (-1, fibs));
-  CHECK_THROW (std::exception, fibonacci (200, fibs));
+  CHECK_THROW (fibonacci (-1, fibs), std::exception);
+  CHECK_THROW (fibonacci (200, fibs), std::exception);
 }
 
 // Example of a test with a fixture

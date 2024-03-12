@@ -315,7 +315,7 @@
 #ifdef CHECK_THROW
 #error Macro CHECK_THROW is already defined
 #endif
-#define CHECK_THROW(except, expr) \
+#define CHECK_THROW(expr, except) \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
@@ -341,7 +341,7 @@
 #ifdef CHECK_THROW_EX
 #error Macro CHECK_THROW_EX is already defined
 #endif
-#define CHECK_THROW_EX(except, expr, ...) \
+#define CHECK_THROW_EX(expr, except, ...) \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
@@ -372,7 +372,7 @@
 #ifdef CHECK_THROW_EQUAL
 #error Macro CHECK_THROW_EQUAL is already defined
 #endif
-#define CHECK_THROW_EQUAL(except, value, expression)                          \
+#define CHECK_THROW_EQUAL(expression, value, except)                          \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
@@ -404,7 +404,7 @@
 #ifdef CHECK_THROW_EQUAL_EX
 #error Macro CHECK_THROW_EQUAL_EX is already defined
 #endif
-#define CHECK_THROW_EQUAL_EX(except, value, expression, ...)                  \
+#define CHECK_THROW_EQUAL_EX(expression, value, except, ...)                  \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
