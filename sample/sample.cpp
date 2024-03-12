@@ -510,6 +510,8 @@ SUITE (utf16_checks)
 
 TEST_MAIN (int argc, char** argv)
 {
+  (void)argc;
+  (void)argv;
   int ret, ret1;
 
   //Suites can be disabled using the "DisableSuite" function

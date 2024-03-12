@@ -588,7 +588,7 @@ void Reporter::TestStart (const Test&)
 }
 
 inline
-void Reporter::ReportFailure (const Failure& f)
+void Reporter::ReportFailure (const Failure&)
 {
 }
 
@@ -642,7 +642,7 @@ ReporterDeferred::TestResult::TestResult (const std::string& suite, const std::s
 inline
 void ReporterDeferred::SuiteStart (const TestSuite& suite)
 {
-  results.push_back (TestResult (CurrentSuite, std::string ()));
+  results.push_back (TestResult (suite.name, std::string()));
 }
 
 /*!
