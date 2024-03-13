@@ -152,7 +152,7 @@ TEST (CheckThrowEqual)
 
   //Handling unexpected exceptions - logs an error
   //Shows also how small closures can become arguments to CHECK macros
-  CHECK_THROW ([]() {throw std::exception{ "Other exception" };}(), int);
+  CHECK_THROW ([]() {throw std::runtime_error{ "Other exception" };}(), int);
 }
 
 
