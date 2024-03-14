@@ -160,7 +160,7 @@ int main (ARGC,ARGV)
   public:                                                                     \
     Test##Name() : Fixture (), Test(#Name) {}                                 \
   private:                                                                    \
-    void RunImpl() override;                                                           \
+    void RunImpl() override;                                                  \
   };                                                                          \
   UnitTest::Test* Name##_maker() {return new Test##Name;}                     \
   UnitTest::TestSuite::Inserter Name##_inserter (GetSuiteName(), #Name,       \
@@ -180,7 +180,7 @@ int main (ARGC,ARGV)
 #define ABORT(value) \
   do                                                                          \
   {                                                                           \
-    if (UnitTest::Check(value))                                              \
+    if (UnitTest::Check(value))                                               \
       throw UnitTest::test_abort (__FILE__, __LINE__, #value);                \
   } while (0)
 
@@ -197,7 +197,7 @@ int main (ARGC,ARGV)
 #define ABORT_EX(value, ...) \
   do                                                                          \
   {                                                                           \
-    if (UnitTest::Check(value)) {                                            \
+    if (UnitTest::Check(value)) {                                             \
       char message[UnitTest::MAX_MESSAGE_SIZE];                               \
       sprintf (message, __VA_ARGS__);                                         \
       throw UnitTest::test_abort (__FILE__, __LINE__, message);               \
@@ -741,9 +741,6 @@ int TestSuite::RunTests(Reporter& rep, int maxtime)
             ++listp;
         }
     }
-    else
-        ;
-
     ///At the end invoke reporter SuiteFinish function
     return CurrentReporter->SuiteFinish(*this);
 }

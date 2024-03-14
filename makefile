@@ -7,5 +7,5 @@ clean:
 
 samples: samp1
 
-samp1: sample/sample.cpp
+samp1: sample/sample.cpp $(wildcard include/*)
 	$(CXX) $(CXXFLAGS) -o $@ $<

@@ -635,6 +635,38 @@ bool CheckEqual (const std::list<T>& expected, const std::list<T>& actual, std::
 
 
 /// Internal function for conversion from UTF-16 to UTF-8
+#if __WCHAR_MAX__ > 0x10000
+inline std::string to_utf8 (const std::wstring& ws)
+{
+  std::string out;
+  auto in = ws.cbegin ();
+  while (in != ws.end ())
+  {
+    unsigned int c = (unsigned int)*in++;
+    if (c < 0x7f)
+      out.push_back ((char)c);
+    else if (c < 0x7ff)
+    {
+      out.push_back (0xC0 | (c >> 6));
+      out.push_back (0x80 | (c & 0x3f));
+    }
+    else if (c < 0xffff)
+    {
+      out.push_back (0xE0 | (c >> 12));
+      out.push_back (0x80 | ((c >> 6) & 0x3f));
+      out.push_back (0x80 | (c & 0x3f));
+    }
+    else
+    {
+      out.push_back (0xF0 | (c >> 18));
+      out.push_back (0x80 | ((c >> 12) & 0x3f));
+      out.push_back (0x80 | ((c >> 6) & 0x3f));
+      out.push_back (0x80 | (c & 0x3f));
+    }
+  }
+  return out;
+}
+#else
 inline std::string to_utf8 (const std::wstring& ws)
 {
   std::string out;
@@ -648,14 +680,14 @@ inline std::string to_utf8 (const std::wstring& ws)
         out.push_back ((char)c1);
       else if (c1 < 0x7ff)
       {
-        out.push_back (0xC0 | c1 >> 6);
-        out.push_back (0x80 | c1 & 0x3f);
+        out.push_back (0xC0 | (c1 >> 6));
+        out.push_back (0x80 | (c1 & 0x3f));
       }
       else
       {
-        out.push_back (0xE0 | c1 >> 12);
-        out.push_back (0x80 | c1 >> 6 & 0x3f);
-        out.push_back (0x80 | c1 & 0x3f);
+        out.push_back (0xE0 | (c1 >> 12));
+        out.push_back (0x80 | ((c1 >> 6) & 0x3f));
+        out.push_back (0x80 | (c1 & 0x3f));
       }
     }
     else if (in != ws.end ())
@@ -667,19 +699,19 @@ inline std::string to_utf8 (const std::wstring& ws)
       c1 &= 0x3ff;
       c2 &= 0x3ff;
 
-      unsigned int c = (c1 << 10) | c2 + 0x10000;
+      unsigned int c = ((c1 << 10) | c2) + 0x10000;
 
-      out.push_back (0xF0 | c >> 18);
-      out.push_back (0x80 | c >> 12 & 0x3f);
-      out.push_back (0x80 | c >> 6 & 0x3f);
-      out.push_back (0x80 | c & 0x3f);
+      out.push_back (0xF0 | (c >> 18));
+      out.push_back (0x80 | ((c >> 12) & 0x3f));
+      out.push_back (0x80 | ((c >> 6) & 0x3f));
+      out.push_back (0x80 | (c & 0x3f));
     }
     else
       break; //malformed input; just bail out
   }
   return out;
 }
-
+#endif
 /*!
   CheckEqual function for wide C++ strings.
 
@@ -817,7 +849,7 @@ bool isClose (const T& expected, const T& actual, double tolerance)
       throw UnitTest::tolerance_not_set ();
     tolerance = UnitTest::default_tolerance;
   }
-  return abs (actual - expected) <= tolerance;
+  return fabs (actual - expected) <= tolerance;
 }
 /*!
   Check if two values are closer than specified tolerance. If not, generate a
@@ -1276,20 +1308,51 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
 
 #define EXPECT_TRUE(x) CHECK (x)
 #define EXPECT_FALSE(x) CHECK (!(x))
-#define EXPECT_EQ(A, B) CHECK ((A) == (B))
-#define EXPECT_NE(A, B) CHECK ((A) != (B))
+#define EXPECT_EQ(A, B) CHECK_EQUAL (B, A)
+#define EXPECT_NE(A, B)                                                       \
+  do                                                                          \
+  {                                                                           \
+    try {                                                                     \
+      std::string str__;                                                      \
+      if (UnitTest::CheckEqual ((A), (B), str__))                             \
+        UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
+    }                                                                         \
+    catch (...) {                                                             \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+            "Unhandled exception in CHECK_EQUAL(" #A ", " #B ")");            \
+    }                                                                         \
+  } while (0)
+
 #define EXPECT_GE(A, B) CHECK ((A) >= (B))
 #define EXPECT_GT(A, B) CHECK ((A) > (B))
 #define EXPECT_LE(A, B) CHECK ((A) <= (B))
 #define EXPECT_LT(A, B) CHECK ((A) < (B))
 
 #define EXPECT_NEAR(A, B, tol) CHECK_CLOSE(B, A, tol)
-#define EXPECT_THROW(expr, except) CHECK_THROW(except, expr)
+#define EXPECT_THROW(expr, except) CHECK_THROW(expr, except)
 
 #define ASSERT_TRUE(expr) ABORT (!(expr))
 #define ASSERT_FALSE(expr) ABORT (expr)
-#define ASSERT_EQ(e1, e2) ABORT ((e1) != (e2))
-#define ASSERT_NE(e1, e2) ABORT ((e1) == (e2))
+#define ASSERT_EQ(e1, e2)                                                     \
+  do                                                                          \
+  {                                                                           \
+    std::string str__;                                                        \
+    if (!UnitTest::CheckEqual((e1), (e2), str__))                             \
+      throw UnitTest::test_abort (__FILE__, __LINE__, str__.c_str());         \
+  } while (0)
+
+#define ASSERT_NE(e1, e2)                                                     \
+  do                                                                          \
+  {                                                                           \
+    std::string str__;                                                        \
+    if (UnitTest::CheckEqual ((e1), (e2), str__))                             \
+    {                                                                         \
+      std::stringstream stream__;                                             \
+      stream__ << (e1) << " and " << (e2) << " should be different";          \
+      throw UnitTest::test_abort (__FILE__, __LINE__, stream__.str ().c_str ());\
+    }                                                                         \
+  } while (0)
+
 #define ASSERT_GE(e1, e2) ABORT ((e1) < (e2))
 #define ASSERT_GT(e1, e2) ABORT ((e1) <= (e2))
 #define ASSERT_LE(e1, e2) ABORT ((e1) > (e2))

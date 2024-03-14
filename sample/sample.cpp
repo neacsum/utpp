@@ -295,10 +295,10 @@ TEST_FIXTURE (Account_fixture, Uncaught_exception)
 TEST_FIXTURE (Account_fixture, Test_Abort)
 {
   exchange_to_chf (amount_usd, amount_chf);
-  ASSERT_EQ (amount_usd, 0);
   ABORT (amount_usd == 0); //this condition is true so we abort test
   printf ("Never gets here\n");
 }
+
 /// Same thing but with ABORT_EX
 TEST_FIXTURE (Account_fixture, Test_AbortEx)
 {
@@ -309,7 +309,7 @@ TEST_FIXTURE (Account_fixture, Test_AbortEx)
 
 TEST (GTest_macros)
 {
-  int v1 = 2, v2 = 3;
+std::string v1 = "v1", v2 = "v2";
 
   EXPECT_FALSE (v1 == v2);
   EXPECT_NE (v1, v2);
