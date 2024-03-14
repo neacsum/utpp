@@ -962,6 +962,29 @@ bool CheckArrayClose (const T& expected, const T& actual, size_t count,
 }
 
 /*!
+  CheckEqual function for const void* pointers.
+
+  \param expected - expected_T pointer value
+  \param actual   - actual_T pointer value
+  \param msg      - generated error message
+
+  \return `true` if strings match
+*/
+template <>
+inline
+bool CheckEqual<void, void>(const void* expected, const void* actual, std::string& msg)
+{
+  if (!(expected == actual)) {
+    std::stringstream stream;
+    stream << "Expected " << expected << " but was " << actual;
+    msg = stream.str();
+    return false;
+  } else
+    msg.clear();
+  return true;
+}
+
+/*!
   Check if values in two C++ vectors are closer than specified tolerance. If not,
   generate a failure message.
 

@@ -255,6 +255,12 @@ TEST (Array2D_Close)
   CHECK_ARRAY2D_CLOSE (expected, actual, 10, 8);
 }
 
+// CHECK_EQUAL should work for two const void* pointers, too
+TEST (VoidPointer) {
+  void *a = reinterpret_cast<void*>(4), *b = reinterpret_cast<void*>(4);
+
+  CHECK_EQUAL(static_cast< void*>(a), static_cast<void*>(b));
+}
 
 // CHECK_THROW can catch a base class of the exception
 TEST (AnotherException)
@@ -504,6 +510,8 @@ SUITE (utf16_checks)
 
 TEST_MAIN (int argc, char** argv)
 {
+  (void)argc;
+  (void)argv;
   int ret, ret1;
 
   //Suites can be disabled using the "DisableSuite" function

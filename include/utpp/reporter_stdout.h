@@ -85,8 +85,14 @@ void ReporterStdout::ReportFailure (const Failure& failure)
       std::cout << "suite " << CurrentSuite << ' ';
     std::cout << "test " << CurrentTest->test_name ();
   }
-  std::cout << std::endl << failure.filename << "(" << failure.line_number << "): "
+
+#if defined(__APPLE__) || defined(__GNUG__)
+  std::cout << std::endl << failure.filename << ":" << failure.line_number << ": error: "
     << failure.message << std::endl;
+#else
+  std::cout << std::endl << failure.filename << "(" << failure.line_number << "): error: "
+    << failure.message << std::endl;
+#endif
   Reporter::ReportFailure (failure);
 }
 
