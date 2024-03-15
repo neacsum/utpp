@@ -18,4 +18,4 @@ jobs:
     - name: Build
       run: make
     - name: Run sample
-      run: samp1
+      run: ./samp1
