@@ -508,6 +508,26 @@ SUITE (utf16_checks)
   }
 }
 
+SUITE (typecasting)
+{
+  TEST (closeTest) {
+    float fValue = 0.005f;
+    CHECK_CLOSE (0.0, fValue, 0.01);
+
+    unsigned char ucValue = 122;
+    CHECK_CLOSE (123, ucValue, 3);
+
+    long lValue = 122;
+    CHECK_CLOSE (123, lValue, 3);
+  }
+
+  TEST (arrayCloseTest) {
+    float arr1[] = { 1.0f, 2.0f, 3.0f };
+    float* arr2 = arr1;
+    CHECK_ARRAY_CLOSE (arr1, arr2, 3, 0.1f);
+  }
+}
+
 TEST_MAIN (int argc, char** argv)
 {
   (void)argc;

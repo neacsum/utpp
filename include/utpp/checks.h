@@ -538,21 +538,20 @@ bool CheckEqual (const expected_T* expected, const actual_T* actual, std::string
 
   \return `true` if vectors compare as equal
 */ 
-template <typename T>
+template <typename expected_T, typename actual_T>
 inline
-bool CheckEqual (const std::vector<T>& expected, const std::vector<T>& actual, std::string& msg)
+bool CheckEqual (const std::vector<expected_T>& expected, const std::vector<actual_T>& actual, std::string& msg)
 {
   if (expected != actual)
   {
     std::stringstream stream;
     stream << "Expected [ ";
-    typename std::vector<T>::const_iterator p;
-    for (p = expected.begin (); p != expected.end (); ++p)
-      stream << *p << " ";
+    for (auto& p : expected)
+      stream << p << " ";
 
     stream << "] but was [ ";
-    for (p = actual.begin (); p != actual.end (); ++p)
-      stream << *p << " ";
+    for (auto& p : actual)
+      stream << p << " ";
 
     stream << "]";
     msg = stream.str ();
@@ -574,9 +573,9 @@ bool CheckEqual (const std::vector<T>& expected, const std::vector<T>& actual, s
 
   \return `true` if arrays compare as equal
 */
-template <typename T, size_t N>
+template <typename expected_T, typename actual_T, size_t N>
 inline
-bool CheckEqual (const std::array<T,N>& expected, const std::array<T,N>& actual, std::string& msg)
+bool CheckEqual (const std::array<expected_T,N>& expected, const std::array<actual_T,N>& actual, std::string& msg)
 {
   if (expected != actual)
   {
@@ -609,9 +608,9 @@ bool CheckEqual (const std::array<T,N>& expected, const std::array<T,N>& actual,
 
   \return `true` if lists compare as equal
 */
-template <typename T>
+template <typename expected_T, typename actual_T>
 inline
-bool CheckEqual (const std::list<T>& expected, const std::list<T>& actual, std::string& msg)
+bool CheckEqual (const std::list<expected_T>& expected, const std::list<actual_T>& actual, std::string& msg)
 {
   if (expected != actual)
   {
@@ -840,8 +839,8 @@ bool CheckEqual (char* expected, const char* actual, std::string& msg)
   If UnitTest::default_tolerance is 0, the function throws an exception causing
   test to abort.
 */
-template <typename T>
-bool isClose (const T& expected, const T& actual, double tolerance)
+template <typename expected_T, typename actual_T>
+bool isClose (const expected_T& expected, const actual_T& actual, double tolerance)
 {
   if (tolerance == 0)
   {
@@ -862,8 +861,8 @@ bool isClose (const T& expected, const T& actual, double tolerance)
 
   \return `true` if actual value is within the tolerance range
 */
-template <typename T>
-bool CheckClose (const T& expected, const T& actual, double tolerance,
+template <typename expected_T, typename actual_T>
+bool CheckClose (const expected_T& expected, const actual_T& actual, double tolerance,
                  std::string& msg)
 {
   if (!isClose(actual, expected, tolerance))
@@ -943,8 +942,8 @@ bool CheckArrayEqual (const expected_T& expected, const actual_T& actual,
   Calls isClose() for each element of the array to verify that it is within
   allowed limits.
 */
-template <typename T>
-bool isClose1D (const T& expected, const T& actual, size_t count, double tolerance)
+template <typename expected_T, typename actual_T>
+bool isClose1D (const expected_T& expected, const actual_T& actual, size_t count, double tolerance)
 {
   for (size_t i = 0; i < count; ++i)
   {
@@ -967,8 +966,8 @@ bool isClose1D (const T& expected, const T& actual, size_t count, double toleran
 
   \return `true` if all actual values are within the tolerance range
 */
-template <typename T>
-bool CheckArrayClose (const T& expected, const T& actual, size_t count, 
+template <typename expected_T, typename actual_T>
+bool CheckArrayClose (const expected_T& expected, const actual_T& actual, size_t count, 
                       double tolerance, std::string& msg)
 {
   if (!isClose1D (expected, actual, count, tolerance))
@@ -1026,8 +1025,8 @@ bool CheckEqual<void, void>(const void* expected, const void* actual, std::strin
   \param msg        - generated error message
   \return `true` if all actual values are within the tolerance range
 */
-template <typename T>
-bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, double tolerance,
+template <typename expected_T, typename actual_T>
+bool CheckClose (const std::vector<expected_T>& expected, const std::vector<actual_T>& actual, double tolerance,
   std::string& msg)
 {
   if (expected.size () != actual.size () 
@@ -1039,13 +1038,12 @@ bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, d
     stream.precision (prec);
     stream.setf (std::ios::fixed);
     stream << "Expected [ ";
-    typename std::vector<T>::const_iterator p;
-    for (p = expected.begin(); p != expected.end(); ++p)
-      stream << *p << " ";
+    for (auto& p : expected)
+      stream << p << " ";
 
     stream << "] +/- " << fail_tol << " but was [ ";
-    for (p = actual.begin(); p != actual.end(); ++p)
-      stream << *p << " ";
+    for (auto& p : actual)
+      stream << p << " ";
     stream << "]";
     msg = stream.str ();
     return false;
@@ -1063,8 +1061,8 @@ bool CheckClose (const std::vector<T>& expected, const std::vector<T>& actual, d
   \param msg        - generated error message
   \return `true` if all actual values are within the tolerance range
 */
-template <typename T, size_t N>
-bool CheckClose (const std::array<T, N>& expected, const std::array<T, N>& actual, double tolerance,
+template <typename expected_T, typename actual_T, size_t N>
+bool CheckClose (const std::array<expected_T, N>& expected, const std::array<actual_T, N>& actual, double tolerance,
   std::string& msg)
 {
   if (!isClose1D (&expected[0], &actual[0], N, tolerance))
@@ -1075,13 +1073,12 @@ bool CheckClose (const std::array<T, N>& expected, const std::array<T, N>& actua
     stream.precision (prec);
     stream.setf (std::ios::fixed);
     stream << "Expected [ ";
-    typename std::array<T,N>::const_iterator p;
-    for (p = expected.begin (); p != expected.end (); ++p)
-      stream << *p << " ";
+    for (auto& p : expected)
+      stream << p << " ";
 
     stream << "] +/- " << fail_tol << " but was [ ";
-    for (p = actual.begin (); p != actual.end (); ++p)
-      stream << *p << " ";
+    for (auto& p : actual)
+      stream << p << " ";
     stream << "]";
     msg = stream.str ();
     return false;
@@ -1159,8 +1156,8 @@ bool CheckArray2DEqual (const expected_T& expected, const actual_T& actual,
 
   \return `true` if all values in the two arrays are within given tolerance
 */
-template <typename T>
-bool isClose2D (const T& expected, const T& actual, size_t rows, size_t columns,
+template <typename expected_T, typename actual_T>
+bool isClose2D (const expected_T& expected, const actual_T& actual, size_t rows, size_t columns,
               double tolerance)
 {
   for (size_t i = 0; i < rows; ++i)
@@ -1181,8 +1178,8 @@ bool isClose2D (const T& expected, const T& actual, size_t rows, size_t columns,
 
   \return `true` if all values in the two arrays are within given tolerance
 */
-template <typename T>
-bool CheckArray2DClose (const T& expected, const T& actual,
+template <typename expected_T, typename actual_T>
+bool CheckArray2DClose (const expected_T& expected, const actual_T& actual,
                         size_t rows, size_t columns, double tolerance, std::string& msg)
 {
   if (!isClose2D (expected, actual, rows, columns, tolerance))
