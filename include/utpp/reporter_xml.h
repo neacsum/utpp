@@ -123,7 +123,7 @@ int ReporterXml::Summary ()
 
   os << " <command-line>" << xml_escape (cmd) << "</command-line>" << std::endl;
 
-  for (auto& i = results.begin (); i != results.end (); ++i)
+  for (auto i = results.cbegin (); i != results.cend (); ++i)
   {
     if (i->test_name.empty ()) // New suite flag
     {
@@ -131,7 +131,7 @@ int ReporterXml::Summary ()
         os << " </suite>" << std::endl;
       suite = i->suite_name;
       os << " <suite name=\"" << suite << '\"';
-      if ((i + 1) == results.end () || (i + 1)->test_name.empty ())
+      if ((i + 1) == results.cend () || (i + 1)->test_name.empty ())
       {
         // Next record is another suite. This suite is either empty or disabled
         os << " /";
