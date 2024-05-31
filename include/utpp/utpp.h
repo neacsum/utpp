@@ -1,7 +1,7 @@
 #pragma once
 /*
   UTPP - A New Generation of UnitTest++
-  (c) Mircea Neacsu 2017-2023
+  (c) Mircea Neacsu 2017-2024
 
   See LICENSE file for full copyright information.
 */
@@ -686,10 +686,10 @@ void ReporterDeferred::TestFinish (const Test& test)
 //------------------- TestSuite member functions ------------------------------
 
 inline
-TestSuite::TestSuite(const std::string& name_)
-    : name(name_)
-    , max_runtime(0)
-    , enabled(true)
+TestSuite::TestSuite (const std::string& name_)
+  : name (name_)
+  , max_runtime (0)
+  , enabled (true)
 {
 }
 
@@ -702,9 +702,9 @@ TestSuite::TestSuite(const std::string& name_)
   objects are statically created by the TEST... macros.
 */
 inline
-void TestSuite::Add(const Inserter* inf)
+void TestSuite::Add (const Inserter* inf)
 {
-    test_list.push_back(inf);
+  test_list.push_back (inf);
 }
 
 /*!
@@ -717,32 +717,29 @@ void TestSuite::Add(const Inserter* inf)
   Iterate through all test information objects doing the following:
 */
 inline
-int TestSuite::RunTests(Reporter& rep, int maxtime)
+int TestSuite::RunTests (Reporter& rep, int maxtime)
 {
-    /// Establish reporter as CurrentReporter and suite as CurrentSuite
-    CurrentSuite = name;
-    CurrentReporter = &rep;
+  /// Establish reporter as CurrentReporter and suite as CurrentSuite
+  CurrentSuite = name;
+  CurrentReporter = &rep;
 
-    ///Inform reporter that suite has started
-    CurrentReporter->SuiteStart(*this);
-    if (IsEnabled())
+  ///Inform reporter that suite has started
+  CurrentReporter->SuiteStart (*this);
+  std::deque <const Inserter*>::iterator listp = test_list.begin ();
+  max_runtime = maxtime;
+  while (listp != test_list.end ())
+  {
+    /// Setup the test context
+    if (SetupCurrentTest (*listp))
     {
-        std::deque <const Inserter*>::iterator listp = test_list.begin();
-        max_runtime = maxtime;
-        while (listp != test_list.end())
-        {
-            /// Setup the test context
-            if (SetupCurrentTest(*listp))
-            {
-                RunCurrentTest(*listp); /// Run test
-                TearDownCurrentTest(*listp);  /// Tear down test context
-            }
-            /// Repeat for all tests
-            ++listp;
-        }
+      RunCurrentTest (*listp); /// Run test
+      TearDownCurrentTest (*listp);  /// Tear down test context
     }
-    ///At the end invoke reporter SuiteFinish function
-    return CurrentReporter->SuiteFinish(*this);
+    /// Repeat for all tests
+    ++listp;
+  }
+  ///At the end invoke reporter SuiteFinish function
+  return CurrentReporter->SuiteFinish (*this);
 }
 
 /*!
@@ -755,121 +752,121 @@ int TestSuite::RunTests(Reporter& rep, int maxtime)
   \return true if constructor was successful
 */
 inline
-bool TestSuite::SetupCurrentTest(const Inserter* inf)
+bool TestSuite::SetupCurrentTest (const Inserter* inf)
 {
-    bool ok = false;
-    try {
-        CurrentTest = (inf->maker)();
-        ok = true;
-    }
-    catch (UnitTest::test_abort& x)
-    {
-        std::stringstream stream;
-        stream << " Aborted setup of " << inf->test_name << " - " << x.what();
-        CurrentTest = new Test (inf->test_name); //mock-up to keep ReportFailure happy
-        ReportFailure(x.file, x.line, stream.str());
-        delete CurrentTest;
-        CurrentTest = 0;
-    }
-    catch (const std::exception& e)
-    {
-        std::stringstream stream;
-        stream << "Unhandled exception: " << e.what()
-            << " while setting up test " << inf->test_name;
-        CurrentTest = new Test (inf->test_name); //mock-up to keep ReportFailure happy
-        ReportFailure(inf->file_name, inf->line, stream.str());
-        delete CurrentTest;
-        CurrentTest = 0;
-    }
-    catch (...)
-    {
-      std::stringstream stream;
-      stream << "Setup unhandled exception while setting up test " << inf->test_name;
-      CurrentTest = new Test (inf->test_name); //mock-up to keep ReportFailure happy
-      ReportFailure(inf->file_name, inf->line, stream.str ());
-      delete CurrentTest;
-      CurrentTest = 0;
-    }
-    return ok;
+  bool ok = false;
+  try {
+    CurrentTest = (inf->maker)();
+    ok = true;
+  }
+  catch (UnitTest::test_abort& x)
+  {
+    std::stringstream stream;
+    stream << " Aborted setup of " << inf->test_name << " - " << x.what ();
+    CurrentTest = new Test (inf->test_name); //mock-up to keep ReportFailure happy
+    ReportFailure (x.file, x.line, stream.str ());
+    delete CurrentTest;
+    CurrentTest = 0;
+  }
+  catch (const std::exception& e)
+  {
+    std::stringstream stream;
+    stream << "Unhandled exception: " << e.what ()
+      << " while setting up test " << inf->test_name;
+    CurrentTest = new Test (inf->test_name); //mock-up to keep ReportFailure happy
+    ReportFailure (inf->file_name, inf->line, stream.str ());
+    delete CurrentTest;
+    CurrentTest = 0;
+  }
+  catch (...)
+  {
+    std::stringstream stream;
+    stream << "Setup unhandled exception while setting up test " << inf->test_name;
+    CurrentTest = new Test (inf->test_name); //mock-up to keep ReportFailure happy
+    ReportFailure (inf->file_name, inf->line, stream.str ());
+    delete CurrentTest;
+    CurrentTest = 0;
+  }
+  return ok;
 }
 
 /// Run the test
 inline
-void TestSuite::RunCurrentTest(const Inserter* inf)
+void TestSuite::RunCurrentTest (const Inserter* inf)
 {
-    assert(CurrentTest);
-    CurrentReporter->TestStart(*CurrentTest);
+  assert (CurrentTest);
+  CurrentReporter->TestStart (*CurrentTest);
 
 
-    try {
-        CurrentTest->run();
-    }
-    catch (UnitTest::test_abort& x)
-    {
-        ReportFailure(x.file, x.line, std::string("Test aborted: ") + x.what());
-    }
-    catch (const std::exception& e)
-    {
-        std::stringstream stream;
-        stream << "Unhandled exception: " << e.what()
-            << " while running test " << inf->test_name;
-        ReportFailure(inf->file_name, inf->line, stream.str());
-    }
-    catch (...)
-    {
-        std::stringstream stream;
-        stream << "Unhandled exception while running test " << inf->test_name;
-        ReportFailure(inf->file_name, inf->line, stream.str());
-    }
+  try {
+    CurrentTest->run ();
+  }
+  catch (UnitTest::test_abort& x)
+  {
+    ReportFailure (x.file, x.line, std::string ("Test aborted: ") + x.what ());
+  }
+  catch (const std::exception& e)
+  {
+    std::stringstream stream;
+    stream << "Unhandled exception: " << e.what ()
+      << " while running test " << inf->test_name;
+    ReportFailure (inf->file_name, inf->line, stream.str ());
+  }
+  catch (...)
+  {
+    std::stringstream stream;
+    stream << "Unhandled exception while running test " << inf->test_name;
+    ReportFailure (inf->file_name, inf->line, stream.str ());
+  }
 
-    int actual_time = CurrentTest->test_time_ms();
-    if (CurrentTest->is_time_constraint() && max_runtime && actual_time > max_runtime)
-    {
-        std::stringstream stream;
-        stream << "Global time constraint failed while running test " << inf->test_name
-            << " Expected under " << max_runtime
-            << "ms but took " << actual_time << "ms.";
+  int actual_time = CurrentTest->test_time_ms ();
+  if (CurrentTest->is_time_constraint () && max_runtime && actual_time > max_runtime)
+  {
+    std::stringstream stream;
+    stream << "Global time constraint failed while running test " << inf->test_name
+      << " Expected under " << max_runtime
+      << "ms but took " << actual_time << "ms.";
 
-        ReportFailure(inf->file_name, inf->line, stream.str());
-    }
-    CurrentReporter->TestFinish(*CurrentTest);
+    ReportFailure (inf->file_name, inf->line, stream.str ());
+  }
+  CurrentReporter->TestFinish (*CurrentTest);
 }
 
 /// Delete current test instance
 inline
-void TestSuite::TearDownCurrentTest(const Inserter* inf)
+void TestSuite::TearDownCurrentTest (const Inserter* inf)
 {
-    try {
-        delete CurrentTest;
-        CurrentTest = 0;
-    }
-    catch (const std::exception& e)
-    {
-        std::stringstream stream;
-        stream << "Unhandled exception: " << e.what()
-            << " while tearing down test " << inf->test_name;
-        ReportFailure(inf->file_name, inf->line, stream.str());
-    }
-    catch (...)
-    {
-        std::stringstream stream;
-        stream << "Unhandled exception tearing down test " << inf->test_name;
-        ReportFailure(inf->file_name, inf->line, stream.str());
-    }
+  try {
+    delete CurrentTest;
+    CurrentTest = 0;
+  }
+  catch (const std::exception& e)
+  {
+    std::stringstream stream;
+    stream << "Unhandled exception: " << e.what ()
+      << " while tearing down test " << inf->test_name;
+    ReportFailure (inf->file_name, inf->line, stream.str ());
+  }
+  catch (...)
+  {
+    std::stringstream stream;
+    stream << "Unhandled exception tearing down test " << inf->test_name;
+    ReportFailure (inf->file_name, inf->line, stream.str ());
+  }
 }
 
 /// Returns true if suite is enabled
 inline
-bool TestSuite::IsEnabled() const
+bool TestSuite::IsEnabled () const
 {
-    return enabled;
+  return enabled;
 }
 
 ///Enables or disables this suite
 inline
-void TestSuite::Enable(bool on_off)
+void TestSuite::Enable (bool on_off)
 {
-    enabled = on_off;
+  enabled = on_off;
 }
 
 //------------------ TestSuite::Inserter --------------------------------------
@@ -884,17 +881,14 @@ void TestSuite::Enable(bool on_off)
   Calls SuiteList::Add() to add the test to a suite.
 */
 inline
-TestSuite::Inserter::Inserter(const std::string& suite,
-    const std::string& test,
-    const std::string& file,
-    int ln,
-    Testmaker func)
-    : test_name(test)
-    , file_name(file)
-    , line(ln)
-    , maker(func)
+TestSuite::Inserter::Inserter (const std::string& suite, const std::string& test,
+    const std::string& file, int ln, Testmaker func)
+  : test_name (test)
+  , file_name (file)
+  , line (ln)
+  , maker (func)
 {
-    SuitesList::GetSuitesList().Add(suite, this);
+  SuitesList::GetSuitesList ().Add (suite, this);
 }
 
 //-----------------Timer member functions -------------------------------------
@@ -1066,7 +1060,10 @@ inline
 int SuitesList::RunAll (Reporter& reporter, int max_time_ms)
 {
   for (auto& s : suites)
-   s.RunTests (reporter, max_time_ms);
+  {
+    if (s.IsEnabled ())
+      s.RunTests (reporter, max_time_ms);
+  }
 
   return reporter.Summary ();
 }
@@ -1196,7 +1193,7 @@ const char* GetSuiteName ()
   return DEFAULT_SUITE;
 }
 
-#include "reporter_stdout.h"
+#include "reporter_stream.h"
 #include "reporter_xml.h"
 #ifdef _WIN32
 #include "reporter_dbgout.h"
@@ -1207,11 +1204,12 @@ const char* GetSuiteName ()
 inline
 UnitTest::Reporter& UnitTest::GetDefaultReporter ()
 {
-  static UnitTest::ReporterStdout the_default_reporter;
+  static UnitTest::ReporterStream the_default_reporter;
   return the_default_reporter;
 }
 
-#if _MSVC_LANG >= 201703L
+#if (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)  \
+  || (!defined(_MSVC_LANG) && (__cplusplus >= 201703L))
 // In C++ 17 and later we have inline data. TEST_MAIN is not really needed.
 inline UnitTest::Test* UnitTest::CurrentTest;
 inline UnitTest::Reporter* UnitTest::CurrentReporter;

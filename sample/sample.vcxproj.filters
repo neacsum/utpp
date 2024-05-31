@@ -26,13 +26,13 @@
     <ClInclude Include="..\include\utpp\reporter_dbgout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\utpp\reporter_stdout.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\utpp\reporter_xml.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\utpp\utpp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utpp\reporter_stream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

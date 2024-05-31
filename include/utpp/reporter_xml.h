@@ -1,7 +1,7 @@
 #pragma once
 /*
   UTPP - A New Generation of UnitTest++
-  (c) Mircea Neacsu 2017-2023
+  (c) Mircea Neacsu 2017-2024
 
   See LICENSE file for full copyright information.
 */
@@ -11,8 +11,6 @@
   \brief Definition of UnitTest::ReporterXml class
 */
 
-#include "utpp.h"
-
 #include <iostream>
 #include <iomanip>
 #include <ctime>
@@ -20,11 +18,11 @@
 namespace UnitTest
 {
 
-/// A Reporter that sends results to an XML file.
+/// A Reporter that generates XML formatted results similar to NUnit
 class ReporterXml : public ReporterDeferred
 {
 public:
-  explicit ReporterXml (std::ostream& ostream);
+  explicit ReporterXml (std::ostream& ostream = std::cout);
 
   int Summary () override;
 
@@ -48,6 +46,7 @@ private:
 inline
 std::string ReporterXml::xml_escape (const std::string& value)
 {
+  //TODO trade style for speed
   std::string escaped = value;
   auto replace_char = [&escaped] (char c, const char* repl){
     for (auto pos = escaped.find(c); pos != std::string::npos; pos = escaped.find(c, pos + 1))
@@ -71,7 +70,11 @@ std::string ReporterXml::build_failure_message (const std::string& file, int lin
   return failureMessage.str();
 }
 
-/// Constructor
+/*!
+  Constructor.
+
+  \param ostream Output stream that will contain XML formatted results
+*/
 inline
 ReporterXml::ReporterXml (std::ostream& ostream)
   : os (ostream)
@@ -120,8 +123,7 @@ int ReporterXml::Summary ()
 
   os << " <command-line>" << xml_escape (cmd) << "</command-line>" << std::endl;
 
-  std::deque<TestResult>::iterator i;
-  for (i = results.begin (); i != results.end (); ++i)
+  for (auto& i = results.begin (); i != results.end (); ++i)
   {
     if (i->test_name.empty ()) // New suite flag
     {
@@ -180,11 +182,10 @@ void ReporterXml::AddFailure (const ReporterDeferred::TestResult& result)
 {
   os << ">" << std::endl; // close <test> element
 
-  std::deque<Failure>::const_iterator it;
-  for (it = result.failures.begin (); it != result.failures.end (); ++it)
+  for (auto& fail : result.failures)
   {
-    std::string escapedMessage = xml_escape (it->message);
-    std::string message = build_failure_message (it->filename, it->line_number, escapedMessage);
+    std::string escapedMessage = xml_escape (fail.message);
+    std::string message = build_failure_message (fail.filename, fail.line_number, escapedMessage);
 
     os << "   <failure" << " message=\"" << message << "\"" << "/>" << std::endl;
   }

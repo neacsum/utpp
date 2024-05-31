@@ -1,7 +1,7 @@
 #pragma once
 /*
   UTPP - A New Generation of UnitTest++
-  (c) Mircea Neacsu 2017-2023
+  (c) Mircea Neacsu 2017-2024
 
   See LICENSE file for full copyright information.
 */
@@ -11,7 +11,6 @@
   \brief Definition of UnitTest::ReporterDbgout class
 */
 
-#include "utpp.h"
 #include <iomanip>
 
 namespace UnitTest {

@@ -539,11 +539,18 @@ TEST_MAIN (int argc, char** argv)
   UnitTest::DisableSuite ("time_limits"); //
   UnitTest::default_tolerance = .001;
 
-  UnitTest::GetDefaultReporter ().SetTrace (true);
-
   ret = UnitTest::RunAllTests ();
-  std::cout << "RunAllTests() returned " << ret << std::endl
-            << "Running again with results sent to TEST.XML file..." << std::endl;
+  std::cout << "RunAllTests() returned " << ret << std::endl;
+
+  //Now we run one of the disabled suites with trace turned on.
+  UnitTest::CurrentReporter->SetTrace (true);
+
+  //Suites that are disabled are skipped by RunAllTests() but can be executed
+  //by RunSuite()
+  UnitTest::RunSuite ("not_run");
+
+  std::cout << "Running again with results sent to TEST.XML file..."
+    << std::endl;
   std::ofstream os ("test.xml");
   UnitTest::ReporterXml xml (os);
   UnitTest::EnableSuite ("time_limits");
@@ -551,12 +558,13 @@ TEST_MAIN (int argc, char** argv)
   ret1 = UnitTest::RunAllTests (xml, 3000);
   std::cout << "RunAllTests() returned " << ret1 << std::endl;
 
+  UnitTest::CurrentReporter = &UnitTest::GetDefaultReporter ();
   // CHECK macros can be used outside of tests also.
   // The following check should fail
   CHECK_EQUAL (0, ret);
 
-  const char* abc = "abc";
   const char* def = "def";
+  const char* abc = "abc";
   //and this one too
   CHECK_EQUAL (def, abc);
 
