@@ -155,17 +155,17 @@ int main (ARGC,ARGV)
   \hideinitializer
 */
 #define TEST_FIXTURE(Fixture, Name)                                           \
-  class Test##Name : public Fixture, public UnitTest::Test                    \
+  class Fixture##Name##Helper : public Fixture, public UnitTest::Test         \
   {                                                                           \
   public:                                                                     \
-    Test##Name() : Fixture (), Test(#Name) {}                                 \
+    Fixture##Name##Helper() : Fixture (), Test(#Name) {}                      \
   private:                                                                    \
     void RunImpl() override;                                                  \
   };                                                                          \
-  UnitTest::Test* Name##_maker() {return new Test##Name;}                     \
+  UnitTest::Test* Name##_maker() {return new Fixture##Name##Helper;}          \
   UnitTest::TestSuite::Inserter Name##_inserter (GetSuiteName(), #Name,       \
     __FILE__, __LINE__, Name##_maker);                                        \
-  void Test##Name::RunImpl()
+  void Fixture##Name##Helper::RunImpl()
 
 #ifdef ABORT
 #error Macro ABORT is already defined
