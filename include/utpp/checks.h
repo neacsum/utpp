@@ -1215,10 +1215,6 @@ bool CheckArray2DClose (const expected_T& expected, const actual_T& actual,
   return true;
 }
 
-#ifndef _WIN32
-#define sprintf_s sprintf
-#endif
-
 /*!
   Function called by CHECK_FILE_EQUAL() macro to compare two files.
   \param ref      Name of reference file
@@ -1233,15 +1229,15 @@ inline
 bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
 {
   struct stat st1, st2;
-  char buf[1024];
+  std::ostringstream buf;
 
   stat (ref, &st1);
   stat (actual, &st2);
   if (st1.st_size != st2.st_size)
   {
-    sprintf_s (buf, "Size is different (%ld vs %ld) while comparing %s and %s",
-      st1.st_size, st2.st_size, ref, actual);
-    message = buf;
+    buf << "Size is different (" << st1.st_size << " vs " << st2.st_size
+      << ") while comparing " << ref << " and " << actual;
+    message = buf.str();
     return false;
   }
 
@@ -1252,9 +1248,9 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
   {
     if (f1) fclose (f1);
     if (f2) fclose (f2);
-    sprintf_s (buf, "Failed to open files while comparing %s and %s",
-      ref, actual);
-    message = buf;
+    buf << "Failed to open files while comparing "
+      << ref << " and " << actual;
+    message = buf.str();
     return false; //something wrong with files
   }
 
@@ -1280,9 +1276,9 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
       *p1 && *p2 && *p1 == *p2;
       p1++, p2++, off++)
       ;
-    sprintf_s (buf, "Difference at line %zu position %d while comparing %s and %s",
-      ln, off, ref, actual);
-    message = buf;
+	buf << "Difference at line " << ln << " position " << off
+      << " while comparing " << ref << " and " << actual;
+    message = buf.str();
   }
   else
     message.clear ();
@@ -1290,12 +1286,6 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
 }
 
 } //end namespace
-
-/// \cond
-#ifndef _WIN32
-#undef sprintf_s
-#endif
-/// \endcond
 
 /*!
   \ingroup gt 
