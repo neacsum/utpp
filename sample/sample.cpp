@@ -142,6 +142,19 @@ SUITE (EarthSuite)
   }
 }
 
+// Example of CHECK_NAN
+TEST (Should_be_NaN)
+{
+  auto nan = std::numeric_limits<double>::quiet_NaN ();
+  CHECK_NAN (nan);
+}
+
+TEST (Not_a_NaN)
+{
+  long double x = 1.;
+  CHECK_NAN (x); //this should fail
+}
+
 // Example of CHECK_THROW_EQUAL
 TEST (CheckThrowEqual)
 {
@@ -568,7 +581,7 @@ TEST_MAIN (int argc, char** argv)
   //and this one too
   CHECK_EQUAL (def, abc);
 
-  //Expecting 17 tests to fail
-  return (ret1 == 17)? 0 : 1;
+  //Expecting 18 tests to fail
+  return (ret1 == 18)? 0 : 1;
 }
 

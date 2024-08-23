@@ -103,6 +103,29 @@
   } while (0)
 
 /*!
+  \def CHECK_NAN
+  \brief Generate a failure if value is not NaN
+
+  \hideinitializer
+*/
+#ifdef CHECK_NAN
+#error Macro CHECK_NAN is already defined
+#endif
+
+#define CHECK_NAN(value)                                                      \
+  do                                                                          \
+  {                                                                           \
+    try {                                                                     \
+      if (!UnitTest::CheckNaN(value))                                         \
+        UnitTest::ReportFailure (__FILE__, __LINE__, "Check failed: " #value " is not NaN");\
+    }                                                                         \
+    catch (...) {                                                             \
+      UnitTest::ReportFailure (__FILE__, __LINE__,                            \
+        "Unhandled exception in CHECK_NAN(" #value ")");                      \
+    }                                                                         \
+  } while (0)
+
+/*!
   \def CHECK_EQUAL_EX
   \brief  Generate a failure if actual value is different from expected.
           The given message is appended to the standard CHECK_EQUAL message. 
@@ -485,6 +508,18 @@ template <typename Value>
 bool Check (Value const value)
 {
   return (bool)value;
+}
+
+/*!
+  Check if value is a NaN
+
+  \param value object to check. Must be a floating point type
+  \return `true` if object is a NaN
+*/
+template <typename Value>
+bool CheckNaN (Value const value)
+{
+  return std::isnan(value);
 }
 
 /*!
