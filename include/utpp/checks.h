@@ -714,14 +714,14 @@ inline std::string to_utf8 (const std::wstring& ws)
         out.push_back ((char)c1);
       else if (c1 < 0x7ff)
       {
-        out.push_back (0xC0 | (c1 >> 6));
-        out.push_back (0x80 | (c1 & 0x3f));
+        out.push_back (char(0xC0 | (c1 >> 6)));
+        out.push_back (char(0x80 | (c1 & 0x3f)));
       }
       else
       {
-        out.push_back (0xE0 | (c1 >> 12));
-        out.push_back (0x80 | ((c1 >> 6) & 0x3f));
-        out.push_back (0x80 | (c1 & 0x3f));
+        out.push_back (char(0xE0 | (c1 >> 12)));
+        out.push_back (char(0x80 | ((c1 >> 6) & 0x3f)));
+        out.push_back (char(0x80 | (c1 & 0x3f)));
       }
     }
     else if (in != ws.end ())
@@ -735,10 +735,10 @@ inline std::string to_utf8 (const std::wstring& ws)
 
       unsigned int c = ((c1 << 10) | c2) + 0x10000;
 
-      out.push_back (0xF0 | (c >> 18));
-      out.push_back (0x80 | ((c >> 12) & 0x3f));
-      out.push_back (0x80 | ((c >> 6) & 0x3f));
-      out.push_back (0x80 | (c & 0x3f));
+      out.push_back (char(0xF0 | (c >> 18)));
+      out.push_back (char(0x80 | ((c >> 12) & 0x3f)));
+      out.push_back (char(0x80 | ((c >> 6) & 0x3f)));
+      out.push_back (char(0x80 | (c & 0x3f)));
     }
     else
       break; //malformed input; just bail out

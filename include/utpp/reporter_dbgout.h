@@ -27,59 +27,68 @@ protected:
   void ReportFailure (const Failure& failure) override;
   int Summary () override;
 private:
+#ifdef _UNICODE
   std::wstring widen (const std::string& s);
+  inline void ODS (std::stringstream& ss) {
+    OutputDebugString (widen (ss.str ()).c_str ());
+  }
+#else
+  inline void ODS (std::stringstream& ss) {
+    OutputDebugString (ss.str ().c_str());
+  }
+#endif
 };
 
 
 /// If tracing is enabled, show a suite start message 
 inline
-void ReporterDbgout::SuiteStart(const TestSuite& suite)
+void ReporterDbgout::SuiteStart (const TestSuite& suite)
 {
-    Reporter::SuiteStart(suite);
-    if (!trace)
-        return;
+  Reporter::SuiteStart (suite);
+  if (!trace)
+    return;
 
-    std::stringstream ss;
-    ss << "Suite starting: " << suite.name << std::endl;
-    OutputDebugString(widen(ss.str()).c_str());
+  std::stringstream ss;
+  ss << "Suite starting: " << suite.name << std::endl;
+  ODS (ss);
 }
 
 /// If tracing is enabled, show a test start message 
 inline
-void ReporterDbgout::TestStart(const Test& test)
+void ReporterDbgout::TestStart (const Test& test)
 {
-    Reporter::TestStart(test);
-    if (!trace)
-        return;
-    std::stringstream ss;
-    ss << "Test starting: " << test.test_name() << std::endl;
-    OutputDebugString(widen(ss.str()).c_str());
+  Reporter::TestStart (test);
+  if (!trace)
+    return;
+  std::stringstream ss;
+  ss << "Test starting: " << test.test_name () << std::endl;
+  ODS (ss);
 }
 
 /// If tracing is enabled, show a test finish message 
 inline
-void ReporterDbgout::TestFinish(const Test& test)
+void ReporterDbgout::TestFinish (const Test& test)
 {
-    if (trace)
-    {
-        std::stringstream ss;
-        ss << "Test finished: " << test.test_name() << std::endl;
-        OutputDebugString(widen(ss.str()).c_str());
-    }
-    Reporter::TestFinish(test);
+  if (trace)
+  {
+    std::stringstream ss;
+    ss << "Test finished: " << test.test_name () << std::endl;
+    ODS (ss);
+  }
+  Reporter::TestFinish (test);
 }
 
 /// If tracing is enabled, show a suite finish message 
 inline
-int ReporterDbgout::SuiteFinish(const TestSuite& suite)
+int ReporterDbgout::SuiteFinish (const TestSuite& suite)
 {
-    if (trace)
-    {
-        std::stringstream ss;
-        ss << "Suite finishing: " << suite.name << std::endl;
-        OutputDebugString(widen(ss.str()).c_str());
-    }
-    return Reporter::SuiteFinish(suite);
+  if (trace)
+  {
+    std::stringstream ss;
+    ss << "Suite finishing: " << suite.name << std::endl;
+    ODS (ss);
+  }
+  return Reporter::SuiteFinish (suite);
 }
 
 
@@ -90,25 +99,25 @@ int ReporterDbgout::SuiteFinish(const TestSuite& suite)
   \param failure - the failure information (filename, line number and message)
 */
 inline
-void ReporterDbgout::ReportFailure(const Failure& failure)
+void ReporterDbgout::ReportFailure (const Failure& failure)
 {
-    std::stringstream ss;
-    ss << "Failure in ";
-    if (CurrentTest)
-    {
-        if (CurrentSuite != DEFAULT_SUITE)
-            ss << "suite " << CurrentSuite << ' ';
-        ss << "test " << CurrentTest->test_name();
-    }
-    ss << std::endl;
+  std::stringstream ss;
+  ss << "Failure in ";
+  if (CurrentTest)
+  {
+    if (CurrentSuite != DEFAULT_SUITE)
+      ss << "suite " << CurrentSuite << ' ';
+    ss << "test " << CurrentTest->test_name ();
+  }
+  ss << std::endl;
+  ODS (ss);
 
-    OutputDebugString(widen(ss.str()).c_str());
-    ss.clear();
-    ss.str("");
-    ss << failure.filename << "(" << failure.line_number << "):"
-        << failure.message << std::endl;
-    OutputDebugString(widen(ss.str()).c_str());
-    Reporter::ReportFailure(failure);
+  ss.clear ();
+  ss.str ("");
+  ss << failure.filename << "(" << failure.line_number << "):"
+    << failure.message << std::endl;
+  ODS (ss);
+  Reporter::ReportFailure (failure);
 }
 
 /*!
@@ -116,40 +125,43 @@ void ReporterDbgout::ReportFailure(const Failure& failure)
   running time, etc.
 */
 inline
-int ReporterDbgout::Summary()
+int ReporterDbgout::Summary ()
 {
-    std::stringstream ss;
-    if (total_failed_count > 0)
-    {
-        ss << "FAILURE: " << total_failed_count << " out of "
-            << total_test_count << " tests failed (" << total_failures_count
-            << " failures).";
-    }
-    else
-    {
-        ss << "Success: " << total_test_count << " tests passed.";
-    }
-    ss << std::endl;
-    OutputDebugString(widen(ss.str()).c_str());
-    ss.clear();
-    ss.str("");
-    ss.setf(std::ios::fixed);
-    ss << "Run time: " << std::setprecision(2) << total_time_msec / 1000.;
-    OutputDebugString(widen(ss.str()).c_str());
+  std::stringstream ss;
+  if (total_failed_count > 0)
+  {
+    ss << "FAILURE: " << total_failed_count << " out of "
+      << total_test_count << " tests failed (" << total_failures_count
+      << " failures).";
+  }
+  else
+  {
+    ss << "Success: " << total_test_count << " tests passed.";
+  }
+  ss << std::endl;
+  ODS (ss);
 
-    return Reporter::Summary();
+  ss.clear ();
+  ss.str ("");
+  ss.setf (std::ios::fixed);
+  ss << "Run time: " << std::setprecision (2) << total_time_msec / 1000.;
+  ODS (ss);
+
+  return Reporter::Summary ();
 }
 
+#ifdef _UNICODE
 /// Conversion from UTF-16 to UTF-8
 inline
-std::wstring ReporterDbgout::widen(const std::string& s)
+std::wstring ReporterDbgout::widen (const std::string& s)
 {
-    int nsz = (int)s.size();
-    int wsz = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), nsz, 0, 0);
-    std::wstring out(wsz, 0);
-    if (wsz)
-        MultiByteToWideChar(CP_UTF8, 0, s.c_str(), nsz, &out[0], wsz);
-    return out;
+  int nsz = (int)s.size ();
+  int wsz = MultiByteToWideChar (CP_UTF8, 0, s.c_str (), nsz, 0, 0);
+  std::wstring out (wsz, 0);
+  if (wsz)
+    MultiByteToWideChar (CP_UTF8, 0, s.c_str (), nsz, &out[0], wsz);
+  return out;
 }
+#endif
 
 }

@@ -933,7 +933,7 @@ long long Timer::GetTime () const
 #else
   struct timeval currentTime;
   gettimeofday (&currentTime, 0);
-  return currentTime.tv_sec * frequency () + currentTime.tv_usec;
+  return currentTime.tv_sec * (long long)frequency () + currentTime.tv_usec;
 #endif
 }
 
