@@ -883,7 +883,7 @@ bool isClose (const expected_T& expected, const actual_T& actual, double toleran
       throw UnitTest::tolerance_not_set ();
     tolerance = UnitTest::default_tolerance;
   }
-  return fabs (actual - expected) <= tolerance;
+  return (actual >= (expected - tolerance)) && (actual <= (expected + tolerance));
 }
 /*!
   Check if two values are closer than specified tolerance. If not, generate a
