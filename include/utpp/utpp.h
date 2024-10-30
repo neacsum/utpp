@@ -199,7 +199,7 @@ int main (ARGC,ARGV)
   {                                                                           \
     if (UnitTest::Check(value)) {                                             \
       char message[UnitTest::MAX_MESSAGE_SIZE];                               \
-      sprintf (message, __VA_ARGS__);                                         \
+      snprintf (message, UnitTest::MAX_MESSAGE_SIZE, __VA_ARGS__);            \
       throw UnitTest::test_abort (__FILE__, __LINE__, message);               \
     }                                                                         \
   } while (0)

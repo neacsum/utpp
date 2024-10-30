@@ -572,14 +572,12 @@ TEST_MAIN (int argc, char** argv)
   std::cout << "RunAllTests() returned " << ret1 << std::endl;
 
   UnitTest::CurrentReporter = &UnitTest::GetDefaultReporter ();
-  // CHECK macros can be used outside of tests also.
-  // The following check should fail
-  CHECK_EQUAL (0, ret);
+  // CHECK macros can also be used outside of tests. Example:
+  CHECK_EQUAL (0, ret); // should fail
 
   const char* def = "def";
   const char* abc = "abc";
-  //and this one too
-  CHECK_EQUAL (def, abc);
+  CHECK_EQUAL (def, abc); //this one fails too
 
   //Expecting 18 tests to fail
   return (ret1 == 18)? 0 : 1;

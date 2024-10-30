@@ -68,7 +68,7 @@
     try {                                                                     \
       if (!UnitTest::Check(value)){                                           \
         char message[UnitTest::MAX_MESSAGE_SIZE];                             \
-        sprintf (message, __VA_ARGS__);                                       \
+        snprintf (message, UnitTest::MAX_MESSAGE_SIZE, __VA_ARGS__);          \
         UnitTest::ReportFailure (__FILE__, __LINE__, message);                \
       }                                                                       \
     }                                                                         \
@@ -143,7 +143,7 @@
       if (!UnitTest::CheckEqual((expected), (actual), str__))                 \
       {                                                                       \
         char message[UnitTest::MAX_MESSAGE_SIZE];                             \
-        sprintf (message, __VA_ARGS__);                                       \
+        snprintf (message, UnitTest::MAX_MESSAGE_SIZE, __VA_ARGS__);          \
         str__ += " - ";                                                       \
         str__ += message;                                                     \
         UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
@@ -203,7 +203,7 @@
       if (!UnitTest::CheckClose ((expected), (actual), (tolerance), str__))   \
       {                                                                       \
         char message[UnitTest::MAX_MESSAGE_SIZE];                             \
-        sprintf (message, __VA_ARGS__);                                       \
+        snprintf (message, UnitTest::MAX_MESSAGE_SIZE, __VA_ARGS__);          \
         str__ += " - ";                                                       \
         str__ += message;                                                     \
         UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
@@ -377,7 +377,7 @@
     if (!caught_) {                                                           \
       std::string str__{"Expected exception: \"" #except "\", not thrown"};   \
       char message[UnitTest::MAX_MESSAGE_SIZE];                               \
-      sprintf (message, __VA_ARGS__);                                         \
+      snprintf (message, UnitTest::MAX_MESSAGE_SIZE, __VA_ARGS__);            \
       str__ += " - ";                                                         \
       str__ += message;                                                       \
       UnitTest::ReportFailure (__FILE__, __LINE__, str__);                    \
@@ -438,7 +438,7 @@
       if (!UnitTest::CheckEqual(value, actual, str__))                        \
       {                                                                       \
         char message[UnitTest::MAX_MESSAGE_SIZE];                             \
-        sprintf (message, __VA_ARGS__);                                       \
+        snprintf (message, UnitTest::MAX_MESSAGE_SIZE, __VA_ARGS__);          \
         str__ += " - ";                                                       \
         str__ += message;                                                     \
         UnitTest::ReportFailure (__FILE__, __LINE__, str__);                  \
@@ -452,7 +452,7 @@
     {                                                                         \
       std::string str__{ "Expected exception: \"" #except "\", not thrown" }; \
       char message[UnitTest::MAX_MESSAGE_SIZE];                               \
-      sprintf (message, __VA_ARGS__);                                         \
+      snprintf (message, UnitTest::MAX_MESSAGE_SIZE, __VA_ARGS__);            \
       str__ += " - ";                                                         \
       str__ += message;                                                       \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
