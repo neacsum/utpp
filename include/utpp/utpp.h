@@ -303,6 +303,9 @@ public:
   /// Generate results report
   virtual int Summary () { return total_failed_count; }
 
+  /// Reset all statistics
+  virtual void Clear ();
+
 protected:
   int suite_test_count,     ///< number of tests in suite
     suite_failed_count,     ///< number of failed tests in suite
@@ -328,6 +331,7 @@ public:
   void TestStart (const Test& test) override;
   void ReportFailure (const Failure& failure) override;
   void TestFinish (const Test& test) override;
+  void Clear () override;
 
 protected:
   /// %Test results including all failure messages
@@ -615,6 +619,23 @@ int Reporter::SuiteFinish (const TestSuite&)
   return suite_failures_count;
 }
 
+
+inline 
+void Reporter::Clear ()
+{
+  suite_test_count =
+    suite_failed_count =
+    suite_failures_count =
+    suite_time_msec = 0;
+
+  total_test_count =
+    total_failed_count =
+    total_failures_count =
+    total_time_msec = 0;
+
+  suites_count = 0;
+}
+
 //------------------- ReporterDeferred member functions -----------------------
 /// Default constructor needed container inclusion
 inline
@@ -680,6 +701,12 @@ void ReporterDeferred::TestFinish (const Test& test)
 {
   Reporter::TestFinish (test);
   results.back ().test_time_ms = test.test_time_ms ();
+}
+
+inline void ReporterDeferred::Clear ()
+{
+  Reporter::Clear ();
+  results.clear ();
 }
 
 
@@ -1110,11 +1137,14 @@ void SuitesList::Enable (const std::string& suite, bool enable)
   Each test is expected to run in under max_time_ms milliseconds. If a test takes
   longer, it generates a time constraint failure.
 
+  All previous statistics of the reporter object are erased.
+
   \ingroup exec
 */
 inline
 int RunAllTests (Reporter& rpt, int max_time_ms)
 {
+  rpt.Clear ();
   return SuitesList::GetSuitesList ().RunAll (rpt, max_time_ms);
 }
 

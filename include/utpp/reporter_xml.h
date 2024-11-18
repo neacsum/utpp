@@ -25,6 +25,7 @@ public:
   explicit ReporterXml (std::ostream& ostream = std::cout);
 
   int Summary () override;
+  void Clear ();
 
 protected:
   void BeginTest (const ReporterDeferred::TestResult& result);
@@ -87,6 +88,8 @@ ReporterXml::ReporterXml (std::ostream& ostream)
   strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
   start_time = tmp;
   orig_state.copyfmt (os);
+  os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
+
 }
 
 /// Generate XML report
@@ -111,7 +114,6 @@ int ReporterXml::Summary ()
   const struct tm* t = gmtime (&now);
   strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
   os.copyfmt (orig_state);
-  os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
 
   os << "<utpp-results"
     << " total=\"" << total_test_count << '\"'
@@ -156,6 +158,19 @@ int ReporterXml::Summary ()
     << "</end-time>" << std::endl;
   os << "</utpp-results>" << std::endl;
   return ReporterDeferred::Summary ();
+}
+
+inline
+void ReporterXml::Clear ()
+{
+  char tmp[80];
+  time_t now;
+  time (&now);
+  const struct tm* t = gmtime (&now);
+  strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
+  start_time = tmp;
+
+  ReporterDeferred::Clear ();
 }
 
 inline

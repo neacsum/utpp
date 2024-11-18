@@ -571,6 +571,11 @@ TEST_MAIN (int argc, char** argv)
   ret1 = UnitTest::RunAllTests (xml, 3000);
   std::cout << "RunAllTests() returned " << ret1 << std::endl;
 
+  //A second run of all tests just to see that results are consistent
+  auto ret2 = UnitTest::RunAllTests (xml, 3000);
+  std::cout << "2nd run of RunAllTests() returned "
+    << ret2 << std::endl;
+
   UnitTest::CurrentReporter = &UnitTest::GetDefaultReporter ();
   // CHECK macros can also be used outside of tests. Example:
   CHECK_EQUAL (0, ret); // should fail
