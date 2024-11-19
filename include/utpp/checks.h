@@ -1261,13 +1261,13 @@ bool CheckArray2DClose (const expected_T& expected, const actual_T& actual,
   the first difference is.
 */
 inline
-bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
+bool CheckFileEqual (const std::string& ref, const std::string& actual, std::string& message)
 {
   struct stat st1, st2;
   std::ostringstream buf;
 
-  stat (ref, &st1);
-  stat (actual, &st2);
+  stat (ref.c_str(), &st1);
+  stat (actual.c_str(), &st2);
   if (st1.st_size != st2.st_size)
   {
     buf << "Size is different (" << st1.st_size << " vs " << st2.st_size
@@ -1277,8 +1277,8 @@ bool CheckFileEqual (const char* ref, const char* actual, std::string& message)
   }
 
   FILE* f1, * f2;
-  f1 = fopen (ref, "r");
-  f2 = fopen (actual, "r");
+  f1 = fopen (ref.c_str(), "r");
+  f2 = fopen (actual.c_str(), "r");
   if (!f1 || !f2)
   {
     if (f1) fclose (f1);

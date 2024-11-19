@@ -25,7 +25,7 @@ public:
   explicit ReporterXml (std::ostream& ostream = std::cout);
 
   int Summary () override;
-  void Clear ();
+  void Clear () override;
 
 protected:
   void BeginTest (const ReporterDeferred::TestResult& result);

@@ -11,10 +11,11 @@ There is also [documentation](https://neacsum.github.io/utpp) generated with Dox
 Author:
 Mircea Neacsu (mircea@neacsu.net)
 
+
 ## License ##
 The MIT License (MIT)
  
-Copyright (c) 2017-2023 Mircea Neacsu
+Copyright (c) 2017-2024 Mircea Neacsu
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -215,10 +216,10 @@ allows you to disable a suite.
 
 
 ## Comparison with GoogleTest
-1. Macro definitions for assertion verification have different names. `CHECK_...` macros are almost direct correspondents to GoogleTest `EXPECT_...` macros and `ABORT_...` correspond to `ASSERT_...` definitions.
+1. Macro definitions for assertion verification have different names: `CHECK_...` macros are almost direct correspondents to GoogleTest `EXPECT_...` macros and `ABORT_...` correspond to `ASSERT_...` definitions.
    
 2. In GoogleTest, additional messages are streamed into assertion macros while UTPP `..._EX` macros accept arguments similar to `printf` function.
    
-3. GoogleTest fixtures are classes derived from `testing::Test`; meanwhile UTPP fixtures are arbitrary objects that can be default-constructed.
+3. GoogleTest fixtures are classes derived from `testing::Test`. Meanwhile UTPP fixtures are arbitrary objects that can be default-constructed.
 
 
