@@ -71,8 +71,8 @@ TEST (EndOfTheEarth)
 {
   CHECK_THROW (go_to_end_of_earth (), flat_earth_exception);
 }
-
 ```
+
 ### Grouping Tests
 Tests can be defined in different source files. The magic behind UTPP will make sure that they are all executed but it doesn't make any promise as to the order of execution between different files. If you need some kind of ordering, you can group tests in _suites_. UTPP will execute all the tests in one suite before starting another. Suites can also be used to get synthetic results for a group of tests.
 
@@ -83,6 +83,12 @@ SUITE (MyNiceTests)
 // ... many tests here
 }
 ```
+
+> [!note] 
+> Test names must be unique within a suite.
+
+> [!warning]
+> A suite must be contiguous in a translation unit (source file). You can however have tests belonging to the same suite in different translation units.
 
 ### Fixtures
 When performing test you need certain objects and values to be in a known state before the beginning of the test. This is called a _fixture_. In UTPP any object with a default constructor can be used as a fixture. Your tests will be derived from that object and the state of the object is defined by the fixture constructor.

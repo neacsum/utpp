@@ -132,7 +132,10 @@ int ReporterXml::Summary ()
       if (!suite.empty ())
         os << " </suite>" << std::endl;
       suite = i->suite_name;
-      os << " <suite name=\"" << suite << '\"';
+      if (suite == DEFAULT_SUITE)
+        os << " <suite";
+      else
+        os << " <suite name=\"" << suite << '\"';
       if ((i + 1) == results.cend () || (i + 1)->test_name.empty ())
       {
         // Next record is another suite. This suite is either empty or disabled
