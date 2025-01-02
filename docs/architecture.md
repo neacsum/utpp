@@ -24,14 +24,14 @@ UnitTest++ but on the inside almost everything has been rewritten.
 ## Terminology ##
 The library allows you to define test cases (called _tests_) and group those cases
 in _test suites_. Test suites are executed and the results are displayed using
-a _repoter_.
+a _reporter_.
 
 Included are three reporters: 
-* [ReporterStdout](@ref UnitTest::ReporterStdout) generates output to `stdout`.
+* [ReporterStream](@ref UnitTest::ReporterStream) sends results to an output stream. The derived [ReporterStdout](@ref UnitTest::ReporterStdout) sends results to `stdout`.
 * [ReporterXml](@ref UnitTest::ReporterXml) generates results in an XML file
   with a structure similar to the files created by NUnit.
 * [ReporterDbgout](@ref UnitTest::ReporterDbgout) writes messages to debug output
-  (using OutputDebugString)
+  using `OutputDebugString` (for Windows platform only)
 
 The function GetDefaultTestReporter() returns an instance of the `ReporterStdout`
 object as the default test reporter.
@@ -130,7 +130,7 @@ running a test:
 `CHECK_THROW_EQUAL(expression, expected, ExceptionType)` Verifies that expression
  throws an of the given type and with the expected value.
 
-CHECK_EQUAL and CHECK_THOW_EQUAL macros use a template function UnitTest::CheckEqual()
+CHECK_EQUAL and CHECK_THROW_EQUAL macros use a template function UnitTest::CheckEqual()
 to compare their arguments. That means they can be used to compare any objects
 that define a suitable equality operator.
 
@@ -174,7 +174,7 @@ TEST_FIXTURE (Account_fixture, TestExchangeEur)
 {
   ExchangeToEur(&amount_usd, &amount_eur);
   CHECK_EQUAL (0, amount_usd);
-  CHECK (amout_eur > 0);
+  CHECK (amount_eur > 0);
 }
 TEST_FIXTURE (Account_fixture, TestExchangeChf)
 {
