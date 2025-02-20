@@ -584,6 +584,9 @@ TEST_MAIN (int argc, char** argv)
   const char* abc = "abc";
   CHECK_EQUAL (def, abc); //this one fails too
 
+  // FAILURE macro allows you to always generate a failure
+  FAILURE ("So far we had %d failures.", ret1);
+
   //Expecting 18 tests to fail
   return (ret1 == 18)? 0 : 1;
 }

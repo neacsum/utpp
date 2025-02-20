@@ -483,6 +483,23 @@
     }                                                                         \
   } while (0)
 
+/*!
+  \def FAILURE
+  \brief  Generate a failure
+
+  \hideinitializer
+*/
+#ifdef FAILURE
+#error Macro FAILURE is already defined
+#endif
+#define FAILURE(...)                                                          \
+  do                                                                          \
+  {                                                                           \
+    char message[UnitTest::MAX_MESSAGE_SIZE];                                 \
+    snprintf (message, UnitTest::MAX_MESSAGE_SIZE, __VA_ARGS__);              \
+    UnitTest::ReportFailure (__FILE__, __LINE__, message);                    \
+  } while (0)
+
 ///@}
 
 namespace UnitTest {
