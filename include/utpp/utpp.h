@@ -1,7 +1,7 @@
 #pragma once
 /*
   UTPP - A New Generation of UnitTest++
-  (c) Mircea Neacsu 2017-2024
+  (c) Mircea Neacsu 2017-2025
 
   See LICENSE file for full copyright information.
 */
@@ -44,6 +44,11 @@
 #include <unistd.h>
 #endif
 
+// --------------- Global configuration options -------------------------------
+#define UTPP_VERSION "2.2.0"
+
+// --------------- end of configuration options -------------------------------
+
 namespace UnitTest {
 
 ///Maximum size of message buffer for ..._EX macro definitions
@@ -76,7 +81,7 @@ const size_t MAX_MESSAGE_SIZE = 1024;
 /*!
   Replacement macro for main function.
 
-  This macro is used instead of `int main(int argc, char** argv)` function
+  This macro is used instead of `int main(int argc, char** argv)` function,
   if you are compiling under C++11 or C++14 language rules. If you are
   compiling under C++17 or newer language rules, you can use the normal `main`
   function.
