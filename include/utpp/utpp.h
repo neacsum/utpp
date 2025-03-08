@@ -39,6 +39,10 @@
 #include <sstream>
 #include <cassert>
 #include <chrono>
+#ifndef _WIN32
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
 
 // --------------- Global configuration options -------------------------------
 #define UTPP_VERSION "2.2.0"
