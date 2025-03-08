@@ -38,11 +38,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <cassert>
-#ifndef _WIN32
-#include <sys/time.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#endif
+#include <chrono>
 
 // --------------- Global configuration options -------------------------------
 #define UTPP_VERSION "2.2.0"
@@ -413,9 +409,7 @@ public:
   long long GetTimeInUs () const;
 
 private:
-  long long GetTime () const;
-  long long startTime;
-  static double frequency();
+  std::chrono::steady_clock::time_point startTime;
 };
 
 ///Defines maximum run time of a test
@@ -926,7 +920,7 @@ TestSuite::Inserter::Inserter (const std::string& suite, const std::string& test
 //-----------------Timer member functions -------------------------------------
 inline
 Timer::Timer ()
-  : startTime (0)
+  : startTime (std::chrono::steady_clock::now())
 {
 }
 
@@ -934,52 +928,24 @@ Timer::Timer ()
 inline
 void Timer::Start ()
 {
-  startTime = GetTime ();
+  startTime = std::chrono::steady_clock::now ();
 }
 
 /// Return elapsed time in milliseconds since the starting time
 inline
 int Timer::GetTimeInMs () const
 {
-  long long elapsedTime = GetTime () - startTime;
-  double seconds = (double)elapsedTime / frequency ();
-  return int (seconds * 1000.0);
+  auto elapsedTime = std::chrono::steady_clock::now () - startTime;
+  return (int)std::chrono::duration_cast<std::chrono::milliseconds>
+    (elapsedTime).count ();
 }
 
 /// Return elapsed time in microseconds since the starting time
 inline
 long long Timer::GetTimeInUs () const
 {
-  long long int elapsedTime = GetTime () - startTime;
-  double seconds = (double)elapsedTime / frequency ();
-  return (long long int) (seconds * 1000000.0);
-}
-
-inline
-long long Timer::GetTime () const
-{
-#ifdef _WIN32
-  LARGE_INTEGER curTime;
-  ::QueryPerformanceCounter (&curTime);
-  return curTime.QuadPart;
-#else
-  struct timeval currentTime;
-  gettimeofday (&currentTime, 0);
-  return currentTime.tv_sec * (long long)frequency () + currentTime.tv_usec;
-#endif
-}
-
-inline
-double Timer::frequency ()
-{
-  static long long f;
-#ifdef _WIN32
-  if (!f)
-    ::QueryPerformanceFrequency (reinterpret_cast<LARGE_INTEGER*>(&f));
-#else
-  f = 1000000;
-#endif
-  return (double)f;
+  auto elapsedTime = std::chrono::steady_clock::now () - startTime;
+  return std::chrono::duration_cast<std::chrono::microseconds>(elapsedTime).count ();
 }
 
 /// Pause current thread for the specified time
