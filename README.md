@@ -3,7 +3,7 @@ UTPP - A New Generation of UnitTest++
 
 This is a test framework based on UnitTest++.
 
-Latest version can be downloaded from [GitHub](https://neacsum.github.com/utpp).
+Latest version can be downloaded from [GitHub](https://github.com/neacsum/utpp/releases/latest).
 
 There is also [documentation](https://neacsum.github.io/utpp) generated with Doxygen.
 
