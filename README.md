@@ -38,7 +38,7 @@ SOFTWARE.
 For more information see the [LICENSE](LICENSE) file.
 
 ## Building ##
-This is a headers only library. There is nothing to build. 
+This is a headers-only library. There is nothing to build. Just copy the `include/utpp' directory in your development tree and you are ready to go. 
 
 ## Usage ##
 Here is a simple example of a test program:
@@ -222,4 +222,8 @@ allows you to disable a suite.
    
 3. GoogleTest fixtures are classes derived from `testing::Test`. Meanwhile UTPP fixtures are arbitrary objects that can be default-constructed.
 
+## Users
 
+- [libsydplayfp](https://github.com/libsidplayfp/libsidplayfp) - A library to play Commodore 64 music
+
+If you are using UTPP, I'd like to hear from you. Just leave a comment here or find a way to let me know.
