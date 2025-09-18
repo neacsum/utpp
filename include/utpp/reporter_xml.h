@@ -40,7 +40,7 @@ private:
   ReporterXml& operator=(ReporterXml const&) = delete;
 
   std::ostream& os;
-  std::string start_time;
+  std::chrono::utc_clock::time_point start_time;
   std::ios orig_state;
 };
 
@@ -81,12 +81,7 @@ ReporterXml::ReporterXml (std::ostream& ostream)
   : os (ostream)
   , orig_state (nullptr)
 {
-  char tmp[80];
-  time_t now;
-  time (&now);
-  const struct tm* t = gmtime (&now);
-  strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
-  start_time = tmp;
+  start_time = std::chrono::utc_clock::now();
   orig_state.copyfmt (os);
   os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
 
@@ -96,9 +91,24 @@ ReporterXml::ReporterXml (std::ostream& ostream)
 inline
 int ReporterXml::Summary ()
 {
+  using namespace std::chrono;
+
   std::string suite;
-  std::string cmd;
+  os.copyfmt (orig_state);
+  auto beg_time = std::chrono::time_point_cast<std::chrono::seconds>(start_time);
+  auto end_time = std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::utc_clock::now ());
+  auto total_time_s = duration_cast<duration<float, std::chrono::seconds::period>>(total_time);
+
+  os << "<utpp-results"
+    << " total=\"" << total_test_count << '\"'
+    << " failed=\"" << total_failed_count << '\"'
+    << " failures=\"" << total_failures_count << '\"'
+    << " duration=\"" << std::fixed << std::setprecision (3) << total_time_s << '\"'
+    << '>' << std::endl;
+  os << " <start-time>" << std::format("{0:%F} {0:%T}Z", beg_time) << "</start-time>" << std::endl;
+
 #ifdef _WIN32
+  std::string cmd;
   std::wstring wcmd{ GetCommandLineW () };
   int nsz = WideCharToMultiByte (CP_UTF8, 0, wcmd.c_str (), -1, 0, 0, 0, 0);
   if (nsz)
@@ -107,23 +117,8 @@ int ReporterXml::Summary ()
     WideCharToMultiByte (CP_UTF8, 0, wcmd.c_str (), -1, &cmd[0], nsz, 0, 0);
     cmd.resize (nsz - 1); //output is null-terminated
   }
-#endif
-  time_t now;
-  char tmp[80];
-  time (&now);
-  const struct tm* t = gmtime (&now);
-  strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
-  os.copyfmt (orig_state);
-
-  os << "<utpp-results"
-    << " total=\"" << total_test_count << '\"'
-    << " failed=\"" << total_failed_count << '\"'
-    << " failures=\"" << total_failures_count << '\"'
-    << " duration=\"" << std::fixed << std::setprecision (3) << total_time_msec / 1000. << '\"'
-    << '>' << std::endl;
-  os << " <start-time>" << start_time << "</start-time>" << std::endl;
-
   os << " <command-line>" << xml_escape (cmd) << "</command-line>" << std::endl;
+#endif
 
   for (auto i = results.cbegin (); i != results.cend (); ++i)
   {
@@ -156,9 +151,8 @@ int ReporterXml::Summary ()
   }
   if (!suite.empty ())
     os << " </suite>" << std::endl;
-  os << " <end-time>"
-    << tmp
-    << "</end-time>" << std::endl;
+
+  os << " <end-time>" << std::format ("{0:%F} {0:%T}Z", end_time) << "</end-time>" << std::endl;
   os << "</utpp-results>" << std::endl;
   return ReporterDeferred::Summary ();
 }
@@ -166,12 +160,9 @@ int ReporterXml::Summary ()
 inline
 void ReporterXml::Clear ()
 {
-  char tmp[80];
-  time_t now;
-  time (&now);
-  const struct tm* t = gmtime (&now);
-  strftime (tmp, sizeof (tmp), "%Y-%m-%d %H:%M:%SZ", t);
-  start_time = tmp;
+  os.seekp (0);
+  os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
+  start_time = std::chrono::utc_clock::now();
 
   ReporterDeferred::Clear ();
 }
@@ -181,7 +172,7 @@ void ReporterXml::BeginTest (const ReporterDeferred::TestResult& result)
 {
   os << "  <test"
     << " name=\"" << result.test_name << "\""
-    << " time_ms=\"" << result.test_time_ms << "\"";
+    << " time=\"" << result.test_time << "\"";
 }
 
 inline

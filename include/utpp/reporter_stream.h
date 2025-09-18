@@ -118,17 +118,20 @@ void ReporterStream::ReportFailure (const Failure& failure)
 inline
 int ReporterStream::Summary ()
 {
+  using namespace std::chrono;
+
   if (total_failed_count > 0)
   {
-    out << "FAILURE: " << total_failed_count << " out of "
+    out << std::dec << "FAILURE: " << total_failed_count << " out of "
       << total_test_count << " tests failed (" << total_failures_count
       << " failures)." << std::endl;
   }
   else
-    out << "Success: " << total_test_count << " tests passed." << std::endl;
+    out << std::dec << "Success: " << total_test_count << " tests passed." << std::endl;
 
+  auto total_time_s = duration_cast<duration<float, std::chrono::seconds::period>>(total_time);
   out.setf (std::ios::fixed);
-  out << "Run time: " << std::setprecision (2) << total_time_msec / 1000. << std::endl;
+  out << "Run time: " << std::setprecision (2) << total_time_s.count() << " seconds" << std::endl;
   return Reporter::Summary ();
 }
 

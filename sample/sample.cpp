@@ -16,6 +16,7 @@
 #include <iomanip>
 #include <fstream>
 #include <exception>
+#include <thread>
 
 bool earth_is_round () {
   return true;
@@ -458,31 +459,33 @@ SUITE (not_run)
 
 SUITE (time_limits)
 {
+  using namespace std::chrono_literals;
   // No errors as this is less than the global time constraint
   TEST (SlowTest)
   {
     std::cout << "This suite takes about 12 seconds to run. Please be patient.\n";
-    UnitTest::SleepMs (2000);
+    std::this_thread::sleep_for (2s);
   }
 
   // This should trigger the global time constraint limit
   TEST (TooSlowTest)
   {
-    UnitTest::SleepMs (4000);
+    std::this_thread::sleep_for (4s);
   }
 
   // This breaks a local time constraint
   TEST (MustBeQuick)
   {
-    UTPP_TIME_CONSTRAINT (1000);
-    UnitTest::SleepMs (2000);
+    using namespace std::chrono_literals;
+    UTPP_TIME_CONSTRAINT (1s);
+    std::this_thread::sleep_for (2000ms);
   }
 
   // Test exempt from global limit
   TEST (LetMeRun)
   {
     UTPP_TIME_CONSTRAINT_EXEMPT ();
-    UnitTest::SleepMs (4000);
+    std::this_thread::sleep_for (4s);
   }
 }
 
@@ -543,6 +546,8 @@ SUITE (typecasting)
 
 TEST_MAIN (int argc, char** argv)
 {
+  using namespace std::chrono_literals;
+
   (void)argc;
   (void)argv;
   int ret, ret1;
@@ -568,11 +573,11 @@ TEST_MAIN (int argc, char** argv)
   UnitTest::ReporterXml xml (os);
   UnitTest::EnableSuite ("time_limits");
   //Run tests setting a general time limit for each test
-  ret1 = UnitTest::RunAllTests (xml, 3000);
+  ret1 = UnitTest::RunAllTests (xml, 3s);
   std::cout << "RunAllTests() returned " << ret1 << std::endl;
 
   //A second run of all tests just to see that results are consistent
-  auto ret2 = UnitTest::RunAllTests (xml, 3000);
+  auto ret2 = UnitTest::RunAllTests (xml, 3s);
   std::cout << "2nd run of RunAllTests() returned "
     << ret2 << std::endl;
 

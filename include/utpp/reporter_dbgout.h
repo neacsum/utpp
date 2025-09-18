@@ -127,6 +127,8 @@ void ReporterDbgout::ReportFailure (const Failure& failure)
 inline
 int ReporterDbgout::Summary ()
 {
+  using namespace std::chrono;
+
   std::stringstream ss;
   if (total_failed_count > 0)
   {
@@ -144,7 +146,8 @@ int ReporterDbgout::Summary ()
   ss.clear ();
   ss.str ("");
   ss.setf (std::ios::fixed);
-  ss << "Run time: " << std::setprecision (2) << total_time_msec / 1000.;
+  auto total_time_s = duration_cast<duration<float, std::chrono::seconds::period>>(total_time);
+  ss << "Run time: " << std::setprecision (2) << total_time_s.count();
   ODS (ss);
 
   return Reporter::Summary ();

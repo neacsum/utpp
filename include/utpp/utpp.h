@@ -216,12 +216,12 @@ int main (ARGC,ARGV)
 
 /*!
   \brief Defines a local (per scope) time constraint
-  \param ms Maximum allowed run time (in milliseconds)
+  \param tmax Maximum allowed run time
 
   \hideinitializer
 */
-#define UTPP_TIME_CONSTRAINT(ms) \
-  UnitTest::TimeConstraint unitTest__timeConstraint__(ms, __FILE__, __LINE__)
+#define UTPP_TIME_CONSTRAINT(tmax) \
+  UnitTest::TimeConstraint unitTest__timeConstraint__(tmax, __FILE__, __LINE__)
 
 /*!
   \brief  Flags a test as not subject to the global time constraint
@@ -250,7 +250,7 @@ public:
   bool is_time_constraint () const;
 
   int failure_count () const;
-  int test_time_ms () const;
+  std::chrono::milliseconds test_time_ms () const;
   const std::string& test_name () const;
 
   void failure ();
@@ -262,7 +262,7 @@ public:
 protected:
   std::string name;                   ///< Name of this test
   int failures;                       ///< Number of failures in this test
-  int time;                           ///< Run time
+  std::chrono::milliseconds time;     ///< Run time
   bool time_exempt;                   ///< _true_ if exempt from time constraints
 
 private:
@@ -314,13 +314,13 @@ public:
 protected:
   int suite_test_count,     ///< number of tests in suite
     suite_failed_count,     ///< number of failed tests in suite
-    suite_failures_count,   ///< number of failures in suite
-    suite_time_msec;        ///< total suite running time in milliseconds
+    suite_failures_count;   ///< number of failures in suite
+  std::chrono::milliseconds suite_time; ///< total suite running time in milliseconds
 
   int total_test_count,     ///< total number of tests
     total_failed_count,     ///< total number of failed tests
-    total_failures_count,   ///< total number of failures
-    total_time_msec;        ///< total running time in milliseconds
+    total_failures_count;   ///< total number of failures
+  std::chrono::milliseconds total_time;  ///< total running time in milliseconds
 
   int suites_count;         ///< number of suites ran
   bool trace;               ///< true if tracing is enabled
@@ -347,7 +347,7 @@ protected:
 
     std::string suite_name;         ///< suite name
     std::string test_name;          ///< test name
-    int test_time_ms;               ///< test running time in milliseconds
+    std::chrono::milliseconds test_time;  ///< test running time in milliseconds
     std::deque<Failure> failures;   ///< All failures of a test
   };
 
@@ -389,13 +389,13 @@ public:
   void Add (const Inserter* inf);
   bool IsEnabled () const;
   void Enable (bool on_off);
-  int RunTests (Reporter& reporter, int max_runtime_ms);
+  int RunTests (Reporter& reporter, std::chrono::milliseconds max_runtime);
 
   std::string name;     ///< Suite name
 
 private:
   std::deque <const Inserter*> test_list;  ///< tests included in this suite
-  int max_runtime;
+  std::chrono::milliseconds max_runtime;
   bool enabled;
 
   bool SetupCurrentTest (const Inserter* inf);
@@ -409,8 +409,8 @@ class Timer
 public:
   Timer ();
   void Start ();
-  int GetTimeInMs () const;
-  long long GetTimeInUs () const;
+  std::chrono::milliseconds GetTimeInMs () const;
+  std::chrono::microseconds GetTimeInUs () const;
 
 private:
   std::chrono::steady_clock::time_point startTime;
@@ -420,7 +420,8 @@ private:
 class TimeConstraint
 {
 public:
-  TimeConstraint (int ms, const char* file, int line);
+  template<typename R, typename P>
+  TimeConstraint (std::chrono::duration<R, P> t, const char* file, int line);
   ~TimeConstraint ();
 
 private:
@@ -430,15 +431,15 @@ private:
   Timer timer;
   std::string filename;
   int line_number;
-  int const max_ms;
+  std::chrono::milliseconds tmax;
 };
 
 /// A singleton object containing all test suites
 class SuitesList {
 public:
   void Add (const std::string& suite, const TestSuite::Inserter* inf);
-  int Run (const std::string& suite, Reporter& reporter, int max_time_ms);
-  int RunAll (Reporter& reporter, int max_time_ms);
+  int Run (const std::string& suite, Reporter& reporter, std::chrono::milliseconds max_time);
+  int RunAll (Reporter& reporter, std::chrono::milliseconds max_time);
   static SuitesList& GetSuitesList ();
   void Enable (const std::string& suite, bool enable = true);
 
@@ -479,7 +480,7 @@ extern Reporter* CurrentReporter;
 Reporter& GetDefaultReporter ();
 
 /// Run all tests from all test suites
-int RunAllTests (Reporter& rpt = GetDefaultReporter (), int max_time_ms = 0);
+int RunAllTests (Reporter& rpt = GetDefaultReporter (), std::chrono::milliseconds max_time = std::chrono::milliseconds{ 0 });
 
 /// Disable a test suite
 void DisableSuite (const std::string& suite_name);
@@ -488,7 +489,7 @@ void DisableSuite (const std::string& suite_name);
 void EnableSuite (const std::string& suite_name);
 
 /// Run all tests from one suite
-int RunSuite (const char *suite_name, Reporter& rpt = GetDefaultReporter (), int max_time_ms = 0);
+int RunSuite (const char *suite_name, Reporter& rpt = GetDefaultReporter (), std::chrono::milliseconds max_time = std::chrono::milliseconds{ 0 });
 
 /// Main error reporting function
 void ReportFailure (const std::string& filename, int line, const std::string& message);
@@ -537,7 +538,7 @@ int Test::failure_count () const
 
 /// Return test running time in milliseconds
 inline
-int Test::test_time_ms () const
+std::chrono::milliseconds Test::test_time_ms () const
 {
   return time;
 }
@@ -569,11 +570,11 @@ Reporter::Reporter ()
   : suite_test_count (0)
   , suite_failed_count (0)
   , suite_failures_count (0)
-  , suite_time_msec (0)
+  , suite_time (0)
   , total_test_count (0)
   , total_failed_count (0)
   , total_failures_count (0)
-  , total_time_msec (0)
+  , total_time (0)
   , suites_count (0)
   , trace (false)
 {
@@ -610,9 +611,9 @@ void Reporter::TestFinish (const Test& t)
     total_failed_count++;
     total_failures_count += f;
   }
-  int ms = t.test_time_ms ();
-  suite_time_msec += ms;
-  total_time_msec += ms;
+  auto ms = t.test_time_ms ();
+  suite_time += ms;
+  total_time += ms;
 }
 
 ///  \return number of failures in this suite
@@ -626,15 +627,16 @@ int Reporter::SuiteFinish (const TestSuite&)
 inline 
 void Reporter::Clear ()
 {
+  using namespace std::chrono_literals;
   suite_test_count =
     suite_failed_count =
-    suite_failures_count =
-    suite_time_msec = 0;
+    suite_failures_count = 0;
+    suite_time = 0ms;
 
-  total_test_count =
-    total_failed_count =
-    total_failures_count =
-    total_time_msec = 0;
+    total_test_count =
+      total_failed_count =
+      total_failures_count = 0;
+    total_time = 0ms;
 
   suites_count = 0;
 }
@@ -643,7 +645,7 @@ void Reporter::Clear ()
 /// Default constructor needed container inclusion
 inline
 ReporterDeferred::TestResult::TestResult ()
-  : test_time_ms (0)
+  : test_time{0}
 {
 }
 
@@ -652,7 +654,7 @@ inline
 ReporterDeferred::TestResult::TestResult (const std::string& suite, const std::string& test)
   : suite_name (suite)
   , test_name (test)
-  , test_time_ms (0)
+  , test_time (0)
 {
 }
 
@@ -703,7 +705,7 @@ inline
 void ReporterDeferred::TestFinish (const Test& test)
 {
   Reporter::TestFinish (test);
-  results.back ().test_time_ms = test.test_time_ms ();
+  results.back ().test_time = test.test_time_ms();
 }
 
 inline void ReporterDeferred::Clear ()
@@ -747,7 +749,7 @@ void TestSuite::Add (const Inserter* inf)
   Iterate through all test information objects doing the following:
 */
 inline
-int TestSuite::RunTests (Reporter& rep, int maxtime)
+int TestSuite::RunTests (Reporter& rep, std::chrono::milliseconds maxtime)
 {
   /// Establish reporter as CurrentReporter and suite as CurrentSuite
   CurrentSuite = name;
@@ -849,13 +851,12 @@ void TestSuite::RunCurrentTest (const Inserter* inf)
     ReportFailure (inf->file_name, inf->line, stream.str ());
   }
 
-  int actual_time = CurrentTest->test_time_ms ();
-  if (CurrentTest->is_time_constraint () && max_runtime && actual_time > max_runtime)
+  auto actual_time = CurrentTest->test_time_ms ();
+  if (CurrentTest->is_time_constraint () && max_runtime.count() && actual_time > max_runtime)
   {
     std::stringstream stream;
     stream << "Global time constraint failed while running test " << inf->test_name
-      << " Expected under " << max_runtime
-      << "ms but took " << actual_time << "ms.";
+      << " Expected time <" << max_runtime << "; actual = " << actual_time;
 
     ReportFailure (inf->file_name, inf->line, stream.str ());
   }
@@ -924,7 +925,6 @@ TestSuite::Inserter::Inserter (const std::string& suite, const std::string& test
 //-----------------Timer member functions -------------------------------------
 inline
 Timer::Timer ()
-  : startTime (std::chrono::steady_clock::now())
 {
 }
 
@@ -937,48 +937,36 @@ void Timer::Start ()
 
 /// Return elapsed time in milliseconds since the starting time
 inline
-int Timer::GetTimeInMs () const
+std::chrono::milliseconds Timer::GetTimeInMs () const
 {
   auto elapsedTime = std::chrono::steady_clock::now () - startTime;
-  return (int)std::chrono::duration_cast<std::chrono::milliseconds>
-    (elapsedTime).count ();
+  return std::chrono::duration_cast<std::chrono::milliseconds>(elapsedTime);
 }
 
 /// Return elapsed time in microseconds since the starting time
 inline
-long long Timer::GetTimeInUs () const
+std::chrono::microseconds Timer::GetTimeInUs () const
 {
   auto elapsedTime = std::chrono::steady_clock::now () - startTime;
-  return std::chrono::duration_cast<std::chrono::microseconds>(elapsedTime).count ();
-}
-
-/// Pause current thread for the specified time
-inline
-void SleepMs (int const ms)
-{
-#ifdef _WIN32
-  ::Sleep (ms);
-#else
-  usleep (static_cast<useconds_t>(ms * 1000));
-#endif
+  return std::chrono::duration_cast<std::chrono::microseconds>(elapsedTime);
 }
 
 //------------------TimeConstraint member functions ---------------------------
 
 /*!
   Initializes a TimeConstraint object.
-  \param ms       Maximum allowed duration in milliseconds
+  \param tmax     Maximum allowed duration
   \param file     Filename associated with this constraint
   \param line     Line number associated with this constraint
 
   The object contains a timer that is started now. It also keeps track of the
   filename and line number where it has been created.
 */
-inline
-TimeConstraint::TimeConstraint (int ms, const char* file, int line)
+template <typename R, typename P>
+TimeConstraint::TimeConstraint (std::chrono::duration<R, P> t, const char* file, int line)
   : filename (file)
   , line_number (line)
-  , max_ms (ms)
+  , tmax (t)
 {
   timer.Start ();
 }
@@ -990,12 +978,11 @@ TimeConstraint::TimeConstraint (int ms, const char* file, int line)
 inline
 TimeConstraint::~TimeConstraint ()
 {
-  int t = timer.GetTimeInMs ();
-  if (t > max_ms)
+  std::chrono::milliseconds t = timer.GetTimeInMs ();
+  if (t > tmax)
   {
     std::stringstream stream;
-    stream << "Time constraint failed. Expected to run test under " << max_ms <<
-      "ms but took " << t << "ms.";
+    stream << "Time constraint failed. Expected time <" << tmax << "; actual = " << t;
 
     ReportFailure (filename, line_number, stream.str ());
   }
@@ -1033,18 +1020,18 @@ void SuitesList::Add (const std::string& suite_name, const TestSuite::Inserter* 
 
   \param suite_name name of the suite to run
   \param reporter test reporter to be used for results
-  \param max_time_ms global time constraint in milliseconds
+  \param max_time global time constraint in milliseconds
 
   \return number of tests that failed or -1 if there is no such suite
 */
 inline
-int SuitesList::Run (const std::string& suite_name, Reporter& reporter, int max_time_ms)
+int SuitesList::Run (const std::string& suite_name, Reporter& reporter, std::chrono::milliseconds max_time)
 {
   for (auto& s : suites)
   {
     if (s.name == suite_name)
     {
-      s.RunTests (reporter, max_time_ms);
+      s.RunTests (reporter, max_time);
       return reporter.Summary ();
     }
   }
@@ -1054,17 +1041,17 @@ int SuitesList::Run (const std::string& suite_name, Reporter& reporter, int max_
 /*!
   Run tests in all suites
   \param reporter test reporter to be used for results
-  \param max_time_ms global time constraint in milliseconds
+  \param max_time global time constraint in milliseconds
 
   \return total number of failed tests
 */
 inline
-int SuitesList::RunAll (Reporter& reporter, int max_time_ms)
+int SuitesList::RunAll (Reporter& reporter, std::chrono::milliseconds max_time)
 {
   for (auto& s : suites)
   {
     if (s.IsEnabled ())
-      s.RunTests (reporter, max_time_ms);
+      s.RunTests (reporter, max_time);
   }
 
   return reporter.Summary ();
@@ -1106,10 +1093,10 @@ void SuitesList::Enable (const std::string& suite, bool enable)
 /*!
   Runs all test suites and produces results using the given reporter.
   \param  rpt           Reporter used to generate results
-  \param  max_time_ms   Global time constraint or 0 if there is no time constraint.
+  \param  max_time      Global time constraint or 0 if there is no time constraint.
   \return number of failed tests
 
-  Each test is expected to run in under max_time_ms milliseconds. If a test takes
+  Each test is expected to run in under `max_time` milliseconds. If a test takes
   longer, it generates a time constraint failure.
 
   All previous statistics of the reporter object are erased.
@@ -1117,10 +1104,10 @@ void SuitesList::Enable (const std::string& suite, bool enable)
   \ingroup exec
 */
 inline
-int RunAllTests (Reporter& rpt, int max_time_ms)
+int RunAllTests (Reporter& rpt, std::chrono::milliseconds max_time)
 {
   rpt.Clear ();
-  return SuitesList::GetSuitesList ().RunAll (rpt, max_time_ms);
+  return SuitesList::GetSuitesList ().RunAll (rpt, max_time);
 }
 
 /*!
@@ -1128,16 +1115,16 @@ int RunAllTests (Reporter& rpt, int max_time_ms)
 
   \param suite_name   Name of the suite to run
   \param rpt          Test reporter to be used for results
-  \param max_time_ms  Global time constraint in milliseconds
+  \param max_time     Global time constraint in milliseconds
 
   \return number of tests that failed or -1 if there is no such suite
 
   \ingroup exec
 */
 inline
-int RunSuite (const char* suite_name, Reporter& rpt, int max_time_ms)
+int RunSuite (const char* suite_name, Reporter& rpt, std::chrono::milliseconds max_time)
 {
-  return SuitesList::GetSuitesList ().Run (suite_name, rpt, max_time_ms);
+  return SuitesList::GetSuitesList ().Run (suite_name, rpt, max_time);
 }
 
 /*!
