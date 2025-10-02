@@ -1,4 +1,4 @@
-CXXFLAGS := -I include/ -Wall -Wextra -pedantic -std=c++20 -fno-char8_t
+CXXFLAGS := -I include/ -Wall -Wextra -pedantic -std=c++20
 
 all: samples
 

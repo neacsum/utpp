@@ -688,7 +688,7 @@ bool CheckEqual (const std::list<expected_T>& expected, const std::list<actual_T
 /// Internal function for conversion from UTF-16 to UTF-8
 #if __WCHAR_MAX__ > 0x10000 //4-bytes wchar_t
 inline
-std::string string to_utf8 (const std::wstring& ws)
+std::string to_utf8 (const std::wstring& ws)
 {
   std::string out;
   auto in = ws.cbegin ();
