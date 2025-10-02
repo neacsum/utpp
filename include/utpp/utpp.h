@@ -856,8 +856,18 @@ void TestSuite::RunCurrentTest (const Inserter* inf)
   {
     std::stringstream stream;
     stream << "Global time constraint failed while running test " << inf->test_name
-      << " Expected time <" << max_runtime << "; actual = " << actual_time;
-
+      << " Expected time <"
+#if _MSVC_LANG >= 202002L
+      << max_runtime
+#else
+      << max_runtime.count () << "ms"
+#endif
+      << "; actual = "
+#if _MSVC_LANG >= 202002L
+      << actual_time;
+#else
+      << actual_time.count ();
+#endif
     ReportFailure (inf->file_name, inf->line, stream.str ());
   }
   CurrentReporter->TestFinish (*CurrentTest);
@@ -982,8 +992,18 @@ TimeConstraint::~TimeConstraint ()
   if (t > tmax)
   {
     std::stringstream stream;
-    stream << "Time constraint failed. Expected time <" << tmax << "; actual = " << t;
-
+    stream << "Time constraint failed. Expected time <"
+#if _MSVC_LANG >= 202002L
+      << tmax
+#else
+      << tmax.count () << "ms"
+#endif
+      << "; actual = "
+#if _MSVC_LANG >= 202002L
+      << t;
+#else
+      << t.count () << "ms";
+#endif
     ReportFailure (filename, line_number, stream.str ());
   }
 }

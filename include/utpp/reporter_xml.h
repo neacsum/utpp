@@ -40,7 +40,7 @@ private:
   ReporterXml& operator=(ReporterXml const&) = delete;
 
   std::ostream& os;
-  std::chrono::utc_clock::time_point start_time;
+  std::chrono::system_clock::time_point start_time;
   std::ios orig_state;
 };
 
@@ -81,7 +81,7 @@ ReporterXml::ReporterXml (std::ostream& ostream)
   : os (ostream)
   , orig_state (nullptr)
 {
-  start_time = std::chrono::utc_clock::now();
+  start_time = std::chrono::system_clock::now();
   orig_state.copyfmt (os);
   os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
 
@@ -95,17 +95,30 @@ int ReporterXml::Summary ()
 
   std::string suite;
   os.copyfmt (orig_state);
-  auto beg_time = std::chrono::time_point_cast<std::chrono::seconds>(start_time);
-  auto end_time = std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::utc_clock::now ());
+  auto beg_time = time_point_cast<std::chrono::seconds>(start_time);
+  auto end_time = time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now ());
   auto total_time_s = duration_cast<duration<float, std::chrono::seconds::period>>(total_time);
 
   os << "<utpp-results"
     << " total=\"" << total_test_count << '\"'
     << " failed=\"" << total_failed_count << '\"'
-    << " failures=\"" << total_failures_count << '\"'
-    << " duration=\"" << std::fixed << std::setprecision (3) << total_time_s << '\"'
+    << " failures=\"" << total_failures_count << '\"' << " duration=\"" << std::fixed << std::setprecision (3)
+#if _MSVC_LANG >= 202002L
+    << total_time_s << '\"'
+#else
+    << total_time_s.count() << "s\""
+#endif
     << '>' << std::endl;
+#if _MSVC_LANG >= 202002L
   os << " <start-time>" << std::format("{0:%F} {0:%T}Z", beg_time) << "</start-time>" << std::endl;
+#else
+  struct tm* timeinfo;
+  char buffer[80];
+  time_t t = system_clock::to_time_t (start_time);
+  timeinfo = gmtime (&t);
+  strftime (buffer, sizeof(buffer), "%F %TZ", timeinfo);
+  os << " <start-time>" << buffer << "</start-time>" << std::endl;
+#endif
 
 #ifdef _WIN32
   std::string cmd;
@@ -151,8 +164,14 @@ int ReporterXml::Summary ()
   }
   if (!suite.empty ())
     os << " </suite>" << std::endl;
-
+#if _MSVC_LANG >= 202002L
   os << " <end-time>" << std::format ("{0:%F} {0:%T}Z", end_time) << "</end-time>" << std::endl;
+#else
+  t = system_clock::to_time_t (end_time);
+  timeinfo = gmtime (&t);
+  strftime (buffer, sizeof (buffer), "%F %TZ", timeinfo);
+  os << " <end-time>" << buffer << "</end-time>" << std::endl;
+#endif
   os << "</utpp-results>" << std::endl;
   return ReporterDeferred::Summary ();
 }
@@ -162,7 +181,7 @@ void ReporterXml::Clear ()
 {
   os.seekp (0);
   os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
-  start_time = std::chrono::utc_clock::now();
+  start_time = std::chrono::system_clock::now();
 
   ReporterDeferred::Clear ();
 }
@@ -172,7 +191,11 @@ void ReporterXml::BeginTest (const ReporterDeferred::TestResult& result)
 {
   os << "  <test"
     << " name=\"" << result.test_name << "\""
+#if _MSVC_LANG >= 202002L
     << " time=\"" << result.test_time << "\"";
+#else
+    << " time=\"" << result.test_time.count() << "ms\"";
+#endif
 }
 
 inline

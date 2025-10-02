@@ -686,8 +686,9 @@ bool CheckEqual (const std::list<expected_T>& expected, const std::list<actual_T
 
 
 /// Internal function for conversion from UTF-16 to UTF-8
-#if __WCHAR_MAX__ > 0x10000
-inline std::string to_utf8 (const std::wstring& ws)
+#if __WCHAR_MAX__ > 0x10000 //4-bytes wchar_t
+inline
+std::string string to_utf8 (const std::wstring& ws)
 {
   std::string out;
   auto in = ws.cbegin ();
@@ -717,8 +718,9 @@ inline std::string to_utf8 (const std::wstring& ws)
   }
   return out;
 }
-#else
-inline std::string to_utf8 (const std::wstring& ws)
+#else   //2-bytes wchar_t
+inline
+std::string to_utf8 (const std::wstring& ws)
 {
   std::string out;
   auto in = ws.cbegin ();
@@ -780,8 +782,8 @@ bool CheckEqual (const std::wstring expected, const std::wstring actual,
   if (expected != actual)
   {
     std::stringstream stream;
-    std::string u8exp = to_utf8 (expected);
-    std::string u8act = to_utf8 (actual);
+    auto u8exp = to_utf8 (expected);
+    auto u8act = to_utf8 (actual);
     stream << "Expected \'" << u8exp << "\' but was \'" << u8act << "\'";
     msg = stream.str ();
     return false;
@@ -875,6 +877,46 @@ bool CheckEqual (char* expected, const char* actual, std::string& msg)
   return CheckEqual (const_cast<const char *>(expected), const_cast<const char*>(actual), msg);
 }
 ///@}
+
+#if _MSVC_LANG > 201703L
+/*!
+  Specializations of CheckEqual function for char8_t
+  @{
+*/
+inline
+bool CheckEqual (const char8_t* expected, const std::string& actual, std::string& msg)
+{
+  return CheckEqual ((const char*)expected, actual, msg);
+}
+
+inline
+bool CheckEqual (const std::string& expected, const char8_t* actual, std::string& msg)
+{
+  return CheckEqual (expected, (const char*)actual, msg);
+}
+
+inline
+bool CheckEqual (const char8_t* expected, const char8_t* actual, std::string& msg)
+{
+  return CheckEqual ((const char*)expected, (const char*)actual, msg);
+}
+
+inline
+bool CheckEqual (char32_t expected, char32_t actual, std::string& msg)
+{
+  if (expected != actual)
+  {
+    std::stringstream stream;
+    stream << std::hex << "Expected (char32_t)U\'\\x" << static_cast<uint32_t>(expected) 
+      << "\' but was (char32_t)U\'\\x" << static_cast<uint32_t>(actual) << "\'";
+    msg = stream.str ();
+    return false;
+  }
+  return true;
+}
+///@}
+
+#endif
 
 /*!
   Check if two values are closer than specified tolerance. If not, generate a

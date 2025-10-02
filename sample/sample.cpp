@@ -1,4 +1,4 @@
-/*
+﻿/*
   UTPP - A New Generation of UnitTest++
   (c) Mircea Neacsu 2017-2023
 
@@ -493,12 +493,14 @@ SUITE (utf16_checks)
 {
   TEST (conversion)
   {
-    const wchar_t* yee = L"𐐷";
-    std::string exp = u8"𐐷";
+    const wchar_t* yee = L"𐐷"; //Deseret letter yee
+    auto exp = u8"𐐷";
     auto s = UnitTest::to_utf8 (yee);
     CHECK_EQUAL (exp, s);
-  }
+    CHECK_EQUAL (s, exp);
+    CHECK_EQUAL (exp, exp);
 
+  }
   TEST (const_wchar)
   {
     const wchar_t *s1 {L"😁 widechar string"};
@@ -592,7 +594,12 @@ TEST_MAIN (int argc, char** argv)
   // FAILURE macro allows you to always generate a failure
   FAILURE ("So far we had %d failures.", ret1);
 
-  //Expecting 18 tests to fail
+  // char32_t doesn't have a stream extraction operator in C++20 and above.
+  // we have to roll our own (thanks Randy Eckman)
+  auto e = U'😁';
+  auto a = U'😒';
+  CHECK_EQUAL (e, a);
+
   return (ret1 == 18)? 0 : 1;
 }
 
