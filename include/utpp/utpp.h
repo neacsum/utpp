@@ -15,9 +15,6 @@
 */
 
 #ifdef _WIN32
-#if !defined(_CRT_SECURE_NO_WARNINGS)
-#define _CRT_SECURE_NO_WARNINGS 1
-#endif
 //Acrobatics to leave out winsock.h (for the benefit of winsock2.h)
 #ifndef _WINSOCKAPI_
 #define _WINSOCKAPI_
@@ -30,7 +27,11 @@
 #undef _WINSOCKAPI_
 #undef MUST_UNDEF_WINSOCK
 #endif
+#endif
 
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 4996 ) //disable deprecation warnings
 #endif
 
 #include <string>
@@ -45,7 +46,7 @@
 #endif
 
 // --------------- Global configuration options -------------------------------
-#define UTPP_VERSION "2.2.0"
+#define UTPP_VERSION "3.0.1"
 
 // --------------- end of configuration options -------------------------------
 
@@ -1226,4 +1227,8 @@ UnitTest::Reporter& UnitTest::GetDefaultReporter ()
 inline UnitTest::Test* UnitTest::CurrentTest;
 inline UnitTest::Reporter* UnitTest::CurrentReporter;
 inline std::string UnitTest::CurrentSuite;
+#endif
+
+#ifdef _MSC_VER
+#pragma warning ( pop )
 #endif

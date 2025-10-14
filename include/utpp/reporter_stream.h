@@ -100,6 +100,7 @@ void ReporterStream::ReportFailure (const Failure& failure)
       out << "suite " << CurrentSuite << ' ';
     out << "test " << CurrentTest->test_name ();
   }
+  auto f = out.flags (std::ios::dec);
 
 #if defined(__APPLE__) || defined(__GNUG__)
   out << std::endl << failure.filename << ":" << failure.line_number << ": error: "
@@ -108,6 +109,7 @@ void ReporterStream::ReportFailure (const Failure& failure)
   out << std::endl << failure.filename << "(" << failure.line_number << "): error: "
     << failure.message << std::endl;
 #endif
+  out.flags (f);
   Reporter::ReportFailure (failure);
 }
 
@@ -119,19 +121,22 @@ inline
 int ReporterStream::Summary ()
 {
   using namespace std::chrono;
+  auto f = out.flags (std::ios::dec | std::ios::fixed);
+  auto p = out.precision (2);
 
   if (total_failed_count > 0)
   {
-    out << std::dec << "FAILURE: " << total_failed_count << " out of "
+    out << "FAILURE: " << total_failed_count << " out of "
       << total_test_count << " tests failed (" << total_failures_count
       << " failures)." << std::endl;
   }
   else
-    out << std::dec << "Success: " << total_test_count << " tests passed." << std::endl;
+    out << "Success: " << total_test_count << " tests passed." << std::endl;
 
   auto total_time_s = duration_cast<duration<float, std::chrono::seconds::period>>(total_time);
-  out.setf (std::ios::fixed);
-  out << "Run time: " << std::setprecision (2) << total_time_s.count() << " seconds" << std::endl;
+  out << "Run time: " << total_time_s.count() << " seconds" << std::endl;
+  out.flags (f);
+  out.precision (p);
   return Reporter::Summary ();
 }
 

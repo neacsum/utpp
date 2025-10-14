@@ -12,12 +12,6 @@
   CHECK_... macro-definitions
 */
 
-/// \cond
-#if !defined(_CRT_SECURE_NO_WARNINGS)
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-/// \endcond
-
 #include <sstream>
 #include <vector>
 #include <array>
@@ -685,7 +679,7 @@ bool CheckEqual (const std::list<expected_T>& expected, const std::list<actual_T
 }
 
 
-/// Internal function for conversion from UTF-16 to UTF-8
+/// Internal function for conversion from wstring to UTF-8
 #if __WCHAR_MAX__ > 0x10000 //4-bytes wchar_t
 inline
 std::string to_utf8 (const std::wstring& ws)
@@ -879,6 +873,7 @@ bool CheckEqual (char* expected, const char* actual, std::string& msg)
 ///@}
 
 #if _MSVC_LANG > 201703L
+#if  defined(__cpp_char8_t)
 /*!
   Specializations of CheckEqual function for char8_t
   @{
@@ -900,7 +895,12 @@ bool CheckEqual (const char8_t* expected, const char8_t* actual, std::string& ms
 {
   return CheckEqual ((const char*)expected, (const char*)actual, msg);
 }
+///@}
+#endif
 
+/*!
+  Specializations of CheckEqual function for char32_t
+*/
 inline
 bool CheckEqual (char32_t expected, char32_t actual, std::string& msg)
 {
@@ -914,8 +914,6 @@ bool CheckEqual (char32_t expected, char32_t actual, std::string& msg)
   }
   return true;
 }
-///@}
-
 #endif
 
 /*!
