@@ -114,7 +114,7 @@ int ReporterXml::Summary ()
 #else
   struct tm* timeinfo;
   char buffer[80];
-  time_t t = system_clock::to_time_t (start_time);
+  time_t t = system_clock::to_time_t (beg_time);
   timeinfo = gmtime (&t);
   strftime (buffer, sizeof(buffer), "%F %TZ", timeinfo);
   os << " <start-time>" << buffer << "</start-time>" << std::endl;
