@@ -524,6 +524,38 @@ SUITE (utf16_checks)
     CHECK_EQUAL (s1, s2);
     CHECK_EQUAL_EX (s1, s2, "s1 and s2 are different");
   }
+
+  TEST(const_wchar_const_wstring)
+  {
+    const wchar_t* s1{ L"😁 widechar string" };
+    const std::wstring s2 = L"😒 widechar string";
+    CHECK_EQUAL(s1, s2);
+    CHECK_EQUAL_EX(s1, s2, "s1 and s2 are different");
+  }
+
+  TEST(const_wstring_const_wchar)
+  {
+    const std::wstring s1 = L"😁 widechar string";
+    const wchar_t* s2{ L"😒 widechar string" };
+    CHECK_EQUAL(s1, s2);
+    CHECK_EQUAL_EX(s1, s2, "s1 and s2 are different");
+  }
+
+  TEST(nonconst_wchar_nonconst_wstring)
+  {
+    const wchar_t* s1{ L"😁 widechar string" };
+    const std::wstring s2 = L"😒 widechar string";
+    CHECK_EQUAL(s1, s2);
+    CHECK_EQUAL_EX(s1, s2, "s1 and s2 are different");
+  }
+
+  TEST(nonconst_wstring_nonconst_wchar)
+  {
+    std::wstring s1 = L"😁 widechar string";
+    wchar_t* s2{ const_cast<wchar_t*>(L"😒 widechar string") };
+    CHECK_EQUAL(s1, s2);
+    CHECK_EQUAL_EX(s1, s2, "s1 and s2 are different");
+  }
 }
 
 SUITE (typecasting)
