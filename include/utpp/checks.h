@@ -815,6 +815,26 @@ bool CheckEqual (const wchar_t *expected, const wchar_t *actual,
   return true;
 }
 
+inline
+bool CheckEqual(const wchar_t* expected, const std::wstring actual,
+  std::string& msg)
+{
+  return CheckEqual(std::wstring(expected), actual, msg);
+}
+
+inline
+bool CheckEqual(const std::wstring expected, const wchar_t* actual,
+  std::string& msg)
+{
+  return CheckEqual(expected, std::wstring(actual), msg);
+}
+
+inline
+bool CheckEqual(const std::wstring expected, wchar_t* actual,
+  std::string& msg)
+{
+  return CheckEqual(expected, std::wstring(actual), msg);
+}
 
 inline
 bool CheckEqual (wchar_t *expected, wchar_t *actual, std::string &msg)
