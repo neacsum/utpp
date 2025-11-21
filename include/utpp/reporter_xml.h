@@ -95,7 +95,6 @@ int ReporterXml::Summary ()
 
   std::string suite;
   os.copyfmt (orig_state);
-  auto beg_time = time_point_cast<std::chrono::seconds>(start_time);
   auto end_time = time_point_cast<std::chrono::seconds>(std::chrono::system_clock::now ());
   auto total_time_s = duration_cast<duration<float, std::chrono::seconds::period>>(total_time);
 
@@ -110,7 +109,8 @@ int ReporterXml::Summary ()
 #endif
     << '>' << std::endl;
 #if _MSVC_LANG >= 202002L
-  os << " <start-time>" << std::format("{0:%F} {0:%T}Z", beg_time) << "</start-time>" << std::endl;
+  auto start_time_sec = time_point_cast<std::chrono::seconds>(start_time);
+  os << " <start-time>" << std::format("{0:%F} {0:%T}Z", start_time_sec) << "</start-time>" << std::endl;
 #else
   struct tm* timeinfo;
   char buffer[80];
