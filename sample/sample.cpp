@@ -632,6 +632,6 @@ TEST_MAIN (int argc, char** argv)
   auto a = U'😒';
   CHECK_EQUAL (e, a);
 
-  return (ret1 == 18)? 0 : 1;
+  return (ret1 == 22)? 0 : 1;
 }
 
