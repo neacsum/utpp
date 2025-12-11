@@ -102,13 +102,13 @@ int ReporterXml::Summary ()
     << " total=\"" << total_test_count << '\"'
     << " failed=\"" << total_failed_count << '\"'
     << " failures=\"" << total_failures_count << '\"' << " duration=\"" << std::fixed << std::setprecision (3)
-#if _MSVC_LANG >= 202002L
+#if UTPP_STD_CHRONO_OSTREAM_AVAILABLE
     << total_time_s << '\"'
 #else
     << total_time_s.count() << "s\""
 #endif
     << '>' << std::endl;
-#if _MSVC_LANG >= 202002L
+#if UTPP_STD_FORMAT_AVAILABLE
   auto start_time_sec = time_point_cast<std::chrono::seconds>(start_time);
   os << " <start-time>" << std::format("{0:%F} {0:%T}Z", start_time_sec) << "</start-time>" << std::endl;
 #else
@@ -164,7 +164,7 @@ int ReporterXml::Summary ()
   }
   if (!suite.empty ())
     os << " </suite>" << std::endl;
-#if _MSVC_LANG >= 202002L
+#if UTPP_STD_FORMAT_AVAILABLE
   os << " <end-time>" << std::format ("{0:%F} {0:%T}Z", end_time) << "</end-time>" << std::endl;
 #else
   t = system_clock::to_time_t (end_time);
@@ -191,7 +191,7 @@ void ReporterXml::BeginTest (const ReporterDeferred::TestResult& result)
 {
   os << "  <test"
     << " name=\"" << result.test_name << "\""
-#if _MSVC_LANG >= 202002L
+#if UTPP_STD_CHRONO_OSTREAM_AVAILABLE
     << " time=\"" << result.test_time << "\"";
 #else
     << " time=\"" << result.test_time.count() << "ms\"";
