@@ -635,3 +635,8 @@ TEST_MAIN (int argc, char** argv)
   return (ret1 == 22)? 0 : 1;
 }
 
+#ifdef _WIN32
+// Check that utpp.h didn't #include <windows.h> in a
+// way that prevents using WinSock2.h.
+#include <WinSock2.h>
+#endif
