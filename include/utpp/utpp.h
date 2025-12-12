@@ -45,6 +45,18 @@
 #include <unistd.h>
 #endif
 
+#ifdef __cpp_lib_format
+#define UTPP_STD_FORMAT_AVAILABLE 1
+#else
+#define UTPP_STD_FORMAT_AVAILABLE 0
+#endif
+#if ((_MSVC_LANG >= 202002L && \
+  (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION >= 160000)))
+#define UTPP_STD_CHRONO_OSTREAM_AVAILABLE 1
+#else
+#define UTPP_STD_CHRONO_OSTREAM_AVAILABLE 0
+#endif
+
 // --------------- Global configuration options -------------------------------
 #define UTPP_VERSION "3.0.1"
 
@@ -858,13 +870,13 @@ void TestSuite::RunCurrentTest (const Inserter* inf)
     std::stringstream stream;
     stream << "Global time constraint failed while running test " << inf->test_name
       << " Expected time <"
-#if _MSVC_LANG >= 202002L
+#if UTPP_STD_CHRONO_OSTREAM_AVAILABLE
       << max_runtime
 #else
       << max_runtime.count () << "ms"
 #endif
       << "; actual = "
-#if _MSVC_LANG >= 202002L
+#if UTPP_STD_CHRONO_OSTREAM_AVAILABLE
       << actual_time;
 #else
       << actual_time.count ();
@@ -994,13 +1006,13 @@ TimeConstraint::~TimeConstraint ()
   {
     std::stringstream stream;
     stream << "Time constraint failed. Expected time <"
-#if _MSVC_LANG >= 202002L
+#if UTPP_STD_CHRONO_OSTREAM_AVAILABLE
       << tmax
 #else
       << tmax.count () << "ms"
 #endif
       << "; actual = "
-#if _MSVC_LANG >= 202002L
+#if UTPP_STD_CHRONO_OSTREAM_AVAILABLE
       << t;
 #else
       << t.count () << "ms";
