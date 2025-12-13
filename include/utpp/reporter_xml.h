@@ -14,6 +14,7 @@
 #include <iostream>
 #include <iomanip>
 #include <ctime>
+#include <fstream>
 
 namespace UnitTest
 {
@@ -131,6 +132,14 @@ int ReporterXml::Summary ()
     cmd.resize (nsz - 1); //output is null-terminated
   }
   os << " <command-line>" << xml_escape (cmd) << "</command-line>" << std::endl;
+#else
+  std::ifstream cmd_stream("/proc/self/cmdline");
+  if (cmd_stream.good ()) 
+  {
+    std::string cmd;
+    std::getline(cmd_stream, cmd, '\0');
+    os << " <command-line>" << xml_escape (cmd) << "</command-line>" << std::endl;
+  }
 #endif
 
   for (auto i = results.cbegin (); i != results.cend (); ++i)
