@@ -15,17 +15,16 @@
 */
 
 #ifdef _WIN32
-//Acrobatics to leave out winsock.h (for the benefit of winsock2.h)
-#ifndef _WINSOCKAPI_
-#define _WINSOCKAPI_
-#define MUST_UNDEF_WINSOCK
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#define UTPP_MUST_UNDEF_LEAN_AND_MEAN
 #endif
 
 #include <windows.h>
 
-#ifdef MUST_UNDEF_WINSOCK
-#undef _WINSOCKAPI_
-#undef MUST_UNDEF_WINSOCK
+#ifdef UTPP_MUST_UNDEF_LEAN_AND_MEAN
+#undef UTPP_MUST_UNDEF_LEAN_AND_MEAN
+#undef WIN32_LEAN_AND_MEAN
 #endif
 #endif
 
