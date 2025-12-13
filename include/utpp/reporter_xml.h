@@ -108,7 +108,7 @@ int ReporterXml::Summary ()
     << total_time_s.count() << "s\""
 #endif
     << '>' << std::endl;
-#if UTPP_STD_FORMAT_AVAILABLE
+#if defined(__cpp_lib_format)
   auto start_time_sec = time_point_cast<std::chrono::seconds>(start_time);
   os << " <start-time>" << std::format("{0:%F} {0:%T}Z", start_time_sec) << "</start-time>" << std::endl;
 #else
@@ -164,7 +164,7 @@ int ReporterXml::Summary ()
   }
   if (!suite.empty ())
     os << " </suite>" << std::endl;
-#if UTPP_STD_FORMAT_AVAILABLE
+#if defined(__cpp_lib_format)
   os << " <end-time>" << std::format ("{0:%F} {0:%T}Z", end_time) << "</end-time>" << std::endl;
 #else
   t = system_clock::to_time_t (end_time);

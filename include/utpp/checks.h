@@ -498,7 +498,7 @@
 
 namespace UnitTest {
 
-#if _MSVC_LANG < 201703L
+#if UTPP_CPP_LANG < 201703L
 /// Default tolerance for CLOSE... macros
 extern double default_tolerance;
 #else
@@ -892,7 +892,7 @@ bool CheckEqual (char* expected, const char* actual, std::string& msg)
 }
 ///@}
 
-#if _MSVC_LANG > 201703L
+#if UTPP_CPP_LANG > 201703L
 #if  defined(__cpp_char8_t)
 /*!
   Specializations of CheckEqual function for char8_t

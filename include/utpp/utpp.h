@@ -44,12 +44,19 @@
 #include <unistd.h>
 #endif
 
-#ifdef __cpp_lib_format
-#define UTPP_STD_FORMAT_AVAILABLE 1
+/*
+  VC doesn't define the proper value for __cplusplus but _MSVC_LANG is correct.
+  We set UTPP_CPP_VERSION to correct value in all cases.
+*/
+
+#ifndef _MSVC_LANG
+#define UTPP_CPP_LANG __cplusplus
 #else
-#define UTPP_STD_FORMAT_AVAILABLE 0
+#define UTPP_CPP_LANG _MSVC_LANG
 #endif
-#if ((_MSVC_LANG >= 202002L && \
+
+
+#if ((UTPP_CPP_LANG >= 202002L && \
   (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION >= 160000)))
 #define UTPP_STD_CHRONO_OSTREAM_AVAILABLE 1
 #else
@@ -57,7 +64,7 @@
 #endif
 
 // --------------- Global configuration options -------------------------------
-#define UTPP_VERSION "3.0.1"
+#define UTPP_VERSION "3.0.2"
 
 // --------------- end of configuration options -------------------------------
 
@@ -83,13 +90,6 @@ const size_t MAX_MESSAGE_SIZE = 1024;
 #error Macro SUITE is already defined
 #endif
 
-/* VC doesn't define the proper value for __cplusplus but _MSVC_LANG is correct.
-  Fake it here for non-MS compilers
-*/
-#ifndef _MSVC_LANG
-#define _MSVC_LANG __cplusplus
-#endif
-
 /*!
   Replacement macro for main function.
 
@@ -106,7 +106,7 @@ const size_t MAX_MESSAGE_SIZE = 1024;
   \ingroup exec
 */
 
-#if _MSVC_LANG < 201703L
+#if UTPP_CPP_LANG < 201703L
 #define TEST_MAIN(ARGC, ARGV) \
 UnitTest::Test *UnitTest::CurrentTest; \
 UnitTest::Reporter *UnitTest::CurrentReporter; \
@@ -1232,8 +1232,7 @@ UnitTest::Reporter& UnitTest::GetDefaultReporter ()
   return the_default_reporter;
 }
 
-#if (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)  \
-  || (!defined(_MSVC_LANG) && (__cplusplus >= 201703L))
+#if UTPP_CPP_LANG >= 201703L
 // In C++ 17 and later we have inline data. TEST_MAIN is not really needed.
 inline UnitTest::Test* UnitTest::CurrentTest;
 inline UnitTest::Reporter* UnitTest::CurrentReporter;
