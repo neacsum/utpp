@@ -639,4 +639,14 @@ TEST_MAIN (int argc, char** argv)
 // Check that utpp.h didn't #include <windows.h> in a
 // way that prevents using WinSock2.h.
 #include <WinSock2.h>
+
+// Check that #including <windows.h> has not polluted global
+// namespace with windows.h's own min() and max() macros.
+#include <algorithm>
+static void f() {
+  int a = 1, b = 2;
+  int c = std::min(a, b);
+  (void)c;
+}
+
 #endif
