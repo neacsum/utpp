@@ -597,6 +597,13 @@ TEST_MAIN (int argc, char** argv)
   //Now we run one of the disabled suites with trace turned on.
   UnitTest::CurrentReporter->SetTrace (true);
 
+#ifdef _WIN32
+  std::cout << "Running again with results sent to dbgout..."
+    << std::endl;
+  UnitTest::ReporterDbgout dbg;
+  UnitTest::RunAllTests (dbg, 3s);
+#endif
+
   //Suites that are disabled are skipped by RunAllTests() but can be executed
   //by RunSuite()
   UnitTest::RunSuite ("not_run");
@@ -632,6 +639,7 @@ TEST_MAIN (int argc, char** argv)
   auto a = U'😒';
   CHECK_EQUAL (e, a);
 
+
   return (ret1 == 22)? 0 : 1;
 }
 
@@ -642,6 +650,11 @@ TEST_MAIN (int argc, char** argv)
 
 // Check that #including <windows.h> has not polluted global
 // namespace with windows.h's own min() and max() macros.
+
+#ifdef min
+#error "min macro is defined"
+#endif
+
 #include <algorithm>
 static void f() {
   int a = 1, b = 2;

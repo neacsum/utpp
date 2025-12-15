@@ -14,31 +14,6 @@
   in all the other required headers.
 */
 
-#ifdef _WIN32
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#define UTPP_MUST_UNDEF_LEAN_AND_MEAN
-#endif
-
-#ifndef NOMINMAX
-#define NOMINMAX
-#define UTPP_MUST_UNDEF_NOMINMAX
-#endif
-
-#include <windows.h>
-
-#ifdef UTPP_MUST_UNDEF_LEAN_AND_MEAN
-#undef UTPP_MUST_UNDEF_LEAN_AND_MEAN
-#undef WIN32_LEAN_AND_MEAN
-#endif
-
-#ifdef UTPP_MUST_UNDEF_NOMINMAX
-#undef UTPP_MUST_UNDEF_NOMINMAX
-#undef NOMINMAX
-#endif
-
-#endif
-
 #ifdef _MSC_VER
 #pragma warning( push )
 #pragma warning( disable : 4996 ) //disable deprecation warnings

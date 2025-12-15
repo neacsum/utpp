@@ -16,6 +16,31 @@
 #include <ctime>
 #include <fstream>
 
+#ifdef _WIN32
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#define UTPP_MUST_UNDEF_LEAN_AND_MEAN
+#endif
+
+#ifndef NOMINMAX
+#define NOMINMAX
+#define UTPP_MUST_UNDEF_NOMINMAX
+#endif
+
+#include <windows.h>
+
+#ifdef UTPP_MUST_UNDEF_NOMINMAX
+#undef NOMINMAX
+#endif
+
+#ifdef UTPP_MUST_UNDEF_LEAN_AND_MEAN
+#undef WIN32_LEAN_AND_MEAN
+#endif
+
+#undef UTPP_MUST_UNDEF_LEAN_AND_MEAN
+#undef UTPP_MUST_UNDEF_NOMINMAX
+#endif
+
 namespace UnitTest
 {
 
