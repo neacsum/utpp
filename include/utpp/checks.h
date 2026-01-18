@@ -19,6 +19,7 @@
 #include <string>
 #include <cmath>
 #include <cstring>
+#include <sys/stat.h>
 
 /*!
   \ingroup checks
