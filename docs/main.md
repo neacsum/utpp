@@ -34,11 +34,11 @@ TEST_MAIN (int argc, char** argv)
 ```
 The program contains two tests: one that checks if the `earth_is_round` function returns `true` and another one that checks if the `earth_radius_km` function is close enough to the expected value.
 
-The main program is defined using the #TEST_MAIN macro. It runs all the tests and, if all goes well, returns 0.
+The main program is defined using the `TEST_MAIN` macro. It runs all the tests and, if all goes well, returns 0.
 
-Tests are introduced by the #TEST macro followed by a block of code. Throughout the test you can check different conditions using one of the CHECK_... macros.
+Tests are introduced by the `TEST` macro followed by a block of code. Throughout the test you can check different conditions using one of the CHECK_... macros.
 
-The example above showed two of these macros: CHECK verifies that a condition is true, while CHECK_CLOSE verifies that two values are closer than a specified limit.
+The example above showed two of these macros: `CHECK` verifies that a condition is true, while `CHECK_CLOSE` verifies that two values are closer than a specified limit.
 
 Here is another example:
 ```
@@ -52,7 +52,7 @@ TEST (PlanetName)
 }
 
 ```
-The CHECK_EQUAL macro verifies that two values compare for equality. It can
+The `CHECK_EQUAL` macro verifies that two values compare for equality. It can
 compare any values for which an equality operator is defined. 
 
 You can also test if an exception is thrown:
@@ -113,12 +113,12 @@ TEST_FIXTURE (Account_fixture, TestExchangeEur)
   CHECK (amount_eur > 0);
 }
 ```
-A test that uses a fixture is defined using a TEST_FIXTURE macro that takes as arguments the name of the fixture and the name of the test. The fixture constructor is invoked right before the beginning of the test and it insures that `amount_usd` is set to 100. Because the test object is derived from the fixture object any public or protected members of the fixture are directly available in the test body.
+A test that uses a fixture is defined using a `TEST_FIXTURE` macro that takes as arguments the name of the fixture and the name of the test. The fixture constructor is invoked right before the beginning of the test and it insures that `amount_usd` is set to 100. Because the test object is derived from the fixture object any public or protected members of the fixture are directly available in the test body.
 
 When the test finishes, the fixture destructor gets called and can release any resources allocated by the constructor.
 
 ### Aborting a Test
-If something goes terribly wrong in a test, the execution can be aborted using the ABORT or ABORT_EX macros. They work exactly like CHECK and CHECK_EX macros but, once triggered, the remaining test is abandoned. 
+If something goes terribly wrong in a test, the execution can be aborted using the `ABORT` or `ABORT_EX` macros. They work exactly like `CHECK` and `CHECK_EX` macros but, once triggered, the remaining test is abandoned. 
 
 Example:
 ````
@@ -131,7 +131,7 @@ TEST_FIXTURE (Account_fixture, Test_Abort)
 ````
 
 ### Results
-UTPP results are produced by an object called a _Reporter_. There can be different type of reporters depending on where the output must be directed. By default The RunAllTests() function uses a reporter that sends results to `stdout`. The library provides two other reporters: one that generates the output using the `OutputDebugString` function and one that sends results to an XML file with a structure similar to the files created by NUnit.
+UTPP results are produced by an object called a _Reporter_. There can be different type of reporters depending on where the output must be directed. By default The `RunAllTests()` function uses a reporter that sends results to `stdout`. The library provides two other reporters: one that generates the output using the `OutputDebugString` function and one that sends results to an XML file with a structure similar to the files created by NUnit.
 
 Here is an example how to use the XML reporter:
 ```
@@ -143,7 +143,7 @@ TEST_MAIN (int argc, char **argv)
 }
 ```
 ### Execution Control
-While in most cases `RunAllTests`` function is all that is needed to execute all tests, there may be cases where you need a finer control. The UnitTest::RunSuite()
+While in most cases `RunAllTests` function is all that is needed to execute all tests, there may be cases where you need a finer control. The UnitTest::RunSuite()
 function allows you to run one particular suite while the UnitTest::DisbleSuite() allows you to disable a suite.
 
 ---

@@ -1,8 +1,6 @@
 name: Generate Doxygen Pages
 
-on:
-  push:
-    branches: [ "master" ]
+on: push
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -15,13 +13,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download Doxygen
         uses: neacsum/configurator@v0.0.11
         with:
           name: doxygen.exe
-          url: https://github.com/doxygen/doxygen/releases/download/Release_1_13_0/doxygen-1.13.0.windows.x64.bin.zip
+          url: https://github.com/doxygen/doxygen/releases/download/Release_1_18_0/doxygen-1.18.0.windows.x64.bin.zip
           pathInArchive: doxygen.exe
 
       - name: Generate Doxygen documentation

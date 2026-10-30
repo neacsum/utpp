@@ -22,13 +22,15 @@
 #include <sys/stat.h>
 
 /*!
-  \ingroup checks
+  \defgroup checks  Assertion Checking Macros
+  Macro-definitions used to check various conditions during tests
 @{
 */
 
 /*!
   \def CHECK
   \brief Generate a failure if value is 0. Failure message is the value itself.
+  \param value  Value to check
 
   \hideinitializer
 */
@@ -51,6 +53,8 @@
 /*!
   \def CHECK_EX
   \brief Generate a failure with the given message if value is 0
+  \param value      Value to check
+  \param ...        Additinal parameters passed to a printf-type function
 
   \hideinitializer
 */
@@ -76,6 +80,8 @@
 /*!
   \def CHECK_EQUAL
   \brief Generate a failure if actual value is different from expected.
+  \param expected   Expected value
+  \param actual     Actual value
 
   \hideinitializer
 */
@@ -100,6 +106,7 @@
 /*!
   \def CHECK_NAN
   \brief Generate a failure if value is not NaN
+  \param value Value to check
 
   \hideinitializer
 */
@@ -123,7 +130,10 @@
 /*!
   \def CHECK_EQUAL_EX
   \brief  Generate a failure if actual value is different from expected.
-          The given message is appended to the standard CHECK_EQUAL message. 
+          The given message is appended to the standard CHECK_EQUAL message.
+  \param expected   Expected value
+  \param actual     Actual value
+  \param ...        Additional parameters passed to a printf-type function
 
   \hideinitializer
 */
@@ -154,6 +164,12 @@
   \def CHECK_CLOSE
   \brief  Generate a failure if actual value differs from expected value with
           more than tolerance
+  \param expected   Expected value
+  \param actual     Actual value
+  \param ...        Optional tolerance value
+  
+  If no tolerance value is specified, it uses the UnitTest::default_tolerance
+  value.
 
   \hideinitializer
 */
@@ -182,8 +198,13 @@
 /*!
   \def CHECK_CLOSE_EX
   \brief  Generate a failure if actual value differs from expected value with
-          more than given tolerance.
-          The given message is appended to the standard CHECK_CLOSE message.
+          more than given tolerance. The additional message is appended to the
+          standard CHECK_CLOSE message.
+  \param expected   Expected value
+  \param actual     Actual value
+  \param tolerance  Tolerance value
+  \param ...        Additional parameters passed to a printf-type function
+  
   \hideinitializer
 */
 
@@ -217,6 +238,9 @@
 /*!
   \def CHECK_ARRAY_EQUAL
   \brief Generate a failure if actual array is different from expected one
+  \param expected   Expected arrasy values
+  \param actual     Actual array values
+  \param count      Number of values in the array
 
   \hideinitializer
 */
@@ -242,6 +266,13 @@
   \def CHECK_ARRAY_CLOSE
   \brief  Generate a failure if `actual` array elements differs from `expected`
           ones with more than given `tolerance`.
+  \param expected   Expected array values
+  \param actual     Actual array values
+  \param count      Number of values in the array
+  \param ...        Optional tolerance value
+
+  If no tolerance value is specified, it uses the UnitTest::default_tolerance
+  value.
 
   \hideinitializer
 */
@@ -270,6 +301,10 @@
 /*!
   \def CHECK_ARRAY2D_EQUAL
   \brief  Generate a failure if 2D array `actual` differs from `expected` values.
+  \param expected   Expected array values
+  \param actual     Actual array values
+  \param rows       Number of rows in the 2D array
+  \param columns    Number of columns in the 2D array
 
   \hideinitializer
 */
@@ -297,6 +332,14 @@
   \def CHECK_ARRAY2D_CLOSE
   \brief  Generate a failure if 2D array `actual` differs from `expected` values
   with more than given `tolerance`.
+  \param expected   Expected array values
+  \param actual     Actual array values
+  \param rows       Number of rows in the 2D array
+  \param columns    Number of columns in the 2D array
+  \param ...        Optional tolerance value
+  
+  If no tolerance value is specified, it uses the UnitTest::default_tolerance
+  value.
 
   \hideinitializer
 */
@@ -326,8 +369,8 @@
   \def CHECK_THROW
   \brief  Generate a failure if evaluating the expression __does not__ throw
           an exception of the `expected` type.
-  \param except   Expected exception type
-  \param expr     Expression to evaluate
+  \param except     Expected exception type
+  \param expr       Expression to evaluate
   \hideinitializer
 */
 #ifdef CHECK_THROW
@@ -352,8 +395,10 @@
   \def CHECK_THROW_EX
   \brief  Generate a failure if evaluating the expression __does not__ throw
           an exception of the `expected` type.
+  \param except     Expected exception type
+  \param expr       Expression to evaluate
+  \param ...        Additional parameters passed to a printf-type function
 
-  Appends a printf type string to standard failure message.
   \hideinitializer
 */
 #ifdef CHECK_THROW_EX
@@ -383,6 +428,9 @@
   \def CHECK_THROW_EQUAL
   \brief  Checks if evaluating the expression triggers an exception of the given
           type and with the expected value.
+  \param expr       Expression to evaluate
+  \param value      Expected exception value
+  \param except     Expected exception type
 
   \hideinitializer
 */
@@ -390,11 +438,11 @@
 #ifdef CHECK_THROW_EQUAL
 #error Macro CHECK_THROW_EQUAL is already defined
 #endif
-#define CHECK_THROW_EQUAL(expression, value, except)                          \
+#define CHECK_THROW_EQUAL(expr, value, except)                                \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
-    try { expression; }                                                       \
+    try { expr; }                                                             \
     catch (const except& actual) {                                            \
       caught_ = true;                                                         \
       std::string str__;                                                      \
@@ -414,19 +462,22 @@
   \def CHECK_THROW_EQUAL_EX
   \brief  Checks if evaluating the expression triggers an exception of the given
           type and with the expected value.
+  \param expr       Expression to evaluate
+  \param value      Expected exception value
+  \param except     Expected exception type
+  \param ...        Additional parameters passed to a printf-type function
 
-  Appends a printf type string to standard failure message.
   \hideinitializer
 */
 
 #ifdef CHECK_THROW_EQUAL_EX
 #error Macro CHECK_THROW_EQUAL_EX is already defined
 #endif
-#define CHECK_THROW_EQUAL_EX(expression, value, except, ...)                  \
+#define CHECK_THROW_EQUAL_EX(expr, value, except, ...)                        \
   do                                                                          \
   {                                                                           \
     bool caught_ = false;                                                     \
-    try { expression; }                                                       \
+    try { expr; }                                                             \
     catch (const except& actual) {                                            \
       caught_ = true;                                                         \
       std::string str__;                                                      \
@@ -458,6 +509,8 @@
 /*!
   \def CHECK_FILE_EQUAL
   \brief  Generate a failure if the two files are different.
+  \param expected   Name of file with expected values
+  \param actual     Name of file with actual values
 
   \hideinitializer
 */
@@ -481,6 +534,7 @@
 /*!
   \def FAILURE
   \brief  Generate a failure
+  \param ...        Additional parameters passed to a printf-type function
 
   \hideinitializer
 */
@@ -499,11 +553,16 @@
 
 namespace UnitTest {
 
+/*!
+  \var double default_tolerance
+  Default tolerance value for CLOSE... macros
+
+  \note By design, this value is 0 and checks that attempt to use it will throw
+    an exception `UnitTest::default_tolerance_not_set`. It must be set by users
+    to some reasonable default value in the context of the application. */
 #if UTPP_CPP_LANG < 201703L
-/// Default tolerance for CLOSE... macros
 extern double default_tolerance;
 #else
-/// Default tolerance for CLOSE... macros
 inline double default_tolerance = 0;
 #endif
 
@@ -681,6 +740,8 @@ bool CheckEqual (const std::list<expected_T>& expected, const std::list<actual_T
 
 
 /// Internal function for conversion from wstring to UTF-8
+/// \param ws   input widechar sting
+/// \return string converted to UTF-8
 #if __WCHAR_MAX__ > 0x10000 //4-bytes wchar_t
 inline
 std::string to_utf8 (const std::wstring& ws)
@@ -859,6 +920,10 @@ bool CheckEqual (wchar_t *expected, const wchar_t *actual, std::string &msg)
 
 /*!
   Specializations of CheckEqual function for C strings
+    \param expected   Expected string
+    \param actual     Actual string
+    \param msg        Error message
+    \return `true` if strings are equal, `false` otherwise    
   @{
 */
 inline
@@ -1400,15 +1465,30 @@ bool CheckFileEqual (const std::string& ref, const std::string& actual, std::str
 
 } //end namespace
 
-/*!
-  \ingroup gt 
-  These macro definitions provide some compatibility with GoogleTest
-@{
-*/
+/// \defgroup gt Compatibility macros
+/// These maros provide a certain degree of compatibility with Google Test framework
+/// @{
 
+/// Same as __CHECK(x)__
+/// \hideinitializer
+/// \ingroup gt 
 #define EXPECT_TRUE(x) CHECK (x)
+
+/// Same as __CHECK(!x)__
+/// \hideinitializer
+/// \hideinitializer
+/// \ingroup gt 
 #define EXPECT_FALSE(x) CHECK (!(x))
+
+/// Same as __CHECK_EQUAL (B,A)__
+/// \hideinitializer
+/// \hideinitializer
+/// \ingroup gt 
 #define EXPECT_EQ(A, B) CHECK_EQUAL (B, A)
+
+/// The opposite of __EXPECT_EQUAL__
+/// \hideinitializer
+/// \ingroup gt 
 #define EXPECT_NE(A, B)                                                       \
   do                                                                          \
   {                                                                           \
@@ -1419,28 +1499,68 @@ bool CheckFileEqual (const std::string& ref, const std::string& actual, std::str
     }                                                                         \
     catch (...) {                                                             \
       UnitTest::ReportFailure (__FILE__, __LINE__,                            \
-            "Unhandled exception in CHECK_EQUAL(" #A ", " #B ")");            \
+            "Unhandled exception in EXPECT_NE(" #A ", " #B ")");            \
     }                                                                         \
   } while (0)
 
+/// Same as __CHECK (A &ge; B)__
+/// \hideinitializer
+/// \ingroup gt
 #define EXPECT_GE(A, B) CHECK ((A) >= (B))
+
+/// Same as __CHECK (A > B)__
+/// \hideinitializer
+/// \ingroup gt 
 #define EXPECT_GT(A, B) CHECK ((A) > (B))
+
+/// Same as __CHECK (A &le; B)__
+/// \hideinitializer
+/// \ingroup gt 
 #define EXPECT_LE(A, B) CHECK ((A) <= (B))
+
+/// Same as __CHECK (A &lt; B)__
+/// \hideinitializer
+/// \ingroup gt 
 #define EXPECT_LT(A, B) CHECK ((A) < (B))
 
+/// Same as __CHECK_CLOSE (A, B, tol)__
+/// \hideinitializer
+/// \ingroup gt 
 #define EXPECT_NEAR(A, B, tol) CHECK_CLOSE(B, A, tol)
+
+/// Same as __CHECK_THROW (expr, except)__
+/// \hideinitializer
+/// \ingroup gt 
 #define EXPECT_THROW(expr, except) CHECK_THROW(expr, except)
 
+/// Same as __ABORT (!expr)__
+/// \hideinitializer
+/// \ingroup gt 
 #define ASSERT_TRUE(expr) ABORT (!(expr))
+
+/// Same as __ABORT (expr)__
+/// \hideinitializer
+/// \ingroup gt 
 #define ASSERT_FALSE(expr) ABORT (expr)
+
+/// Abort if \p e1 &ne; \p e2
+/// \hideinitializer
+/// \ingroup gt 
 #define ASSERT_EQ(e1, e2)                                                     \
   do                                                                          \
   {                                                                           \
     std::string str__;                                                        \
     if (!UnitTest::CheckEqual((e1), (e2), str__))                             \
+    {                                                                         \
+      std::stringstream stream__;                                             \
+      stream__ << (e1) << " and " << (e2) << " should be equal";              \
       throw UnitTest::test_abort (__FILE__, __LINE__, str__.c_str());         \
+    }                                                                         \
   } while (0)
 
+/// Abort if \p e1 = \p e2
+/// \hideinitializer
+/// \ingroup gt 
 #define ASSERT_NE(e1, e2)                                                     \
   do                                                                          \
   {                                                                           \
@@ -1453,16 +1573,29 @@ bool CheckFileEqual (const std::string& ref, const std::string& actual, std::str
     }                                                                         \
   } while (0)
 
+/// Abort if \p e1 &lt; \p e2
+/// \hideinitializer
+/// \ingroup gt 
 #define ASSERT_GE(e1, e2) ABORT ((e1) < (e2))
+
+/// Abort if \p e1 &le; \p e2
+/// \hideinitializer
+/// \ingroup gt 
 #define ASSERT_GT(e1, e2) ABORT ((e1) <= (e2))
+
+/// Abort if \p e1 &gt; \p e2
+/// \hideinitializer
+/// \ingroup gt 
 #define ASSERT_LE(e1, e2) ABORT ((e1) > (e2))
+
+/// Abort if \p e1 &ge; \p e2
+/// \hideinitializer
+/// \ingroup gt 
 #define ASSERT_LT(e1, e2) ABORT ((e1) >= (e2))
-///@}
+/// @}
 
 /*!
-  \defgroup checks  Assertion Checking Macros
   \defgroup tests   Test Definition Macros
   \defgroup time    Time Control Macros
-  \defgroup gt      Compatibility Macros
   \defgroup exec    Execution Control 
 */

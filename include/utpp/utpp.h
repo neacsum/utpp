@@ -30,18 +30,34 @@
 #include <unistd.h>
 #endif
 
+///  \defgroup config Configuration Macros
+///
+///  All configuration macros shall have names starting with `UTPP_...`
+///  @{
+
 /*
-  VC doesn't define the proper value for __cplusplus but _MSVC_LANG is correct.
-  We set UTPP_CPP_VERSION to correct value in all cases.
+  MSVC doesn't define the proper value for __cplusplus but _MSVC_LANG is correct.
+  We set UTPP_CPP_LANG to correct value in all cases.
 */
 
+/*!
+  \def UTPP_CPP_LANG 
+  C++ language flavor
+  
+  UTPP can be compiled with C++11 and above
+  \hideinitializer
+*/
 #ifndef _MSVC_LANG
 #define UTPP_CPP_LANG __cplusplus
 #else
 #define UTPP_CPP_LANG _MSVC_LANG
 #endif
 
-
+/*!
+  \def UTPP_STD_CHRONO_OSTREAM_AVAILABLE
+  In C++20 and above `std::chrono` valuues can be streamed directly
+  \hideinitializer
+*/
 #if ((UTPP_CPP_LANG >= 202002L && \
   (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION >= 160000)))
 #define UTPP_STD_CHRONO_OSTREAM_AVAILABLE 1
@@ -50,9 +66,12 @@
 #endif
 
 // --------------- Global configuration options -------------------------------
-#define UTPP_VERSION "3.0.2"
+
+/// Library version
+#define UTPP_VERSION "3.0.3"
 
 // --------------- end of configuration options -------------------------------
+/// @}
 
 namespace UnitTest {
 
