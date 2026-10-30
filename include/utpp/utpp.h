@@ -494,6 +494,7 @@ extern std::string CurrentSuite;
 extern Reporter* CurrentReporter;
 
 /// Return the default reporter object
+/// \return Refernce to default reporter
 Reporter& GetDefaultReporter ();
 
 /// Run all tests from all test suites

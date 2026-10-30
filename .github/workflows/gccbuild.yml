@@ -12,6 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build
+      working-directory: ${{env.GITHUB_WORKSPACE}}/sample
       run: make
     - name: Run sample
+      working-directory: ${{env.GITHUB_WORKSPACE}}/sample
       run: ./samp1
